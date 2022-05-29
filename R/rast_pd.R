@@ -1,7 +1,7 @@
 #' Calculate phylogenetic diversity for a raster of presence-absence
 #'
-#' @param pres_bin_stack a raster of presence-absence. It can be a object class 'raster' or 'SpatRaster'
-#' @param tree an object class 'phylo'
+#' @param pres_bin_stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
+#' @param tree an object of class 'phylo'
 #'
 #' @return SpatRaster
 #' @export
