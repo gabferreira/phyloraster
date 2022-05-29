@@ -2,7 +2,7 @@
 % Please edit documentation in R/rast_pd.R
 \name{rast_pd}
 \alias{rast_pd}
-\title{Calculate phylogenetic diversity for a raster of presence-absence}
+\title{Calculate phylogenetic diversity for a raster}
 \usage{
 rast_pd(pres_bin_stack, tree)
 }
@@ -15,5 +15,5 @@ rast_pd(pres_bin_stack, tree)
 SpatRaster
 }
 \description{
-Calculate phylogenetic diversity for a raster of presence-absence
+Calculate phylogenetic diversity for a raster
 }
