@@ -1,4 +1,4 @@
-#' Calculate phylogenetic diversity for a raster of presence-absence
+#' Calculate phylogenetic diversity for a raster
 #'
 #' @param pres_bin_stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
 #' @param tree an object of class 'phylo'
@@ -33,7 +33,6 @@ rast_pd <- function(pres_bin_stack, tree){
     return(c(blt = blt, blr = blr)) # retornando os objetos
   }
 
-  rpd <- app(terra::rast(stack_reord), fun = vec_pd, branch_length = branch_length, species_name = species_name)
+  rpd <- app(terra:::rast(stack_reord), fun = vec_pd, branch_length = branch_length, species_name = species_name)
   return(rpd)
 }
-

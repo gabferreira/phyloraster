@@ -1,0 +1,17 @@
+Package: phylogrid
+Title: Calculate phylogenetic indices for rasters
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Gabriela",
+           family = "Alves-Ferreira",
+           role = c("aut", "cre"),
+           email = "gabriela-alves77@hotmail.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package calculates phylogenetic indices (such as phylogenetic diversity (Faith 1992), phylogenetic endemism (Rosauer et al. 2009) and taxonomic endemism) for presence-absence rasters.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    terra
