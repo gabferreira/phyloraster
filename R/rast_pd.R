@@ -1,38 +1,98 @@
-#' Calculate phylogenetic diversity for a raster
+#' Calculate phylogenetic diversity (Faith 1992) for a vector
 #'
-#' @param pres_bin_stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
+#' @param pres.ab a Named num vector of presence-absence
+#' @param branch.length a Named num vector of branch length for each specie
+#'
+#' @return numeric
+# #' @export
+#'
+#' @examples
+#' bl <- c(5000, 19000, 80000, 128900) # branch length
+#' names(bl) <- c("sp1", "sp2", "sp3", "sp4")
+#' pa <- c(0, 1, 1, 0) # presence absence
+#' names(pa) <- c("sp1", "sp2", "sp3", "sp4")
+#' vec.pd(pa, bl)
+.vec.pd <- function(pres.ab, branch.length){
+  pres.ab[is.na(pres.ab)] <- 0
+  if(sum(pres.ab)== 0) {
+    return(c(NA,NA))
+  }
+  pres <- pres.ab == 1 # only species present
+  species <- names(branch.length)
+  n.species <- length(species)
+  pd <- sum(branch.length[pres]) # pd Faith 1992
+  pdr <- pd/sum(pres) # pd relative to richness
+  return(c(pd = pd, pdr = pdr))
+}
+
+#' Data preparation: reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.
+#'
+#' @param pres.stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
 #' @param tree an object of class 'phylo'
+#'
+#' @return list with SpatRaster and numeric vector
+#' @export
+#'
+#' @examples
+phylo.pres <- function(pres.stack, tree){
+  spat.names <- as.character(names(pres.stack))
+  tree.phy4 <- phylobase::phylo4(tree) # to extract tipLabels
+  labels <- as.character(phylobase::tipLabels(tree.phy4))
+  on.tree <- intersect(spat.names,labels)   # raster species that are on the tree
+  subtree <- ape::keep.tip(tree, on.tree)
+
+  stack.reord <- pres.stack[[subtree[["tip.label"]]]] # reorder the species stack according to the species order in the tree
+  stack.reord.t <- terra::rast(stack.reord) # SpatRaster
+  #names(stack.reord.t) == subtree[["tip.label"]] # to check wether names match
+  subtree <- phylobase::phylo4(subtree)
+  bl <- as.numeric(phylobase::edgeLength(subtree, 1:nTips(subtree)))
+
+  srt <- terra::app(stack.reord.t, function(x){
+    ifelse(x == 0, NA, x) # to transform 0 in NA
+  })
+  srt <- terra::cellSize(srt) # to obtain cell size
+  names(srt) <- names(stack.reord.t)
+
+  # the function below added all the presences to know how many pixels the species is present
+  ## That is, this function determines the size of the species distribution in number of pixels
+  area <- sapply(1:terra::nlyr(srt),
+                 function(x, i){
+                   terra::expanse(x[[i]])
+                 }, x = srt)
+  area.inv <- terra::app(srt, function(x, a){
+    x/a # to calculate the inverse of area size
+  }, a = area)
+
+  area.bl <- terra::app(area.inv, function(x, branch.length){
+    x * branch.length
+  }, branch.length = bl)
+
+  pp <- list(stack.reord.t, area.inv, area.bl, bl)
+  names(pp) <- c("pres.reord", "area.inv", "area.bl", "branch.length")
+  return(pp)
+}
+
+#' Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
+#'
+#' @param pres.reord a presence-absence SpatRaster with the layers ordered according to the tree order
+#' @param area.inv a presence-absence SpatRaster with the inverse of the area for each specie
+#' @param area.tips a presence-absence SpatRaster with the inverse of the area vs branch length
+#' @param branch.length a numeric vector containing the branch length of each specie
+#' @param filename a character specifying the path where rasters can be saved
 #'
 #' @return SpatRaster
 #' @export
 #'
 #' @examples
-rast_pd <- function(pres_bin_stack, tree){
-  {
-    spatial_names <- as.character(names(pres_bin_stack))   # nomes espaciais e nomes filogeneticos
-    tree_phy4 <- phylobase::phylo4(tree) # criei essa arvore de classe phylo4 para poder extrair as tipLabels
-    labels <- as.character(phylobase::tipLabels(tree_phy4))
-    on_tree <- intersect(spatial_names,labels)   # especies do raster que estao na arvore
-    subtree <- ape::keep.tip(tree, on_tree) # arvore com o subconjunto de especies
-    stack_reord <- pres_bin_stack[[subtree[["tip.label"]]]] # reordenar o stack de especies de acordo com a ordem das especies na arvore
-    stack_reord_t <- terra::rast(stack_reord) # lendo como um spatraster para se adequar ao pacote Terra
-    species_name <- names(stack_reord)
-    subtree <- phylobase::phylo4(subtree)
-    branch_length <- as.numeric(phylobase::edgeLength(subtree, 1:phylobase::nTips(subtree)))
-  }
-  vec_pd <- function(pres_bin_stack, branch_length, species_names){
-    pres_bin_stack[is.na(pres_bin_stack)] <- 0 # atribui 0 a tudo que eh NA
-    # para poder somar as presencas
-    if(sum(pres_bin_stack)== 0) { # retorna NA quando a soma de stack_rast eh 0
-      return(c(NA,NA))
-    }
-    pres_spp <- pres_bin_stack == 1 # seleciona as especies presentes
-    n_species <- length(species_name) # riqueza
-    blt <- sum(branch_length[pres_spp]) # div filogenetica: soma do branch_length de especies presentes
-    blr <- blt/sum(pres_spp) # div filogenetica relativa a riqueza
-    return(c(blt = blt, blr = blr)) # retornando os objetos
-  }
+geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename = NULL){
+  rpd <- app(pres.reord, fun = vec.pd, branch.length = branch.length) # phylogenetic diversity and richness-relative phylogenetic diversity
+  rend <- sum(area.inv, na.rm = T) # weighted endemism
+  rpe <- sum(area.tips, na.rm = T) # phylogenetic endemism
+  gp <- c(rpd, rend, rpe)
+  names(gp) <- c("pd", "pdr", "te", "pe")
 
-  rpd <- terra::app(terra::rast(stack_reord), fun = vec_pd, branch_length = branch_length, species_name = species_name)
-  return(rpd)
+  if (!is.null(filename)){
+    gp <- writeRaster(gp, filename)
+  }
+  return(gp)
 }
