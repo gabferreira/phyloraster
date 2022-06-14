@@ -7,11 +7,6 @@
 # #' @export
 #'
 #' @examples
-#' bl <- c(5000, 19000, 80000, 128900) # branch length
-#' names(bl) <- c("sp1", "sp2", "sp3", "sp4")
-#' pa <- c(0, 1, 1, 0) # presence absence
-#' names(pa) <- c("sp1", "sp2", "sp3", "sp4")
-#' vec.pd(pa, bl)
 .vec.pd <- function(pres.ab, branch.length){
   pres.ab[is.na(pres.ab)] <- 0
   if(sum(pres.ab)== 0) {
@@ -45,7 +40,7 @@ phylo.pres <- function(pres.stack, tree){
   stack.reord.t <- terra::rast(stack.reord) # SpatRaster
   #names(stack.reord.t) == subtree[["tip.label"]] # to check wether names match
   subtree <- phylobase::phylo4(subtree)
-  bl <- as.numeric(phylobase::edgeLength(subtree, 1:nTips(subtree)))
+  bl <- as.numeric(phylobase::edgeLength(subtree, 1:phylobase::nTips(subtree)))
 
   srt <- terra::app(stack.reord.t, function(x){
     ifelse(x == 0, NA, x) # to transform 0 in NA
@@ -85,14 +80,14 @@ phylo.pres <- function(pres.stack, tree){
 #'
 #' @examples
 geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename = NULL){
-  rpd <- app(pres.reord, fun = vec.pd, branch.length = branch.length) # phylogenetic diversity and richness-relative phylogenetic diversity
+  rpd <- terra::app(pres.reord, fun = .vec.pd, branch.length = branch.length) # phylogenetic diversity and richness-relative phylogenetic diversity
   rend <- sum(area.inv, na.rm = T) # weighted endemism
   rpe <- sum(area.tips, na.rm = T) # phylogenetic endemism
   gp <- c(rpd, rend, rpe)
   names(gp) <- c("pd", "pdr", "te", "pe")
 
   if (!is.null(filename)){
-    gp <- writeRaster(gp, filename)
+    gp <- terra::writeRaster(gp, filename)
   }
   return(gp)
 }
