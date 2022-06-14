@@ -72,7 +72,7 @@ phylo.pres <- function(pres.stack, tree){
 #' Calculate PD, PE and WE for a raster
 #'
 #' Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
-#'
+#' @inheritParams .vec.pd
 #' @param pres.reord a presence-absence SpatRaster with the layers ordered according to the tree order
 #' @param area.inv a presence-absence SpatRaster with the inverse of the area for each specie
 #' @param area.tips a presence-absence SpatRaster with the inverse of the area vs branch length
