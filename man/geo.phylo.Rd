@@ -2,7 +2,8 @@
 % Please edit documentation in R/rast_pd.R
 \name{geo.phylo}
 \alias{geo.phylo}
-\title{Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output}
+\title{Calculate PD, PE and WE for a raster
+Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output}
 \usage{
 geo.phylo(pres.reord, area.inv, area.tips, branch.length, filename = NULL)
 }
@@ -21,5 +22,6 @@ geo.phylo(pres.reord, area.inv, area.tips, branch.length, filename = NULL)
 SpatRaster
 }
 \description{
+Calculate PD, PE and WE for a raster
 Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
 }

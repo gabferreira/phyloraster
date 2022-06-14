@@ -2,7 +2,7 @@
 % Please edit documentation in R/rast_pd.R
 \name{phylo.pres}
 \alias{phylo.pres}
-\title{Data preparation: reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.}
+\title{Data preparation}
 \usage{
 phylo.pres(pres.stack, tree)
 }
@@ -12,8 +12,8 @@ phylo.pres(pres.stack, tree)
 \item{tree}{an object of class 'phylo'}
 }
 \value{
-list with SpatRaster and numeric vector
+SpatRaster and numeric vector
 }
 \description{
-Data preparation: reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.
+Reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.
 }

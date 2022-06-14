@@ -20,7 +20,9 @@
   return(c(pd = pd, pdr = pdr))
 }
 
-#' Data preparation: reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.
+#' Data preparation
+#'
+#' Reorder stack according to tree order, get branch length, inverse area, and inverse area x branch lengths.
 #'
 #' @param pres.stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
 #' @param tree an object of class 'phylo'
@@ -67,8 +69,9 @@ phylo.pres <- function(pres.stack, tree){
   return(pp)
 }
 
+#' Calculate PD, PE and WE for a raster
+
 #' Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
-#'
 #' @param pres.reord a presence-absence SpatRaster with the layers ordered according to the tree order
 #' @param area.inv a presence-absence SpatRaster with the inverse of the area for each specie
 #' @param area.tips a presence-absence SpatRaster with the inverse of the area vs branch length
