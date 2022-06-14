@@ -25,7 +25,7 @@
 #' @param pres.stack a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'
 #' @param tree an object of class 'phylo'
 #'
-#' @return list with SpatRaster and numeric vector
+#' @return SpatRaster and numeric vector
 #' @export
 #'
 #' @examples
