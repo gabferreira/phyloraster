@@ -7,7 +7,7 @@
 phylo.pres(pres.stack, tree)
 }
 \arguments{
-\item{pres.stack}{a raster of presence-absence. It can be an object of class 'raster' or 'SpatRaster'}
+\item{pres.stack}{a raster of presence-absence of class 'SpatRaster'}
 
 \item{tree}{an object of class 'phylo'}
 }
