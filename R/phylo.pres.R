@@ -8,17 +8,21 @@
 #' @export
 #'
 #' @examples
-phylo.pres <- function(pres.stack, tree){
+phylo.pres <- function(pres.stack, tree) {
   spat.names <- as.character(names(pres.stack))
-  tree.phy4 <- phylobase::phylo4(tree) # to extract tipLabels
+  tree.phy4 <- phylobase::phylo4(tree)
   labels <- as.character(phylobase::tipLabels(tree.phy4))
-  on.tree <- intersect(spat.names,labels)   # raster species that are on the tree
+  on.tree <- intersect(spat.names, labels)
   subtree <- ape::keep.tip(tree, on.tree)
-
-  pres.reord <- pres.stack[[subtree[["tip.label"]]]] # reorder the species stack according to the species order in the tree
-  #names(pres.reord) == subtree[["tip.label"]] # to check wether names match
+  stack.reord <- pres.stack[[subtree[["tip.label"]]]]
+  if(!class(stack.reord) == "SpatRaster"){
+    pres.reord <- terra::rast(stack.reord)
+  } else {
+    pres.reord <- stack.reord
+  }
   subtree <- phylobase::phylo4(subtree)
-  branch.length <- as.numeric(phylobase::edgeLength(subtree, 1:phylobase::nTips(subtree)))
+  branch.length <- as.numeric(phylobase::edgeLength(subtree,
+                                                    1:phylobase::nTips(subtree)))
   names(branch.length) <- names(pres.reord)
   pp <- list(pres.reord = pres.reord, branch.length = branch.length)
   return(pp)
