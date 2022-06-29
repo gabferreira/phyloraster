@@ -21,5 +21,7 @@ Depends:
     R (>= 2.10)
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 2.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 2
