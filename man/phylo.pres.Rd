@@ -12,7 +12,7 @@ phylo.pres(pres.stack, tree)
 \item{tree}{an object of class 'phylo'}
 }
 \value{
-SpatRaster and numeric vector
+SpatRaster, phylo and numeric vector
 }
 \description{
 Reorder stack according to tree order and get branch length.
