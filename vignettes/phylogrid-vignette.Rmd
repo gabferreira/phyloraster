@@ -1,5 +1,5 @@
 ---
-title: "phylogrid-vignette"
+title: "```phylogrid``` Vignette"
 author: "Gabriela Alves-Ferreira"
 output: rmarkdown::html_vignette
 vignette: > 
