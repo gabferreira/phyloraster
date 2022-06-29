@@ -17,3 +17,9 @@ Imports:
     terra,
     ape,
     phylobase
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

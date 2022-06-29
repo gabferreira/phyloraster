@@ -4,3 +4,4 @@
 .httr-oauth
 .DS_Store
 proj_setup/
+inst/doc

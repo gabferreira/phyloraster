@@ -14,11 +14,11 @@
   }
 
   if(sum(pres.ab) != 0) {
-  pres <- pres.ab == 1 # only species present
-  species <- names(branch.length)
-  n.species <- length(species)
-  pd <- sum(branch.length[pres]) # pd Faith 1992
-  pdr <- pd/sum(pres) # pd relative to richness
+    pres <- pres.ab == 1 # only species present
+    species <- names(branch.length)
+    n.species <- length(species)
+    pd <- sum(branch.length[pres]) # pd Faith 1992
+    pdr <- pd/sum(pres) # pd relative to richness
   }
   return(c(pd = pd, pdr = pdr))
 }
@@ -36,20 +36,36 @@
 #' @param ... arguments to be passed to the function
 #' @return SpatRaster
 #' @export
-#'
 #' @examples
 geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename = NULL, ...){
-
-  if((names(pres.reord) != names(branch.length))[1]){
+  ### mudar para all equal
+  if((names(pres.reord) != names(branch.length))){
     stop("Species names are not in the same order on 'pres.reord' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
   }
 
-  if((names(pres.reord) == names(branch.length))[1]){ # to check wether names match
+  if((names(pres.reord) == names(branch.length))){ # to check wether names match
     rpd <- terra::app(pres.reord, fun = .vec.pd, branch.length = branch.length) # phylogenetic diversity and richness-relative phylogenetic diversity
-    rend <- sum(area.inv, na.rm = T) # weighted endemism
-    rpe <- sum(area.tips, na.rm = T) # phylogenetic endemism
+    rend <- terra::app(area.inv,
+                       function(x){
+                         if(all(is.na(x))){
+                           return(NA)}
+                         sum(x, na.rm = T)
+                       }) # weighted endemism
+    rend <- terra::app(rend, function(x, m){
+      (x/m)
+    }, m = minmax(rend)[2,])
+    rpe <- terra::app(area.tips,
+               function(x){
+                 if(all(is.na(x))){
+                   return(NA)
+                   }
+                 sum(x, na.rm = T)
+               }) # phylogenetic endemism
+    rpe <- terra::app(rpe, function(x, m){
+      (x/m)
+    }, m = minmax(rpe)[2,])
     gp <- c(rpd, rend, rpe)
-    names(gp) <- c("pd", "pdr", "te", "pe")
+    names(gp) <- c("pd", "pdr", "we", "pe")
   }
 
   if (!is.null(filename)){
