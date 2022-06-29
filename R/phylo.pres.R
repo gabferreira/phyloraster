@@ -4,7 +4,7 @@
 #' @param pres.stack a raster of presence-absence of class 'SpatRaster'
 #' @param tree an object of class 'phylo'
 #'
-#' @return SpatRaster and numeric vector
+#' @return SpatRaster, phylo and numeric vector
 #' @export
 #'
 #' @examples
@@ -24,6 +24,6 @@ phylo.pres <- function(pres.stack, tree) {
   branch.length <- as.numeric(phylobase::edgeLength(subtree,
                                                     1:phylobase::nTips(subtree)))
   names(branch.length) <- names(pres.reord)
-  pp <- list(pres.reord = pres.reord, branch.length = branch.length)
+  pp <- list(pres.reord = pres.reord, branch.length = branch.length, tree = subtree)
   return(pp)
 }
