@@ -2,19 +2,16 @@
 title: "phylogrid-vignette"
 author: "Gabriela Alves-Ferreira"
 output: rmarkdown::html_vignette
-vignette: >
+vignette: > 
   %\VignetteIndexEntry{phylogrid-vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+  
+## Introduction
+  
+The goal of ```phylogrid``` package is to calculate phylogenetic indices, such as phylogenetic diversity (PD, Faith 1992), phylogenetic endemism (PE, Rosauer et al. 2009) and weighted endemism (WE) for presence-absence rasters and return the result in a raster.
 
-# Introduction
-
-The goal of *phylogrid* is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), phylogenetic endemism (PE. Rosauer et al. 2009) and weighted endemism (WE)) for presence-absence rasters and return a raster object as an output.
-
-## Steps to calculte PD, PE and WE using *phylogrid*
-
-### First, load phylogenetic and spatial data
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -23,42 +20,146 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+### Before starting, you will need to load the following packages and install ```phylogrid```.
+
+### Installation
+
+``` {r{}
+library ("devtools")
+devtools::install_github("gabferreira/phylogrid")
+```
+
+```{r setup, warning = FALSE, message = FALSE}
 library(phylogrid)
 library(terra)
 library(ape)
 ```
 
-```{r}
-ras <- terra::rast(system.file("inst/extdata", "rast.presab.tif", package="phylogrid"))
-tree <- ape::read.tree(system.file("inst/extdata", "tree.nex", package="phylogrid"))
-```
-### Visualize
+### Steps to calculte PD, PE and WE using ```phylogrid```
+
+1. First, load phylogenetic and spatial data.
+
+The package provides an internal dataset containing distribution data and a phylogenetic tree for 33 tree frog species in Australia (Rosauer 2017). This raw dataset can be accessed at:
+<https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data>
+
+We can load the internal data with the following code:
 
 ```{r}
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+```
+
+Visualize the loaded data:
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
 plot(ras)
 ```
 
-```{r}
-plot(tree)
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(tree, cex = 0.65)
 ```
 
-### Now, let's prepare the dataset! The stack will be sorted according to the tree order and the branch lengths will be extracted for each species.
+To calculate PD and PE it is extremely important that the stack and the tree have the species names in the same order. We can verify this using a logical test like this.
+
+```{r}
+names(ras) == tree$tip.label
+```
+
+```{r}
+all.equal(names(ras), tree$tip.label)
+```
+
+2. As we can see, the stack and the tree are not in the same order. Therefore, the next function will sort the stack according to the tree order and extract the branch lengths for each species.
 
 ```{r}
 dataprep <- phylogrid::phylo.pres(pres.stack = ras, tree = tree)
+dataprep$pres.reord
+dataprep$branch.length
 ```
 
-### After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
+Visualize the ordered stack:
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(dataprep$pres.reord)
+```
+
+Here, we have the branch length for each specie.
+
+```{r}
+dataprep$branch.length
+```
+
+Now, the stack and tree are in the same order. All rigth!!
+
+```{r}
+names(dataprep$pres.reord) == tree$tip.label
+```
+
+```{r}
+all.equal(names(dataprep$pres.reord), tree$tip.label)
+```
+
+3. After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
 
 ```{r}
 range <- phylogrid::inv.range(pres.reord = dataprep$pres.reord, branch.length = dataprep$branch.length, filename = NULL)
+range
 ```
 
-### Now, we are already able to calculate PD, PE and WE!!
+This function returns:
+
+• A vector with the area size for each species:
 
 ```{r}
+range$area.size
+```
+
+• A raster with the inverse of the range size:
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(range$inv.R)
+```
+
+• A raster with the inverse of the size of the range multiplied by the branch length:
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(range$LR)
+```
+
+4. Great!! Now, we are already able to calculate PD, PE and WE.
+
+```{r, warning= FALSE}
 pg <- phylogrid::geo.phylo(pres.reord = dataprep$pres.reord, area.inv = range$inv.R,
-                          area.tips = range$LR, range$LR, branch.length = dataprep$branch.length)
-plot(pg)
+                           area.tips = range$LR, branch.length = dataprep$branch.length, filename = NULL)
+pg
+```
+
+Here we have the rasters with a:
+
+• Raster of phylogenetic diversity:
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+pg$PD
+plot(pg$PD, main="Phylogenetic diversity")
+```
+
+• Raster of phylogenetic diversity related with richness:
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+pg$PD
+plot(pg$PD, main="Phylogenetic Diversity Richness Related")
+```
+
+• Raster of weigthed endemism:
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+pg$WE
+plot(pg$WE, main="Weigthed Endemism")
+```
+
+• Raster of phylogenetic endemism:
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+pg$PE
+plot(pg$PE, main="Phylogenetic Endemism")
 ```
