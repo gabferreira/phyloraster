@@ -1,6 +1,6 @@
 ---
 title: "```phylogrid``` Vignette"
-author: "Gabriela Alves-Ferreira"
+author: "Gabriela Alves-Ferreira and Neander Heming"
 output: rmarkdown::html_vignette
 vignette: > 
   %\VignetteIndexEntry{phylogrid-vignette}
