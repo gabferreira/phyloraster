@@ -27,7 +27,6 @@
 #'
 #' Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
 #'
-#' @inheritParams .vec.pd
 #' @param pres.reord a presence-absence SpatRaster with the layers ordered according to the tree order
 #' @param area.inv a presence-absence SpatRaster with the inverse of the area for each specie
 #' @param area.tips a presence-absence SpatRaster with the inverse of the area vs branch length
@@ -39,11 +38,11 @@
 #' @examples
 geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename = NULL, ...){
   ### mudar para all equal
-  if((names(pres.reord) != names(branch.length))){
+  if(!all.equal(names(pres.reord), names(branch.length))){
     stop("Species names are not in the same order on 'pres.reord' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
   }
 
-  if((names(pres.reord) == names(branch.length))){ # to check wether names match
+  if(all.equal(names(pres.reord), names(branch.length))){ # to check wether names match
     rpd <- terra::app(pres.reord, fun = .vec.pd, branch.length = branch.length) # phylogenetic diversity and richness-relative phylogenetic diversity
     rend <- terra::app(area.inv,
                        function(x){
@@ -53,7 +52,7 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
                        }) # weighted endemism
     rend <- terra::app(rend, function(x, m){
       (x/m)
-    }, m = minmax(rend)[2,])
+    }, m = terra::minmax(rend)[2,])
     rpe <- terra::app(area.tips,
                function(x){
                  if(all(is.na(x))){
@@ -63,9 +62,9 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
                }) # phylogenetic endemism
     rpe <- terra::app(rpe, function(x, m){
       (x/m)
-    }, m = minmax(rpe)[2,])
+    }, m = terra::minmax(rpe)[2,])
     gp <- c(rpd, rend, rpe)
-    names(gp) <- c("pd", "pdr", "we", "pe")
+    names(gp) <- c("PD", "PDR", "WE", "PE")
   }
 
   if (!is.null(filename)){
