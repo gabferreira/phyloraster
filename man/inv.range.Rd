@@ -7,15 +7,23 @@
 inv.range(pres.reord, branch.length, filename = NULL)
 }
 \arguments{
-\item{pres.reord}{a presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{pres.reord}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
 
-\item{branch.length}{a numeric vector containing the branch length of each specie on the same order of the raster}
+\item{branch.length}{numeric. A vector containing the branch length of each specie on the same order of the raster}
 
-\item{filename}{a character vector containing the path in your personal computer to save the rasters}
+\item{filename}{character. A vector containing the path in your personal computer to save the rasters}
 }
 \value{
-SpatRaster and Named num vector
+SpatRaster and numeric
 }
 \description{
 Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast
+}
+\examples{
+\dontrun{
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+data <- phylo.pres(ras, tree)
+inv.range(data$pres.reord, data$branch.length)
+}
 }

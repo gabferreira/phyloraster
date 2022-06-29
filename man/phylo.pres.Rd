@@ -7,13 +7,20 @@
 phylo.pres(pres.stack, tree)
 }
 \arguments{
-\item{pres.stack}{a raster of presence-absence of class 'SpatRaster'}
+\item{pres.stack}{SpatRaster. A raster of presence-absence}
 
-\item{tree}{an object of class 'phylo'}
+\item{tree}{phylo. A dated tree}
 }
 \value{
 SpatRaster, phylo and numeric vector
 }
 \description{
-Reorder stack according to tree order and get branch length.
+Reorder stack according to tree order and get branch length
+}
+\examples{
+\dontrun{
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+phylo.pres(ras, tree)
+}
 }

@@ -7,9 +7,9 @@
 .vec.pd(pres.ab, branch.length)
 }
 \arguments{
-\item{pres.ab}{a Named num vector of presence-absence}
+\item{pres.ab}{numeric. A Named num vector of presence-absence}
 
-\item{branch.length}{a Named num vector of branch length for each specie}
+\item{branch.length}{numeric. A Named num vector of branch length for each specie}
 }
 \value{
 numeric
