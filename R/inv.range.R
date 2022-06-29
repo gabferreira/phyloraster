@@ -38,15 +38,17 @@ inv.range <- function(pres.reord, branch.length, filename = NULL){
 
   area.to <- terra::expanse(terra::ifel(any(!is.na(pres.reord)), 1, NA))
 
-  rs <- sapply(1:nlyr(pres.reord),
+  rs <- sapply(1:terra::nlyr(pres.reord),
                function(i, a, Z){
-                 az <- zonal(a, Z[[i]], sum)
+                 az <- terra::zonal(a, Z[[i]], sum)
                  az <- az[az[,1]==1,2]
                  ifelse(length(az)==0, 0, az) # evita voltar erro quando nao tem presenca (1), ou seja, se fosse tudo 0 pra alguma especie
                }, a= area, Z=pres.reord)
 
   rs[] <- rs/area.to # para reescalonar
+  names(rs) <- names(pres.reord)
   branch.length[] <- branch.length/max(branch.length) # para reescalonar
+
 
   message("Calculating the inverse of the range size") # para aparecer mensagem enquanto calcula
   # inv.R <- terra::app(pres.reord, function(x, a){
