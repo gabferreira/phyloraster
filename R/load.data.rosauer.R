@@ -8,7 +8,7 @@
 #' @export
 #' @source Rosauer, 2017. Available on: <https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data>
 #'
-#' @examples
+# #' @examples
 #'
 load.data.rosauer <- function(x){
   x <- phylogrid::dataR

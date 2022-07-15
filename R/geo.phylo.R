@@ -3,6 +3,7 @@
 #' @param pres.ab numeric. A Named num vector of presence-absence
 #' @param branch.length numeric. A Named num vector of branch length for each specie
 #'
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @return numeric
 # #' @export
 #' @examples
@@ -35,6 +36,10 @@
 #' @param ... arguments to be passed to the function
 #' @return SpatRaster
 #' @export
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
@@ -72,7 +77,7 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
     }
 
 
-    ## phylogenetic endemism
+    # phylogenetic endemism
     {
       rpe <- terra::app(area.tips,
                         function(x){
@@ -86,7 +91,7 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
       }, m = terra::minmax(rpe)[2,])
     }
 
-    # Juntando todos os rasters
+    # raster stack
     gp <- c(rpd, rend, rpe)
     names(gp) <- c("PD", "PDR", "WE", "PE")
   }
@@ -108,6 +113,10 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
 #' @param filename character. Output filename
 #' @return SpatRaster
 #' @export
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))

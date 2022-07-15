@@ -21,6 +21,7 @@ Get range size, the inverse of range size and the inverse of range size multipli
 }
 \examples{
 \dontrun{
+library(phylogrid)
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)

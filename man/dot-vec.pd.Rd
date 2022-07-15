@@ -17,3 +17,6 @@ numeric
 \description{
 Calculate phylogenetic diversity (Faith 1992) for a vector
 }
+\references{
+Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+}
