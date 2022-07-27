@@ -1,0 +1,40 @@
+#' Calculate range size
+#'
+#' This function calculate range size in square kilometers for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area. If scale is TRUE, the raster is scaled.
+#'
+#' @param pres.rast SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. This raster must be named.
+#' @param scale logical. If TRUE, scaling is done by dividing the range size x by the area total. If FALSE, scaling is not done. The default is FALSE.
+#' @return Named num
+#' @export
+#' @examples
+#' \dontrun{
+#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' range.size(ras, scale = TRUE)
+#' }
+range.size <- function(pres.rast, scale = FALSE){
+
+    temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+
+    area <- terra::cellSize(terra::rast(pres.rast[[1]]), filename = temp[[1]]) # to calculate cell size
+
+    area.to <- terra::expanse(terra::ifel(any(!is.na(pres.rast)), 1, NA)) #  to calculate area total
+
+    # The function bellow extracts the range size for each species and stores it in a vector
+    rs <- sapply(1:terra::nlyr(pres.rast),
+                 function(i, a, Z){
+                   az <- terra::zonal(a, Z[[i]], sum)
+                   az <- az[az[,1]==1,2]
+                   ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
+                 }, a = area, Z = pres.rast)
+
+    if(scale == TRUE){
+        rs[] <- rs/area.to # to reescale
+        names(rs) <- names(pres.rast) # to add names
+        return(rs)
+    } else {
+        names(rs) <- names(pres.rast) # to add names
+        return(rs)
+    }
+    unlink(temp) # delete the archive that will not be used
+}
