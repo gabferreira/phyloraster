@@ -5,7 +5,7 @@
 #' @param x a data.frame with coordinates and presence-absence data, and a phylogenetic tree.
 #'
 #' @return data.frame and phylo
-#' @export
+# #' @export
 #' @source Rosauer, 2017. Available on: <https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data>
 #'
 # #' @examples
