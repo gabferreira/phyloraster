@@ -34,7 +34,7 @@ inv.range <- function(pres.reord, branch.length, filename = NULL){
 
     area.to <- terra::expanse(terra::ifel(any(!is.na(pres.reord)), 1, NA)) #  to calculate area total
 
-    # The function below extracts the range size for each species and stores it in a vector
+    # The function bellow extracts the range size for each species and stores it in a vector
     rs <- sapply(1:terra::nlyr(pres.reord),
                  function(i, a, Z){
                    az <- terra::zonal(a, Z[[i]], sum)
@@ -49,11 +49,11 @@ inv.range <- function(pres.reord, branch.length, filename = NULL){
 
   # calculating inverse of area and inv area x branch length
   {
-    message("Calculating the inverse of the range size") # show message while calculate
+    # message("Calculating the inverse of the range size") # show message while calculate
 
     inv.R <- terra::ifel(pres.reord == 0, 0, 1/(pres.reord*rs),
                          filename = temp[[2]], overwrite = TRUE) # calculating the inverse of range size
-    message("Calculating the inverse of the range size x branch lengths")
+    # message("Calculating the inverse of the range size x branch lengths")
 
     LR <- terra::app(inv.R, function(x, bl){
       x*bl
