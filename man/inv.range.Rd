@@ -4,10 +4,10 @@
 \alias{inv.range}
 \title{Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast}
 \usage{
-inv.range(pres.reord, branch.length, filename = NULL)
+inv.range(x, branch.length, filename = NULL)
 }
 \arguments{
-\item{pres.reord}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
 
 \item{branch.length}{numeric. A vector containing the branch length of each specie on the same order of the raster}
 

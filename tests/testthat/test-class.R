@@ -8,8 +8,8 @@ test_that("returned object classes are correct", {
   ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
   datapres <- phylo.pres(ras, tree)
-  range <- inv.range(datapres$pres.reord, datapres$branch.length)
-  gp <- geo.phylo(pres.reord = datapres$pres.reord, area.inv = range$inv.R,
+  range <- inv.range(datapres$x, datapres$branch.length)
+  gp <- geo.phylo(x = datapres$x, area.inv = range$inv.R,
                   area.tips = range$LR, branch.length = datapres$branch.length, filename = NULL)
 
   # tests

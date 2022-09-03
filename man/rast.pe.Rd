@@ -2,31 +2,31 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pe}
 \alias{rast.pe}
-\title{Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster}
+\title{Calculate phylogenetic endemism (PE) for a raster}
 \usage{
-rast.pe(pres.reord, branch.length, filename = NULL, ...)
+rast.pe(x, branch.length, filename = NULL, ...)
 }
 \arguments{
-\item{pres.reord}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
 
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
 
-\item{filename}{character. A character specifying the path where rasters can be saved}
+\item{filename}{character. Output filename.}
 
-\item{...}{arguments to be passed to the function}
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
+Calculate phylogenetic endemism using rasters as input and output.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-rast.pe(data$pres.reord, data$branch.length)
+rast.pe(data$x, data$branch.length)
 }
 }
 \references{

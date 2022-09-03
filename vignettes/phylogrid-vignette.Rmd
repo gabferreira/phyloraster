@@ -72,15 +72,15 @@ all.equal(names(ras), tree$tip.label)
 2. As we can see, the stack and the tree are not in the same order. Therefore, the next function will sort the stack according to the tree order and extract the branch lengths for each species.
 
 ```{r}
-dataprep <- phylogrid::phylo.pres(pres.stack = ras, tree = tree)
-dataprep$pres.reord
+dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+dataprep$x
 dataprep$branch.length
 ```
 
 Visualize the ordered stack:
 
 ```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(dataprep$pres.reord)
+plot(dataprep$x)
 ```
 
 Here, we have the branch length for each specie.
@@ -92,17 +92,17 @@ dataprep$branch.length
 Now, the stack and tree are in the same order. All rigth!!
 
 ```{r}
-names(dataprep$pres.reord) == tree$tip.label
+names(dataprep$x) == tree$tip.label
 ```
 
 ```{r}
-all.equal(names(dataprep$pres.reord), tree$tip.label)
+all.equal(names(dataprep$x), tree$tip.label)
 ```
 
 3. After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
 
 ```{r}
-range <- phylogrid::inv.range(pres.reord = dataprep$pres.reord, branch.length = dataprep$branch.length, filename = NULL)
+range <- phylogrid::inv.range(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
 range
 ```
 
@@ -129,7 +129,7 @@ plot(range$LR)
 4. Great!! Now, we are already able to calculate PD, PE and WE.
 
 ```{r, warning= FALSE}
-pg <- phylogrid::geo.phylo(pres.reord = dataprep$pres.reord, area.inv = range$inv.R,
+pg <- phylogrid::geo.phylo(x = dataprep$x, area.inv = range$inv.R,
                            area.tips = range$LR, branch.length = dataprep$branch.length, filename = NULL)
 pg
 ```

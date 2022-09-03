@@ -2,36 +2,36 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo}
 \alias{geo.phylo}
-\title{Calculate PD, PE and WE for a raster}
+\title{Calculate phylogenetic diversity, phylogenetic endemism and WE for a raster}
 \usage{
-geo.phylo(pres.reord, area.inv, area.tips, branch.length, filename = NULL, ...)
+geo.phylo(x, area.inv, area.tips, branch.length, filename = NULL, ...)
 }
 \arguments{
-\item{pres.reord}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
 
-\item{area.inv}{SpatRaster. A presence-absence SpatRaster with the inverse of the area for each specie}
+\item{area.inv}{SpatRaster. A presence-absence SpatRaster with the inverse of the area for each specie.}
 
-\item{area.tips}{SpatRaster. A presence-absence SpatRaster with the inverse of the area vs branch length}
+\item{area.tips}{SpatRaster. A presence-absence SpatRaster with the inverse of the area vs branch length.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
+\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
 
-\item{filename}{character. A character specifying the path where rasters can be saved}
+\item{filename}{character. Output filename.}
 
-\item{...}{arguments to be passed to the function}
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
+Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-range <- inv.range(data$pres.reord, data$branch.length)
-geo.phylo(data$pres.reord, range$inv.R, range$LR, data$branch.length)
+range <- inv.range(data$x, data$branch.length)
+geo.phylo(data$x, range$inv.R, range$LR, data$branch.length)
 }
 }
 \references{

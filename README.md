@@ -39,13 +39,13 @@ dataprep <- phylogrid::phylo.pres(pres.stack = ras, tree = tree)
 ### After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
 
 ``` r
-range <- phylogrid::inv.range(pres.reord = dataprep$pres.reord, branch.length = dataprep$branch.length, filename = NULL)
+range <- phylogrid::inv.range(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
 ```
 
 ### Now, we are already able to calculate PD, PE and WE!!
 
 ``` r
-pg <- phylogrid::geo.phylo(pres.reord = dataprep$pres.reord, area.inv = range$inv.R,
+pg <- phylogrid::geo.phylo(x = dataprep$x, area.inv = range$inv.R,
                            area.tips = range$LR, branch.length = dataprep$branch.length, filename = NULL)
 ```
 

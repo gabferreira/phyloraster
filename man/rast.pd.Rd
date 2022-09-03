@@ -4,16 +4,16 @@
 \alias{rast.pd}
 \title{Calculate phylogenetic diversity (PD. Faith, 1992) for a raster}
 \usage{
-rast.pd(pres.reord, branch.length, filename = NULL, ...)
+rast.pd(x, branch.length, filename = NULL, ...)
 }
 \arguments{
-\item{pres.reord}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
+\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
 
-\item{filename}{character. A character specifying the path where rasters can be saved}
+\item{filename}{character. Output filename.}
 
-\item{...}{arguments to be passed to the function}
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
@@ -26,8 +26,8 @@ Calculate phylogenetic diversity using rasters as input and output. This functio
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-range <- inv.range(data$pres.reord, data$branch.length)
-rast.pd(data$pres.reord, data$branch.length)
+range <- inv.range(data$x, data$branch.length)
+rast.pd(data$x, data$branch.length)
 }
 }
 \references{

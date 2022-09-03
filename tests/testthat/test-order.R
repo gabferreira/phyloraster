@@ -7,5 +7,5 @@ test_that("names are equal", {
   datapres <- phylo.pres(ras, tree)
 
   # test
-  expect_equal(all.equal(names(datapres$pres.reord), tree$tip.label), TRUE)
+  expect_equal(all.equal(names(datapres$x), tree$tip.label), TRUE)
 })

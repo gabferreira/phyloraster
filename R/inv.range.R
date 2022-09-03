@@ -1,6 +1,6 @@
 #' Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast
 #'
-#' @param pres.reord SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
+#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
 #' @param branch.length numeric. A vector containing the branch length of each specie on the same order of the raster
 #' @param filename character. A vector containing the path in your personal computer to save the rasters
 #' @return SpatRaster and numeric
@@ -13,7 +13,7 @@
 #' data <- phylo.pres(ras, tree)
 #' inv.range(data$pres.reord, data$branch.length)
 #'}
-inv.range <- function(pres.reord, branch.length, filename = NULL){
+inv.range <- function(x, branch.length, filename = NULL){
 
   # temporary files
   {
@@ -30,20 +30,20 @@ inv.range <- function(pres.reord, branch.length, filename = NULL){
 
   # calculating area
   {
-    area <- terra::cellSize(terra::rast(pres.reord[[1]]), filename = temp[[1]]) # to calculate cell size
+    area <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]]) # to calculate cell size
 
-    area.to <- terra::expanse(terra::ifel(any(!is.na(pres.reord)), 1, NA)) #  to calculate area total
+    area.to <- terra::expanse(terra::ifel(any(!is.na(x)), 1, NA)) #  to calculate area total
 
     # The function bellow extracts the range size for each species and stores it in a vector
-    rs <- sapply(1:terra::nlyr(pres.reord),
+    rs <- sapply(1:terra::nlyr(x),
                  function(i, a, Z){
                    az <- terra::zonal(a, Z[[i]], sum)
                    az <- az[az[,1]==1,2]
                    ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
-                 }, a= area, Z=pres.reord)
+                 }, a= area, Z=x)
 
     rs[] <- rs/area.to # to reescale
-    names(rs) <- names(pres.reord) # to add names
+    names(rs) <- names(x) # to add names
     branch.length[] <- branch.length/max(branch.length) # to reescale
   }
 
@@ -51,7 +51,7 @@ inv.range <- function(pres.reord, branch.length, filename = NULL){
   {
     # message("Calculating the inverse of the range size") # show message while calculate
 
-    inv.R <- terra::ifel(pres.reord == 0, 0, 1/(pres.reord*rs),
+    inv.R <- terra::ifel(x == 0, 0, 1/(x*rs),
                          filename = temp[[2]], overwrite = TRUE) # calculating the inverse of range size
     # message("Calculating the inverse of the range size x branch lengths")
 

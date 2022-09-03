@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo2}
 \alias{geo.phylo2}
-\title{Calculate PD, PE and WE for a raster- version 2}
+\title{Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism for a raster- version 2}
 \usage{
 geo.phylo2(rast.branch, range.branch, filename = NULL)
 }
@@ -11,20 +11,20 @@ geo.phylo2(rast.branch, range.branch, filename = NULL)
 
 \item{range.branch}{SpatRaster. a presence-absence SpatRaster with the inverse of the area and the inverse of the area vs branch length. These rasters can be obtained in the inv.range function}
 
-\item{filename}{character. Output filename}
+\item{filename}{character. Output filename.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output
+Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-range <- inv.range(data$pres.reord, data$branch.length)
+range <- inv.range(data$x, data$branch.length)
 geo.phylo2(data, range)
 }
 }

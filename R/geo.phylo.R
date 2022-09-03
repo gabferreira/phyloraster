@@ -28,7 +28,7 @@
 #'
 #' Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output.
 #'
-#' @param pres.reord SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
+#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
 #' @param area.inv SpatRaster. A presence-absence SpatRaster with the inverse of the area for each specie.
 #' @param area.tips SpatRaster. A presence-absence SpatRaster with the inverse of the area vs branch length.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
@@ -45,20 +45,20 @@
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' range <- inv.range(data$pres.reord, data$branch.length)
-#' geo.phylo(data$pres.reord, range$inv.R, range$LR, data$branch.length)
+#' range <- inv.range(data$x, data$branch.length)
+#' geo.phylo(data$x, range$inv.R, range$LR, data$branch.length)
 #' }
 
-geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename = NULL, ...){
+geo.phylo <- function(x, area.inv, area.tips, branch.length, filename = NULL, ...){
 
-  if(!all.equal(names(pres.reord), names(branch.length))){
-    stop("Species names are not in the same order on 'pres.reord' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
   }
 
-  if(all.equal(names(pres.reord), names(branch.length))){ # to check wether names match
+  if(all.equal(names(x), names(branch.length))){ # to check wether names match
 
     # phylogenetic diversity and richness-relative phylogenetic diversity
-    rpd <- terra::app(pres.reord, fun = .vec.pd,
+    rpd <- terra::app(x, fun = .vec.pd,
                       branch.length = branch.length)
 
     # weighted endemism
@@ -121,11 +121,11 @@ geo.phylo <- function(pres.reord, area.inv, area.tips, branch.length, filename =
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' range <- inv.range(data$pres.reord, data$branch.length)
+#' range <- inv.range(data$x, data$branch.length)
 #' geo.phylo2(data, range)
 #' }
 geo.phylo2 <- function(rast.branch, range.branch, filename = NULL){
-  gp2 <- geo.phylo(rast.branch$pres.reord,
+  gp2 <- geo.phylo(rast.branch$x,
                    range.branch$inv.R, range.branch$LR,
                   rast.branch$branch.length)
   return(gp2)
@@ -136,7 +136,7 @@ geo.phylo2 <- function(rast.branch, range.branch, filename = NULL){
 #'
 #' Calculate phylogenetic diversity using rasters as input and output. This function follows Faith (1992).
 #'
-#' @param pres.reord SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
+#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -148,19 +148,19 @@ geo.phylo2 <- function(rast.branch, range.branch, filename = NULL){
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' range <- inv.range(data$pres.reord, data$branch.length)
-#' rast.pd(data$pres.reord, data$branch.length)
+#' range <- inv.range(data$x, data$branch.length)
+#' rast.pd(data$x, data$branch.length)
 #' }
-rast.pd <- function(pres.reord, branch.length, filename = NULL, ...){
+rast.pd <- function(x, branch.length, filename = NULL, ...){
 
-  if(!all.equal(names(pres.reord), names(branch.length))){
-    stop("Species names are not in the same order on 'pres.reord' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
   }
 
-  if(all.equal(names(pres.reord), names(branch.length))){ # to check wether names match
+  if(all.equal(names(x), names(branch.length))){ # to check wether names match
 
     # phylogenetic diversity and richness-relative phylogenetic diversity
-    rpd <- terra::app(pres.reord, fun = .vec.pd,
+    rpd <- terra::app(x, fun = .vec.pd,
                       branch.length = branch.length)
     names(rpd) <- c("PD", "PDR")
   }
@@ -176,7 +176,7 @@ rast.pd <- function(pres.reord, branch.length, filename = NULL, ...){
 #'
 #' Calculate phylogenetic endemism using rasters as input and output.
 #'
-#' @param pres.reord SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
+#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -188,17 +188,17 @@ rast.pd <- function(pres.reord, branch.length, filename = NULL, ...){
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' rast.pe(data$pres.reord, data$branch.length)
+#' rast.pe(data$x, data$branch.length)
 #' }
-rast.pe <- function(pres.reord, branch.length, filename = NULL, ...){
+rast.pe <- function(x, branch.length, filename = NULL, ...){
 
-  if(!all.equal(names(pres.reord), names(branch.length))){
-    stop("Species names are not in the same order on 'pres.reord' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
   }
 
-  if(all.equal(names(pres.reord), names(branch.length))){ # to check wether names match
+  if(all.equal(names(x), names(branch.length))){ # to check wether names match
 
-    area.branch <- phylogrid::inv.range(pres.reord = pres.reord, branch.length = branch.length)
+    area.branch <- phylogrid::inv.range(x, branch.length)
 
     # phylogenetic endemism
     message("Calculating the phylogenetic endemism")
@@ -229,7 +229,7 @@ rast.pe <- function(pres.reord, branch.length, filename = NULL, ...){
 #'
 #' Calculate weighted endemism using rasters as input and output.
 #'
-#' @param pres.rast SpatRaster. A presence-absence SpatRaster with 0 representing absence and 1 representing presence.
+#' @param x SpatRaster. A presence-absence SpatRaster with 0 representing absence and 1 representing presence.
 #' @param range.size Named numeric vector. A vector containing range size. See the function phylogrid::range.size.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -243,13 +243,13 @@ rast.pe <- function(pres.reord, branch.length, filename = NULL, ...){
 #' rs <- phylogrid::range.size(ras)
 #' rast.we(ras, rs)
 #' }
-rast.we <- function(pres.rast, range.size, filename = NULL, ...){
+rast.we <- function(x, range.size, filename = NULL, ...){
 
   temp <- vector("list", length = 1) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
   # inverse of range size
-  inv.R <- terra::ifel(pres.rast == 0, 0, 1/(pres.rast * range.size),
+  inv.R <- terra::ifel(x == 0, 0, 1/(x * range.size),
                        filename = temp[[1]], overwrite = TRUE) # calculating the inverse of range size
   # weighted endemism
   { # calculating we

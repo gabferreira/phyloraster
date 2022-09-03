@@ -7,14 +7,12 @@
 Rosauer, 2017. Available on: \url{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data}
 }
 \usage{
-load.data.rosauer(x)
-}
-\arguments{
-\item{x}{a data.frame with coordinates and presence-absence data, and a phylogenetic tree.}
+load.data.rosauer()
 }
 \value{
 data.frame and phylo
 }
 \description{
-This function load a phylogenetic tree and a dataset with presence-absence of 33 Australian tree frogs from Rosauer (2017). Also provides coordinates to each site.
+This function load a phylogenetic tree and a dataset with presence-absence of
+33 Australian tree frogs from Rosauer (2017). Also provides coordinates to each site.
 }

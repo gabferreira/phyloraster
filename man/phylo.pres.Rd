@@ -4,10 +4,10 @@
 \alias{phylo.pres}
 \title{Reorder stack according to tree order and get branch length}
 \usage{
-phylo.pres(pres.stack, tree)
+phylo.pres(x, tree)
 }
 \arguments{
-\item{pres.stack}{SpatRaster. A raster of presence-absence}
+\item{x}{SpatRaster. A raster of presence-absence}
 
 \item{tree}{phylo. A dated tree}
 }
