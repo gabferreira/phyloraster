@@ -23,7 +23,7 @@
 #'
 #' @param x SpatRaster. A presence-absence SpatRaster.
 #' @param aleats numeric. A number indicating how many times the calculation should be repeated.
-#' @param random character. Character indicating the type of randomization to be used. The available types are by "tip", "site", "specie" or "fullspat".
+#' @param random character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".
 #' @return SpatRaster
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @export
