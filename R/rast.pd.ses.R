@@ -19,10 +19,9 @@
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylogrid::phylo.pres(ras, tree)
-#' t <- phylogrid::rast.pe.ses(ras, data$branch.length, aleats = 10, random = "fullspat")
+#' t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
 #' plot(t)
 #' }
-#'
 rast.pd.ses <- function(x, branch.length, aleats,
                         random = c("tip", "site", "specie", "fullspat"), filename = NULL){
 
@@ -131,12 +130,12 @@ rast.pd.ses <- function(x, branch.length, aleats,
   }
 
   ### Concatenate rasters
-  pd <- c(pd.obs, pd.rand.mean, pd.rand.sd)
+  pd <- c(pd.rand.mean, pd.rand.sd, pd.obs)
 
   ## Calculating the standard effect size (SES)
   {
     ses <- function(x){
-      (x[1] - x[2])/sqrt(x[3])
+      (x[1] - x[2])/x[3]
     }
     pd.ses <- terra::app(c(pd.obs, pd.rand.mean, pd.rand.sd),
                          ses)
@@ -144,7 +143,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
   }
 
   out <- c(pd, pd.ses)
-  names(out) <- c("PD Observed", "Mean", "SD", "SES")
+  names(out) <- c("Mean", "SD", "PD Observed", "SES")
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
     out <- terra::writeRaster(out, filename, ...)
@@ -279,12 +278,12 @@ rast.pd.ses.v2 <- function(x, branch.length, aleats,
   }
 
   ### Concatenate rasters
-  pd <- c(pd.obs, pd.rand.mean, pd.rand.sd)
+  pd <- c(pd.rand.mean, pd.rand.sd, pd.obs)
 
   ## Calculating the standard effect size (SES)
   {
     ses <- function(x){
-      (x[1] - x[2])/sqrt(x[3])
+      (x[1] - x[2])/x[3]
     }
     pd.ses <- terra::app(c(pd.obs, pd.rand.mean, pd.rand.sd),
                          ses)
@@ -292,7 +291,7 @@ rast.pd.ses.v2 <- function(x, branch.length, aleats,
   }
 
   out <- c(pd, pd.ses)
-  names(out) <- c("PD Observed", "Mean", "SD", "SES")
+  names(out) <- c("Mean", "SD", "SES", "PD Observed")
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
     out <- terra::writeRaster(out, filename, ...)

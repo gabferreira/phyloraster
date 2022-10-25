@@ -1,4 +1,4 @@
-#' Calculate phylogenetic endemism for a raster
+#' Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster
 #'
 #' Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
 #'
@@ -11,10 +11,11 @@
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 .rast.pe.B <- function(x, branch.length, filename = NULL, ...){
+
   {
     # criei a função .rast.pe.B que não retorna mensagem de erro quando
     # nomes sao diferentes, ao contrario da rast.pe. Assim é possivel rodar o
-    # modelo nulo sem gerar erro pq os nomes sao diferentes no bl e pres.reord.
+    # modelo nulo sem gerar erro pq os nomes sao diferentes no bl e x
 
     area.branch <- phylogrid::inv.range(x, branch.length)
 
@@ -31,6 +32,7 @@
   }
 
   names(rpe) <- c("PE")
+
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
     rpe <- terra::writeRaster(rpe, filename, ...)
@@ -148,16 +150,23 @@ rast.pe.ses <- function(x, branch.length, aleats,
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
   pe.rand.sd <- terra::stdev(pe.rand, na.rm = TRUE, filename = filename) # sd pd
 
+
   unlink(temp) # delete the archive that will not be used
 
   ## Calculating the standard effect size (SES)
-  ses <- function(x, y, z){
-    (x - y)/z
+  {
+    ses <- function(x){
+      (x[1] - x[2])/x[3]
+    }
+    pe.ses <- terra::app(c(pe.obs, pe.rand.mean, pe.rand.sd), fun = ses)
   }
-  pe.ses <- ses(x = pe.obs, y = pe.rand.mean, z = pe.rand.sd)
   names(pe.ses) <- "SES"
-
   out <- c(pe.obs, pe.rand.mean, pe.rand.sd, pe.ses)
   names(out) <- c("PE Observed", "Mean", "SD", "SES" )
+
+  if (!is.null(filename)){ # to save the rasters when the path is provide
+    out <- terra::writeRaster(out, filename, ...)
+  }
+
   return(out)
 }

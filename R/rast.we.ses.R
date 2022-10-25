@@ -20,83 +20,83 @@ rast.we.ses <- function(x, aleats,
                         random = c("area.size", "site", "specie", "fullspat"),
                         filename = NULL){
 
-    aleats <- aleats # number of randomizations
-    temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
-    rs <- range.size(x) # Calculating area
+  aleats <- aleats # number of randomizations
+  temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
+  rs <- range.size(x) # Calculating area
 
 
   ## Null model (bootstrap structure)
-    if(random == "area.size"){
+  if(random == "area.size"){
 
-      we.rand <- list() # to store the rasters in the loop
+    we.rand <- list() # to store the rasters in the loop
 
-      for(i in 1:aleats){
-        rs.random <- sample(rs, replace = TRUE) # randomize the range size
-        ## check if the values are differents
-        # rs == rs.random
+    for(i in 1:aleats){
+      rs.random <- sample(rs, replace = TRUE) # randomize the range size
+      ## check if the values are differents
+      # rs == rs.random
 
-        temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
+      temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
 
-        we.rand[[i]] <- rast.we(pres.rast = x, range.size = rs.random,
-                                filename = temp[[i]])
-      }
-
-      we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-    } else if(random == "site"){
-
-      we.rand <- list() # to store the rasters in the loop
-
-      for(i in 1:aleats){
-        # temporary names to rasters
-        temp[[i]] <- paste0(tempfile(), i, ".tif")
-
-        ### embaralha por lyr - ordem dos sítios de cada espécie separada
-        site.rand <- spat.rand(x, aleats = 1, random = "site")
-
-        we.rand[[i]] <- rast.we(site.rand, range.size = rs,
-                                filename = temp[[i]])
-      }
-
-      we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-    } else if(random == "specie"){
-
-      ### randomize by cells - species in each site
-      we.rand <- list() # to store the rasters in the loop
-
-      for(i in 1:aleats){
-        temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
-        sp.rand <- spat.rand(x, aleats = 1, random = "specie")
-
-        we.rand[[i]] <- rast.we(sp.rand, range.size = rs,
-                                filename = temp[[i]])
-      }
-
-      we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-    } else if (random == "fullspat") {
-
-      we.rand <- list() # to store the rasters in the loop
-      fr <- terra::freq(x)
-
-      for(i in 1:aleats){
-
-        temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
-        ### randomize sites and species
-        full.rand <- spat.rand(x, aleats = 1, random = "fullspat")
-
-        we.rand[[i]] <- rast.we(full.rand, range.size = rs, filename = temp[[i]])
-
-      }
-
-      we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-    } else {
-      stop("Choose a valid randomization method! The methods currently available are: 'site', 'specie', 'fullspat'.")
+      we.rand[[i]] <- rast.we(pres.rast = x, range.size = rs.random,
+                              filename = temp[[i]])
     }
+
+    we.rand <- terra::rast(we.rand) # to transform a list in raster
+
+  } else if(random == "site"){
+
+    we.rand <- list() # to store the rasters in the loop
+
+    for(i in 1:aleats){
+      # temporary names to rasters
+      temp[[i]] <- paste0(tempfile(), i, ".tif")
+
+      ### embaralha por lyr - ordem dos sítios de cada espécie separada
+      site.rand <- spat.rand(x, aleats = 1, random = "site")
+
+      we.rand[[i]] <- rast.we(site.rand, range.size = rs,
+                              filename = temp[[i]])
+    }
+
+    we.rand <- terra::rast(we.rand) # to transform a list in raster
+
+  } else if(random == "specie"){
+
+    ### randomize by cells - species in each site
+    we.rand <- list() # to store the rasters in the loop
+
+    for(i in 1:aleats){
+      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
+
+      sp.rand <- spat.rand(x, aleats = 1, random = "specie")
+
+      we.rand[[i]] <- rast.we(sp.rand, range.size = rs,
+                              filename = temp[[i]])
+    }
+
+    we.rand <- terra::rast(we.rand) # to transform a list in raster
+
+  } else if (random == "fullspat") {
+
+    we.rand <- list() # to store the rasters in the loop
+    fr <- terra::freq(x)
+
+    for(i in 1:aleats){
+
+      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
+
+      ### randomize sites and species
+      full.rand <- spat.rand(x, aleats = 1, random = "fullspat")
+
+      we.rand[[i]] <- rast.we(full.rand, range.size = rs, filename = temp[[i]])
+
+    }
+
+    we.rand <- terra::rast(we.rand) # to transform a list in raster
+
+  } else {
+    stop("Choose a valid randomization method! The methods currently available are: 'site', 'specie', 'fullspat'.")
+  }
 
   ## WE observed
   we.obs <- rast.we(pres.rast = x, range.size = rs, filename = filename)
@@ -110,12 +110,17 @@ rast.we.ses <- function(x, aleats,
   ## Calculating the standard effect size (SES)
   {
     ses <- function(x){
-      (x[1] - x[2])/sqrt(x[3])
+      (x[1] - x[2])/x[3]
     }
     we.ses <- terra::app(c(we.obs, we.rand.mean, we.rand.sd), fun = ses)
-    names(we.ses) <- "SES"
   }
+  names(we.ses) <- "SES"
   out <- c(we.obs, we.rand.mean, we.rand.sd, we.ses)
   names(out) <- c("WE Observed", "Mean", "SD", "SES" )
+
+  if(!is.null(filename)){ # to save the rasters when the path is provide
+    out <- terra::writeRaster(out, filename, ...)
+  }
+
   return(out)
 }
