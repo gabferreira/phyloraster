@@ -15,6 +15,11 @@
 #' }
 
 phylo.pres <- function(x, tree) {
+
+  if(ape::is.rooted(tree) == FALSE){
+    warning("A rooted phylogeny is required for meaningful output of this function",
+            call. = FALSE)
+  }
   spat.names <- as.character(names(x)) # to extract species names in the raster
   tree.phy4 <- phylobase::phylo4(tree) # transform phylo in phylo4 class
   labels <- as.character(phylobase::tipLabels(tree.phy4)) # extracting species names in the tree
@@ -27,9 +32,18 @@ phylo.pres <- function(x, tree) {
     x <- stack.reord
   }
   subtree <- phylobase::phylo4(subtree) # phylo in phylo4
+
+  # Get branch length
   branch.length <- as.numeric(phylobase::edgeLength(subtree,
                                                     1:phylobase::nTips(subtree))) # extract branch lengths
   names(branch.length) <- names(x) # add names
-  pp <- list(x = x, branch.length = branch.length, tree = subtree)
+
+  # Get descendant node numbers
+  n.descen <- as.numeric(phylobase::ancestor(subtree,
+                                             1:phylobase::nTips(subtree)))
+  names(n.descen) <- labels # add names
+  bl.desc <- branch.length / n.descen
+
+  pp <- list(x = x, branch.length = branch.length, n.descendents = n.descen, bl.desc = bl.desc, tree = subtree)
   return(pp)
 }
