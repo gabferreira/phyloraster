@@ -2,20 +2,18 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo}
 \alias{geo.phylo}
-\title{Calculate phylogenetic diversity, phylogenetic endemism and WE for a raster}
+\title{Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism for a raster}
 \usage{
-geo.phylo(x, area.inv, area.tips, branch.length, filename = NULL, ...)
+geo.phylo(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
 
-\item{area.inv}{SpatRaster. A presence-absence SpatRaster with the inverse of the area for each specie.}
-
-\item{area.tips}{SpatRaster. A presence-absence SpatRaster with the inverse of the area vs branch length.}
-
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
 
 \item{filename}{character. Output filename.}
+
+\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -30,8 +28,7 @@ Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism us
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-range <- inv.range(data$x, data$branch.length)
-geo.phylo(data$x, range$inv.R, range$LR, data$branch.length)
+geo.phylo(data$x, data$branch.length, cores = 1)
 }
 }
 \references{
