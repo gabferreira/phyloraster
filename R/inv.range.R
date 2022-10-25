@@ -5,14 +5,8 @@
 #' @param filename character. A vector containing the path in your personal computer to save the rasters
 #' @return SpatRaster and numeric
 #' @export
-#' @examples
-#' \dontrun{
-#' library(phylogrid)
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(ras, tree)
-#' inv.range(data$pres.reord, data$branch.length)
-#'}
+#'
+
 inv.range <- function(x, branch.length, filename = NULL){
 
   # temporary files
@@ -35,12 +29,11 @@ inv.range <- function(x, branch.length, filename = NULL){
     area.to <- terra::expanse(terra::ifel(any(!is.na(x)), 1, NA)) #  to calculate area total
 
     # The function bellow extracts the range size for each species and stores it in a vector
-    rs <- sapply(1:terra::nlyr(x),
-                 function(i, a, Z){
-                   az <- terra::zonal(a, Z[[i]], sum)
-                   az <- az[az[,1]==1,2]
-                   ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
-                 }, a= area, Z=x)
+    rs <- sapply(1:terra::nlyr(x), function(i, a, Z){
+      az <- terra::zonal(a, Z[[i]], sum)
+      az <- az[az[,1]==1,2]
+      ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
+    }, a= area, Z=x)
 
     rs[] <- rs/area.to # to reescale
     names(rs) <- names(x) # to add names
