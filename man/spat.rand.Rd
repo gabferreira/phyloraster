@@ -11,7 +11,7 @@ spat.rand(x, aleats, random = c("site", "specie", "fullspat"))
 
 \item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
 
-\item{random}{character. Character indicating the type of randomization to be used. The available types are by "tip", "site", "specie" or "fullspat".}
+\item{random}{character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".}
 }
 \value{
 SpatRaster
