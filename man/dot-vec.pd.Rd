@@ -4,10 +4,10 @@
 \alias{.vec.pd}
 \title{Calculate phylogenetic diversity (Faith 1992) for a vector}
 \usage{
-.vec.pd(pres.ab, branch.length)
+.vec.pd(x, branch.length)
 }
 \arguments{
-\item{pres.ab}{numeric. A Named numeric vector of presence-absence}
+\item{x}{numeric. A Named numeric vector of presence-absence}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for each specie}
 }
