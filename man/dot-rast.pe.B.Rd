@@ -2,7 +2,7 @@
 % Please edit documentation in R/rast.pe.ses.R
 \name{.rast.pe.B}
 \alias{.rast.pe.B}
-\title{Calculate phylogenetic endemism for a raster}
+\title{Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster}
 \usage{
 .rast.pe.B(x, branch.length, filename = NULL, ...)
 }
