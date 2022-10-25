@@ -2,9 +2,9 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pe}
 \alias{rast.pe}
-\title{Calculate phylogenetic endemism (PE) for a raster}
+\title{Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster}
 \usage{
-rast.pe(x, branch.length, filename = NULL, ...)
+rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
@@ -13,13 +13,15 @@ rast.pe(x, branch.length, filename = NULL, ...)
 
 \item{filename}{character. Output filename.}
 
+\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
+
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate phylogenetic endemism using rasters as input and output.
+Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
 }
 \examples{
 \dontrun{

@@ -2,16 +2,16 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.we}
 \alias{rast.we}
-\title{Calculate Weighted Endemism (WE) for a raster}
+\title{Calculate Weighted Endemism (WE. Williams et al. 1994, Crisp et al. 2001) for a raster}
 \usage{
-rast.we(x, range.size, filename = NULL, ...)
+rast.we(x, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with 0 representing absence and 1 representing presence.}
 
-\item{range.size}{Named numeric vector. A vector containing range size. See the function phylogrid::range.size.}
-
 \item{filename}{character. Output filename.}
+
+\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -19,13 +19,12 @@ rast.we(x, range.size, filename = NULL, ...)
 SpatRaster
 }
 \description{
-Calculate weighted endemism using rasters as input and output.
+Calculate weighted endemism following (Williams et al. 1994, Crisp et al. 2001) using rasters as input and output
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-rs <- phylogrid::range.size(ras)
-rast.we(ras, rs)
+rast.we(ras)
 }
 }
 \references{

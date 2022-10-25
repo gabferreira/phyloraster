@@ -4,7 +4,7 @@
 \alias{rast.pd}
 \title{Calculate phylogenetic diversity (PD. Faith, 1992) for a raster}
 \usage{
-rast.pd(x, branch.length, filename = NULL, ...)
+rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
@@ -12,6 +12,8 @@ rast.pd(x, branch.length, filename = NULL, ...)
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
 
 \item{filename}{character. Output filename.}
+
+\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
