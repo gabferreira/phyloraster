@@ -1,165 +1,259 @@
 ---
-title: "```phylogrid``` Vignette"
-author: "Gabriela Alves-Ferreira and Neander Heming"
-output: rmarkdown::html_vignette
-vignette: > 
-  %\VignetteIndexEntry{phylogrid-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "phylogrid Vignette"
+author: "Gabriela Alves-Ferreira, Neander Heming"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+vignette: "%\\VignetteIndexEntry{phylogrid-vignette} %\\VignetteEngine{knitr::rmarkdown}
+  %\\VignetteEncoding{UTF-8}\n"
 ---
-  
-## Introduction
-  
-The goal of ```phylogrid``` package is to calculate phylogenetic indices, such as phylogenetic diversity (PD, Faith 1992), phylogenetic endemism (PE, Rosauer et al. 2009) and weighted endemism (WE) for presence-absence rasters and return the result in a raster.
 
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r setup, echo = FALSE, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning=FALSE,comment = "#>")
 ```
 
-### Before starting, you will need to load the following packages and install ```phylogrid```.
+-   [Introduction](#intro)
+-   [Installation](#install)
+-   [Data processing](#data)
+-   [Analysis](#analysis)
+-   [Null Models](#null)
+-   [References](#references)
 
-### Installation
+## Introduction {#intro}
 
-``` {r{}
-library ("devtools")
-devtools::install_github("gabferreira/phylogrid")
+[`phylogrid`](https://github.com/gabferreira/phylogrid) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
+A lot of packages such as `phyloregion` (Daru et al., 2020), `picante` (Kembel et al., 2010) and `pez` (Pearse et al. 2015) can be used to calculate patterns of endemism and evolutionary diversity. However, most of these packages use matrices that can be very computationally expensive. `phylorgid` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, thus reducing the amount of RAM required for data processing.
+In addition, `phylogrid` implements spatial randomization methods that allows to simulate new communities that vary in richness patterns (Kembel 2009, Kembel et al. 2010). The user can applying these methods of randomization to test hypotheses about the community structure when richness patterns are correlated with evolutionary patterns (Kembel et al. 2010). In this vignette, we demonstrate the use of the functions of the `phylogrid` package in detail.
+
+## Installation {#install}
+
+The development version of `phylogrid` can be downloaded from [GitHub](https://github.com/gabferreira/phylogrid). If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phylogrid/issues). To install the package, run the following code:
+
+```{r}
+devtools::load_all()
+#devtools::install_github("gabferreira/phylogrid")
+# library(phylogrid) 
 ```
 
-```{r setup, warning = FALSE, message = FALSE}
+`phylogrid` uses some R packages as dependencies such as `terra` (Hijmans 2022), `ape` (Paradis and Schliep 2019) and `phylobase` (Hackathon et al. 2020). Once installed, packages can be loaded into R using `library()`:
+
+```{r, warning = FALSE, message = FALSE}
 library(phylogrid)
 library(terra)
 library(ape)
+library(phylobase)
 ```
 
-### Steps to calculte PD, PE and WE using ```phylogrid```
+## Data processing {#data}
 
-1. First, load phylogenetic and spatial data.
+The functions of `phylogrid` are focused on pre-processing and processing of macroecological and phylogenetic data. In the first stage, we offer support to manipulate matrices, shapefiles, rasters, and phylogenetic trees. In the processing phase, we implemented functions to calculate Faith's phylogenetic diversity (Faith 1994), phylogenetic endemism (Rosauer et al. 2009) and weighted endemism (Williams et al. 1994).
 
-The package provides an internal dataset containing distribution data and a phylogenetic tree for 33 tree frog species in Australia (Rosauer 2017). This raw dataset can be accessed at:
-<https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data>
+-   **Dataset**
 
-We can load the internal data with the following code:
+The package contains one dataset that allows visualizing the structure expected to matrices, rasters, shapefiles and phylogenetic trees and can be accessed using the function `load.data.rosauer()`. This dataset contains a `data.frame` with presence records for 33 Australian tree frogs with coordinates for each site (Rosauer 2017) and a phylogenetic tree for these species (Rosauer 2017). This raw dataset can be accessed [here](https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data). The function also provide a binary raster of presence absence and a shapefile with the range of 27 species following IUCN spatial data.
+
+```{r}
+data <- load.data.rosauer()
+head(data$presab)
+```
+
+```{r}
+data$tree
+```
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(data$tree, cex = 0.65)
+```
+
+-   **Function** `df2rast`
+
+The function `df2rast` converts traditional communities matrices (i.e. species in columns and sites in rows, with coordinates in the two first columns) into binary distribution rasters (presence and absence).
+
+```{r}
+data <- load.data.rosauer()
+r <- df2rast(x = data$presab)
+class(r)
+```
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+plot(r)
+```
+
+-   **Function** `shp2rast`
+
+The `shp2rast` function transform a shapefile to a raster stack with the same extent.
+This function allows to work, for example, with the shapes of species distribution provided by the [International Union for the Conservation of Nature's Spatial Database](https://www.iucnredlist.org/resources/spatial-data-download). We provide a set of shapefiles for 27 species of Australian tree frogs. You can visualize this data through the following code:
+
+```{r}
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
+```
+
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+colors <- rainbow(length(unique(shp$BINOMIAL)),
+                  alpha = 0.5)
+position <- match(shp$BINOMIAL,
+                  unique(shp$BINOMIAL))
+colors <- colors[position]
+plot(shp, col = colors, lty = 0,
+     main = "Spatial polygons")
+maps::map(add = TRUE)
+```
+
+```{r, message = F}
+spps <- shp$BINOMIAL
+r2 <- shp2rast(shp = shp, sps = spps, resolution = 0.1)
+r2
+```
+
+-   **Function** `phylo.pres`
+
+
+
+To calculate evolutionary measurements it is extremely important that the raster with species distributions and the tree have the species names in the same order. 
+We can verify this using a simple logical test like this.
+```{r}
+data <- load.data.rosauer()
+names(data$raster) == data$tree$tip.label
+```
+The function `phylo.pres` reorder the raster stack according to phylogenetic tree order, extract a subtree containing only species present in the raster stack and get the branch length for each species.
 
 ```{r}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-```
-
-Visualize the loaded data:
-
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(ras)
-```
-
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(tree, cex = 0.65)
-```
-
-To calculate PD and PE it is extremely important that the stack and the tree have the species names in the same order. We can verify this using a logical test like this.
-
-```{r}
-names(ras) == tree$tip.label
-```
-
-```{r}
-all.equal(names(ras), tree$tip.label)
-```
-
-2. As we can see, the stack and the tree are not in the same order. Therefore, the next function will sort the stack according to the tree order and extract the branch lengths for each species.
-
-```{r}
 dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
-dataprep$x
-dataprep$branch.length
 ```
 
-Visualize the ordered stack:
-
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(dataprep$x)
-```
-
-Here, we have the branch length for each specie.
-
-```{r}
-dataprep$branch.length
-```
-
-Now, the stack and tree are in the same order. All rigth!!
+Now, the raster stack and the tip label of the tree are in the same order!
 
 ```{r}
 names(dataprep$x) == tree$tip.label
 ```
 
-```{r}
-all.equal(names(dataprep$x), tree$tip.label)
-```
+## Analysis {#analysis}
 
-3. After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
+Great!! Now, we are already able to calculate the measures of endemism and evolutionary diversity.
 
-```{r}
-range <- phylogrid::inv.range(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
-range
-```
+-   **Endemism measurements**
 
-This function returns:
-
-• A vector with the area size for each species:
-
-```{r}
-range$area.size
-```
-
-• A raster with the inverse of the range size:
-
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(range$inv.R)
-```
-
-• A raster with the inverse of the size of the range multiplied by the branch length:
-
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
-plot(range$LR)
-```
-
-4. Great!! Now, we are already able to calculate PD, PE and WE.
+The `phylogrid` package implements functions for calculating spatial patterns of endemism based on the weighted endemism method (WE; Williams et al. 1994, Crisp et al. 2001) through the function `rast.we`. The function returns a raster with the values of weighted endemism by each pixel. Endemism values range from 0 to 1.
 
 ```{r, warning= FALSE}
-pg <- phylogrid::geo.phylo(x = dataprep$x, area.inv = range$inv.R,
-                           area.tips = range$LR, branch.length = dataprep$branch.length, filename = NULL)
-pg
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+wer <- phylogrid::rast.we(x = ras, filename = NULL)
+wer
 ```
 
-Here we have the rasters with a:
-
-• Raster of phylogenetic diversity:
+By using the R plot function from `terra` package it is possible to visualize the regions where species with restricted range are distributed.
 
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-pg$PD
-plot(pg$PD, main="Phylogenetic diversity")
+wer$WE
+plot(wer$WE, main="Weigthed Endemism")
 ```
 
-• Raster of phylogenetic diversity related with richness:
+-   **Evolutionary measurements**
+
+The first evolutionary measure is Faith's phylogenetic diversity (PD, Faith 1994), which is calculated as the sum of the branch length for all species occurring in a given region (Faith 1994).
+
+```{r, warning= FALSE}
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+
+pdr <- phylogrid::rast.pd(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
+pdr[[1]]
+```
 
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-pg$PD
-plot(pg$PD, main="Phylogenetic Diversity Richness Related")
+plot(pdr$PD, main="Phylogenetic diversity")
 ```
 
-• Raster of weigthed endemism:
+The second measure is phylogenetic endemism (PE, Rosauer et al. 2009), which calculates the degree to which PD are restricted to a specific region (Rosauer et al. 2009). The function `rast.pe` returns a raster layer containing PE the region of interest.
+
+```{r, warning= FALSE}
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+
+per <- phylogrid::rast.pe(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
+per
+```
+
+The result can be visualized using the R `plot` function from the `terra` package.
 
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-pg$WE
-plot(pg$WE, main="Weigthed Endemism")
+plot(per$PE, main="Phylogenetic Endemism")
 ```
 
-• Raster of phylogenetic endemism:
+## Null models {#null}
+
+Null models are a widely used method to control for richness effects in diversity measures (Gotelli and Graves, 1996, Gotelli and Ulrich 2012). The standardized effect size (SES) measure, also known as z-score or z-value, is used to calculate null models from randomization tests (Gotelli and McCabe 2002). `phylogrid` implements three methods to calculate SES using spatial and phylogenetic randomization: rast.pe.ses, rast.pd.ses, and rast.we.ses.
+
+-   **Spatial and phylogenetic randomization**
+
+The function `spat.rand` randomizes raster stacks based on observed frequency of presence and absences through three different methods (site, species or full spat: site and species). The first method keeps species richness constant in each pixel, but randomizes the position of species in the stack.
+
+```{r}
+aleats = 10
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+sr <- spat.rand(ras, aleats = 10, random = "site")
+```
 
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-pg$PE
-plot(pg$PE, main="Phylogenetic Endemism")
+plot(sr)
 ```
+
+In the second method, the order of species in the stack is kept constant, but the pixels where each species are present are randomized in space.
+
+```{r}
+aleats = 10
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+ss <- spat.rand(ras, aleats = 10, random = "specie")
+```
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+plot(ss)
+```
+
+In the third method, both the order of species in the stack and the pixels where each species is present are randomized in space.
+
+```{r}
+aleats = 10
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+sa <- spat.rand(ras, aleats = 10, random = "fullspat")
+```
+
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+plot(sa)
+```
+
+To phylogenetic randomization, we provide the function `tip.rand` that shuffle branch length across all taxas. The function returns a list with the lenght of randomizations.
+
+```{r}
+aleats = 10
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+d <- phylo.pres(x = ras, tree = tree)
+sa <- tip.rand(d$branch.length, aleats = 10)
+d$branch.length == sa[[1]]
+```
+
+Now that we have presented the randomization methods, we can start to build the null models.
+
+```{r}
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+data <- phylogrid::phylo.pres(ras, tree)
+
+t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
+```
+
+Plotting the results
+```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+plot(t)
+```
+
+## References {#references}
