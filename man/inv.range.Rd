@@ -19,12 +19,3 @@ SpatRaster and numeric
 \description{
 Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast
 }
-\examples{
-\dontrun{
-library(phylogrid)
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylo.pres(ras, tree)
-inv.range(data$pres.reord, data$branch.length)
-}
-}
