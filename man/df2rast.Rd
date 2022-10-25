@@ -4,10 +4,12 @@
 \alias{df2rast}
 \title{Transform data.frame to raster}
 \usage{
-df2rast(x)
+df2rast(x, resolution = NULL)
 }
 \arguments{
 \item{x}{data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide x and y coordinates.}
+
+\item{CRS}{character. A coordinate reference system (projection) for a Raster object.}
 }
 \value{
 SpatRaster
@@ -17,7 +19,9 @@ Transform data.frame to raster
 }
 \examples{
 \dontrun{
-dat <- phylogrid::dataR
-df.to.rast(dat)
+dat <- phylogrid::load.data.Rosauer
+df2rast(dat, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 }
+
+
 }
