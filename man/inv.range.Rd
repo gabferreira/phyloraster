@@ -11,7 +11,7 @@ inv.range(x, branch.length, filename = NULL)
 
 \item{branch.length}{numeric. A vector containing the branch length of each specie.}
 
-\item{character.}{Output filename.}
+\item{filename}{character. Output filename.}
 }
 \value{
 SpatRaster and numeric

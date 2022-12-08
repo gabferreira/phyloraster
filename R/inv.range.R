@@ -3,7 +3,7 @@
 #' @description Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
 #' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
 #' @param branch.length numeric. A vector containing the branch length of each specie.
-#' @param  character. Output filename.
+#' @param filename character. Output filename.
 #' @return SpatRaster and numeric
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @export
