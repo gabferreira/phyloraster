@@ -24,18 +24,14 @@ phylo.pres <- function(x, tree) {
   labels <- as.character(phylobase::tipLabels(tree.phy4)) # extracting species names in the tree
   on.tree <- intersect(spat.names, labels) # species of the raster that are in the tree
   subtree <- ape::keep.tip(tree, on.tree) # to make a subset of the tree and keep only the species that are in the raster
-
-  cbind(names(x) , subtree$tip.label)
-unique(subtree[["tip.label"]])
-unique(names(x))
-names(x)
-
   stack.reord <- x[[subtree[["tip.label"]]]] # to reorder the stack according to the tree
+
   if(!class(stack.reord) == "SpatRaster"){ # class "Raster" in "SpatRaster"
     x <- terra::rast(stack.reord)
   } else {
     x <- stack.reord
   }
+
   subtree <- phylobase::phylo4(subtree) # phylo in phylo4
 
   # Get branch length
