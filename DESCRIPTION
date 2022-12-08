@@ -1,6 +1,7 @@
 Package: phylogrid
-Title: Calculate phylogenetic indices for rasters
-Version: 0.0.1.0000
+Title: Calculating community metrics for each raster cell
+Version: 0.0.5.0000
+StagedInstall: no 
 Authors@R: 
     person(given = "Gabriela",
            family = "Alves-Ferreira",
@@ -16,7 +17,8 @@ RoxygenNote: 7.1.1
 Imports: 
     terra,
     ape,
-    phylobase
+    phylobase,
+    devtools
 Depends: 
     R (>= 2.10)
 Suggests: 
