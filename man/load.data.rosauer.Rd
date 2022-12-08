@@ -4,15 +4,16 @@
 \alias{load.data.rosauer}
 \title{Load an example dataset with presence-absence data of 33 tree frogs and a phylogenetic tree for this species}
 \source{
-Rosauer, 2017. Available on: \url{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data}
+Rosauer, 2017. Available on: \href{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data/}{Github}
+
+IUCN. 2022. The IUCN Red List of Threatened Species (spatial data). Version 2022-1. \href{https://www.iucnredlist.org}{IUCN}
 }
 \usage{
 load.data.rosauer()
 }
 \value{
-data.frame and phylo
+data.frame, SpatRaster, SpatVector and phylo
 }
 \description{
-This function load a phylogenetic tree and a dataset with presence-absence of
-33 Australian tree frogs from Rosauer (2017). Also provides coordinates to each site.
+This function load a phylogenetic tree, a raster and a data.frame with presence-absence of 33 Australian tree frogs from Rosauer (2017). We also provide distribution shapefiles for each species according to the IUCN.
 }

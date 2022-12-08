@@ -2,18 +2,18 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pd}
 \alias{rast.pd}
-\title{Calculate phylogenetic diversity (PD. Faith, 1992) for a raster}
+\title{Calculate phylogenetic diversity for each raster cell}
 \usage{
 rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
+\item{branch.length}{numeric. A Named numerical vector containing the branch length for a set of species.}
 
 \item{filename}{character. Output filename.}
 
-\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -21,17 +21,19 @@ rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
 SpatRaster
 }
 \description{
-Calculate phylogenetic diversity using rasters as input and output. This function follows Faith (1992).
+Calculate the sum of the branch length for species present in each cell of the raster.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-range <- inv.range(data$x, data$branch.length)
 rast.pd(data$x, data$branch.length)
 }
 }
 \references{
 Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+}
+\author{
+Neander Marcel Heming and Gabriela Alves-Ferreira
 }

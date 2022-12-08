@@ -4,16 +4,26 @@
 \alias{shp2rast}
 \title{Rasterize shapefile}
 \usage{
-shp2rast(shp, sps)
+shp2rast(shp, sps, resolution)
 }
 \arguments{
 \item{shp}{SpatialPolygonsDataFrame or a SpatVector. A shapefile representing species distribution}
 
 \item{sps}{vector. A vector of characters with unique (not duplicated) species names presents in the shapefile}
+
+\item{resolution}{numeric. A numeric vector of length 1 or 2 to set the resolution}
 }
 \value{
 SpatRaster
 }
 \description{
-The function transform a shapefile to a raster with the same extenction.
+The function transform a shapefile to a raster with the same extent.
+}
+\examples{
+\dontrun{
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
+spps <- shp$BINOMIAL
+shp2rast(dat$IUCN_shapefile, spps, resolution = 0.1)
+}
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/rast.we.ses.R
 \name{rast.we.ses}
 \alias{rast.we.ses}
-\title{Calculate Weighted Endemism (WE. Williams et al. 1994, Crisp et al. 2001) standardized for species richness}
+\title{Calculate weighted endemism standardized for species richness}
 \usage{
 rast.we.ses(
   x,
@@ -14,7 +14,7 @@ rast.we.ses(
 \arguments{
 \item{x}{SpatRaster. A SpatRaster of presence-absence.}
 
-\item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
+\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
 \item{random}{character. A character indicating what type of randomization. Could be by tip, site, specie or full spat(site and specie).}
 
@@ -24,13 +24,17 @@ rast.we.ses(
 SpatRaster
 }
 \description{
-The function calculates the WE corrected for species richness. In each null model run, richness is kept constant and range size of each species are randomized. The function provides the mean, standard deviation of all null models and also calculates the standardized effect size (SES).
+Calculates the standardized effect size for weighted endemism. The function has three different methods for spatial randomization. See Details for more information.
+}
+\details{
+The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 t <- rast.we.ses(ras, aleats = 10)
 }
+
 }
 \references{
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.

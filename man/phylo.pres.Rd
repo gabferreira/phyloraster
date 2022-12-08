@@ -2,20 +2,20 @@
 % Please edit documentation in R/phylo.pres.R
 \name{phylo.pres}
 \alias{phylo.pres}
-\title{Reorder stack according to tree order and get branch length}
+\title{Prepare rasters and phylogenetic tree to run community metrics}
 \usage{
 phylo.pres(x, tree)
 }
 \arguments{
-\item{x}{SpatRaster. A raster of presence-absence}
+\item{x}{SpatRaster. A stack containing binary presence-absence rasters for each species.}
 
-\item{tree}{phylo. A dated tree}
+\item{tree}{phylo. A dated tree.}
 }
 \value{
 SpatRaster, phylo and numeric vector
 }
 \description{
-Reorder stack according to tree order and get branch length
+Reorder stack according to tree order and get branch length for each species.
 }
 \examples{
 \dontrun{
@@ -23,4 +23,7 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 phylo.pres(ras, tree)
 }
+}
+\author{
+Neander Marcel Heming and Gabriela Alves Ferreira
 }

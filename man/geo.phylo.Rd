@@ -2,41 +2,60 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo}
 \alias{geo.phylo}
-\title{Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism for a raster}
+\title{Calculate community metrics for each raster cell}
 \usage{
-geo.phylo(x, branch.length, filename = NULL, cores = 1, ...)
+geo.phylo(
+  x,
+  tree,
+  metric = c("richness", "phylo.diversity", "evol.distinct", "phylo.endemism",
+    "weigh.endemism"),
+  filename = NULL,
+  cores = 1
+)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
+\item{tree}{phylo. A dated tree.}
+
+\item{metric}{character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.}
 
 \item{filename}{character. Output filename.}
 
-\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
-
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate phylogenetic diversity, phylogenetic endemism and weighted endemism using rasters as input and output.
+Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism using rasters as input and output.
+}
+\details{
+Community metrics available:
+\itemize{
+\item{Phylogenetic diversity (Faith 1992)}
+\item{Richness}
+\item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
+\item{Phylogenetic endemism (Rosauer et al. 2009)}
+\item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
+}
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylo.pres(ras, tree)
-geo.phylo(data$x, data$branch.length, cores = 1)
+geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1)
 }
+
 }
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 
 Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 }

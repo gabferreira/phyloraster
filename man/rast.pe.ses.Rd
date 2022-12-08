@@ -13,13 +13,13 @@ rast.pe.ses(
 )
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the branch.length order. See phylo.pres function.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie. See phylo.pres function.}
+\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
 
-\item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
+\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating what type of randomization. Could be by tip, site, specie or full spat(site and specie).}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are tip, site, specie or full spat (site and species).}
 
 \item{filename}{character. Output filename.}
 }
@@ -27,7 +27,10 @@ rast.pe.ses(
 SpatRaster
 }
 \description{
-The function calculates the PE corrected for species richness. In each null model run, richness is kept constant and branch lengths of each species are randomized. The function provides the mean and standard deviation of all null models and also calculates the standardized effect size (SES).
+Calculates the standardized effect size for phylogenetic endemism. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+}
+\details{
+The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
 }
 \examples{
 \dontrun{

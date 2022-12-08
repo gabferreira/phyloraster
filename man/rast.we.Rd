@@ -2,16 +2,16 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.we}
 \alias{rast.we}
-\title{Calculate Weighted Endemism (WE. Williams et al. 1994, Crisp et al. 2001) for a raster}
+\title{Calculate weighted endemism for each raster cell}
 \usage{
 rast.we(x, filename = NULL, cores = 1, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with 0 representing absence and 1 representing presence.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
 \item{filename}{character. Output filename.}
 
-\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -19,16 +19,20 @@ rast.we(x, filename = NULL, cores = 1, ...)
 SpatRaster
 }
 \description{
-Calculate weighted endemism following (Williams et al. 1994, Crisp et al. 2001) using rasters as input and output
+Calculate the sum of the inverse of the range size for species present in each raster cell.
 }
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 rast.we(ras)
 }
+
 }
 \references{
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
 Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+}
+\author{
+Neander Marcel Heming and Gabriela Alves Ferreira
 }

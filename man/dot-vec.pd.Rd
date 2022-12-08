@@ -7,16 +7,19 @@
 .vec.pd(x, branch.length)
 }
 \arguments{
-\item{x}{numeric. A Named numeric vector of presence-absence}
+\item{x}{numeric. A named numerical vector of presence-absence for one sample.}
 
-\item{branch.length}{numeric. A Named numeric vector of branch length for each specie}
+\item{branch.length}{numeric. A named numerical vector containing the branch length for each species.}
 }
 \value{
 numeric
 }
 \description{
-Calculate phylogenetic diversity (Faith 1992) for a vector
+This function calculates the sum of the branch length for a set of species for one sample.
 }
 \references{
 Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+}
+\author{
+Neander Marcel Heming and Gabriela Alves-Ferreira
 }

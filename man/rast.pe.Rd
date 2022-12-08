@@ -2,18 +2,18 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pe}
 \alias{rast.pe}
-\title{Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster}
+\title{Calculate phylogenetic endemism for each raster cell}
 \usage{
 rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
 
 \item{filename}{character. Output filename.}
 
-\item{cores}{numeric. A positive integer indicating the number of clusters used for parallelization}
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -21,7 +21,7 @@ rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
 SpatRaster
 }
 \description{
-Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
+Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
 }
 \examples{
 \dontrun{
@@ -32,5 +32,8 @@ rast.pe(data$x, data$branch.length)
 }
 }
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+}
+\author{
+Gabriela Alves-Ferreira and Neander Marcel Heming
 }

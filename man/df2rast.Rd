@@ -2,12 +2,12 @@
 % Please edit documentation in R/df2rast.R
 \name{df2rast}
 \alias{df2rast}
-\title{Transform data.frame to raster}
+\title{Transform a data.frame to raster}
 \usage{
-df2rast(x, resolution = NULL)
+df2rast(x, CRS)
 }
 \arguments{
-\item{x}{data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide x and y coordinates.}
+\item{x}{data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide longitude and latitude, respectively.}
 
 \item{CRS}{character. A coordinate reference system (projection) for a Raster object.}
 }
@@ -15,13 +15,11 @@ df2rast(x, resolution = NULL)
 SpatRaster
 }
 \description{
-Transform data.frame to raster
+The function transform a data.frame or a matrix of presence-absence in a raster of distribution.
 }
 \examples{
 \dontrun{
-dat <- phylogrid::load.data.Rosauer
-df2rast(dat, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+dat <- phylogrid::load.data.rosauer()
+df2rast(dat$presab, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 }
-
-
 }

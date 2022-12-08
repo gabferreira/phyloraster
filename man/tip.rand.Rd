@@ -2,20 +2,30 @@
 % Please edit documentation in R/tip.rand.R
 \name{tip.rand}
 \alias{tip.rand}
-\title{Randomize branch lengths for x times}
+\title{Randomize branch lengths for n times}
 \usage{
 tip.rand(x, aleats)
 }
 \arguments{
-\item{x}{numeric. A numeric vector.}
+\item{x}{numeric. A numeric vector containing the branch lengths.}
 
-\item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
+\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 }
 \value{
 list
 }
 \description{
-This function randomize branch lengths or another vector for a determined number of aleatorizations.
+This function randomize branch lengths or another vector for n times.
+}
+\examples{
+\dontrun{
+aleats = 10
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+data <- phylo.pres(x = ras, tree = tree)
+sa <- tip.rand(data$branch.length, aleats = 10)
+}
+
 }
 \author{
 Gabriela Alves-Ferreira

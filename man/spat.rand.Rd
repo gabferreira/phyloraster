@@ -17,7 +17,7 @@ spat.rand(x, aleats, random = c("site", "specie", "fullspat"))
 SpatRaster
 }
 \description{
-Randomize a set of rasters according to the observed frequency using the sites (by cells), species (by layer) or both (layers and cells).
+Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells).
 }
 \examples{
 \dontrun{

@@ -2,20 +2,23 @@
 % Please edit documentation in R/inv.range.R
 \name{inv.range}
 \alias{inv.range}
-\title{Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast}
+\title{Calculate the inverse of range size}
 \usage{
 inv.range(x, branch.length, filename = NULL)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
 
-\item{branch.length}{numeric. A vector containing the branch length of each specie on the same order of the raster}
+\item{branch.length}{numeric. A vector containing the branch length of each specie.}
 
-\item{filename}{character. A vector containing the path in your personal computer to save the rasters}
+\item{character.}{Output filename.}
 }
 \value{
 SpatRaster and numeric
 }
 \description{
-Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a presence-absence SpatRast
+Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
+}
+\author{
+Neander Marcel Heming and Gabriela Alves-Ferreira
 }

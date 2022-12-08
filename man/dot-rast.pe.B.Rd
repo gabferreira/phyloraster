@@ -2,14 +2,14 @@
 % Please edit documentation in R/rast.pe.ses.R
 \name{.rast.pe.B}
 \alias{.rast.pe.B}
-\title{Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster}
+\title{Calculate phylogenetic endemism for a raster}
 \usage{
 .rast.pe.B(x, branch.length, filename = NULL, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
+\item{branch.length}{numeric. A named numerical vector containing the branch length of each specie.}
 
 \item{filename}{character. Output filename.}
 
@@ -19,7 +19,10 @@
 SpatRaster
 }
 \description{
-Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
+Calculate phylogenetic endemism using rasters as input and output.
+}
+\examples{
+
 }
 \references{
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
