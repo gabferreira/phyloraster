@@ -1,22 +1,19 @@
-#' Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster
+#' Calculate phylogenetic endemism for a raster
 #'
-#' Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
+#' Calculate phylogenetic endemism using rasters as input and output.
 #'
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param branch.length numeric. A named numerical vector containing the branch length of each specie.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster
 # #' @export
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
+#'
 .rast.pe.B <- function(x, branch.length, filename = NULL, ...){
 
   {
-    # criei a função .rast.pe.B que não retorna mensagem de erro quando
-    # nomes sao diferentes, ao contrario da rast.pe. Assim é possivel rodar o
-    # modelo nulo sem gerar erro pq os nomes sao diferentes no bl e x
-
     area.branch <- phylogrid::inv.range(x, branch.length)
 
     rpe <- terra::app(area.branch$LR,
@@ -33,7 +30,6 @@
 
   names(rpe) <- c("PE")
 
-
   if (!is.null(filename)){ # to save the rasters when the path is provide
     rpe <- terra::writeRaster(rpe, filename, ...)
   }
@@ -42,16 +38,12 @@
 
 #' Phylogenetic endemism standardized for specie richness
 #'
-#' The function calculates the PE corrected for species richness. In each null model run, richness is kept constant and branch lengths of each species are randomized. The function provides the mean and standard deviation of all null models and also calculates the standardized effect size (SES).
-#'
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the branch.length order. See phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie. See phylo.pres function.
-#' @param aleats numeric. A number indicating how many times the calculation should be repeated.
-#' @param filename character. Output filename.
-#' @param random character. A character indicating what type of randomization. Could be by tip, site, specie or full spat(site and specie).
+#' @description Calculates the standardized effect size for phylogenetic endemism. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+#' @inheritParams rast.pd.ses
 #' @return SpatRaster
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @export
+#' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
@@ -71,32 +63,30 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
   ## Null model (bootstrap structure)
   if(random == "tip"){
+
     pe.rand <- list() # to store the rasters in the loop
     bl.random <- branch.length
+
     for(i in 1:aleats){
       bl.random[] <- sample(branch.length, replace = T) # aleatorize the branch lenght
       ## check if the values are differents
       # branch.length == bl.random
       temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
-
       pe.rand[[i]] <- .rast.pe.B(x, branch.length = bl.random,
                                  filename = temp[[i]])
     }
 
-
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
+
   } else if (random == "site"){
 
     pe.rand <- list() # to store the rasters in the loop
 
     for(i in 1:aleats){
-
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
-
-      ### embaralha por lyr - ordem dos sítios de cada espécie separada
+      ### shuffle by layer - order of sites for each separate species
       pres.site.null <- spat.rand(x, aleats = 1, random = "site")
-
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
                                  filename = temp[[i]])
@@ -110,10 +100,8 @@ rast.pe.ses <- function(x, branch.length, aleats,
     pe.rand <- list() # to store the rasters in the loop
 
     for(i in 1:aleats){
-
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
       sp.rand <- spat.rand(x, aleats = 1, random = "specie")
-
       pe.rand[[i]] <- .rast.pe.B(sp.rand, branch.length = branch.length,
                                  filename = temp[[i]])
     }
@@ -126,15 +114,11 @@ rast.pe.ses <- function(x, branch.length, aleats,
     fr <- terra::freq(x)
 
     for(i in 1:aleats){
-
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
       ### randomize sites and species
       pres.null <- terra::app(x, fun=.lyr.sample, fr=fr)
-
       pe.rand[[i]] <- .rast.pe.B(pres.null, branch.length = branch.length,
                                  filename = temp[[i]])
-
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
@@ -150,8 +134,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
   pe.rand.sd <- terra::stdev(pe.rand, na.rm = TRUE, filename = filename) # sd pd
 
-
-  unlink(temp) # delete the archive that will not be used
+  unlink(temp) # delete the file that will not be used
 
   ## Calculating the standard effect size (SES)
   {
@@ -160,12 +143,13 @@ rast.pe.ses <- function(x, branch.length, aleats,
     }
     pe.ses <- terra::app(c(pe.obs, pe.rand.mean, pe.rand.sd), fun = ses)
   }
+
   names(pe.ses) <- "SES"
   out <- c(pe.obs, pe.rand.mean, pe.rand.sd, pe.ses)
   names(out) <- c("PE Observed", "Mean", "SD", "SES" )
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
-    out <- terra::writeRaster(out, filename, ...)
+    out <- terra::writeRaster(out, filename)
   }
 
   return(out)

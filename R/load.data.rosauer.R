@@ -1,12 +1,11 @@
 #' Load an example dataset with presence-absence data of 33 tree frogs and a phylogenetic tree for this species
 #'
-#' This function load a phylogenetic tree, a raster and a data.frame with presence-absence of
-#' 33 Australian tree frogs from Rosauer (2017). We also provide distribution shapefiles for each species according to the IUCN..
-#'
+#' @description This function load a phylogenetic tree, a raster and a data.frame with presence-absence of 33 Australian tree frogs from Rosauer (2017). We also provide distribution shapefiles for each species according to the IUCN.
 #' @return data.frame, SpatRaster, SpatVector and phylo
+#' @usage load.data.rosauer()
 #' @export
-#' @source Rosauer, 2017. Available on: <https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data>
-#' @source IUCN. 2022. The IUCN Red List of Threatened Species (spatial data). Version 2022-1. https://www.iucnredlist.org. Accessed on [29 September 2022].
+#' @source Rosauer, 2017. Available on: \href{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data/}{Github}
+#' @source IUCN. 2022. The IUCN Red List of Threatened Species (spatial data). Version 2022-1. \href{https://www.iucnredlist.org}{IUCN}
 #' @export
 load.data.rosauer <- function(){
   x <- phylogrid::dataR

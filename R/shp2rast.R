@@ -4,7 +4,7 @@
 #'
 #' @param shp SpatialPolygonsDataFrame or a SpatVector. A shapefile representing species distribution
 #' @param sps vector. A vector of characters with unique (not duplicated) species names presents in the shapefile
-#' @inheritParams rast
+#' @param resolution numeric. A numeric vector of length 1 or 2 to set the resolution
 #' @return SpatRaster
 #' @export
 #' @examples

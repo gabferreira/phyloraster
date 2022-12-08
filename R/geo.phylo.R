@@ -1,75 +1,121 @@
 #' Calculate phylogenetic diversity (Faith 1992) for a vector
 #'
-#' @param x numeric. A Named numeric vector of presence-absence
-#' @param branch.length numeric. A Named numeric vector of branch length for each specie
-#'
+#' @description This function calculates the sum of the branch length for a set of species for one sample.
+#' @usage .vec.pd(x, branch.length)
+#' @param x numeric. A named numerical vector of presence-absence for one sample.
+#' @param branch.length numeric. A named numerical vector containing the branch length for each species.
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @return numeric
-#' @export
-#' @examples
+# #' @export
 
 .vec.pd <- function(x, branch.length){
-  x[is.na(x)] <- 0
 
-  if(sum(x)== 0) {
+  x[is.na(x)] <- 0 # 0 for all value = NA
+
+  if(sum(x)== 0) { # return NA if x = 0
     return(c(NA,NA))
   }
 
-  if(sum(x) != 0) {
-    pres <- x == 1 # only species present
-    species <- names(branch.length)
-    n.species <- length(species)
+  if(sum(x) != 0) { # if the sum of x is non-zero then do this:
+    pres <- x == 1 # only species present in the vector
+    # species <- names(branch.length)
+    # n.species <- length(species)
     pd <- sum(branch.length[pres]) # pd Faith 1992
-    pd1 <- pd # tive que adicionar pq a funcao nao funcionava se eu retornasse apenas um raster
-    # pdr <- pd/sum(pres) # pd relative to richness
+    pd1 <- pd # terra::app function does not work when it returns only one raster
   }
+
   return(c(pd = pd, pd1 = pd1))
+
 }
 
-#' Calculate Evolutionary distinctiveness for a vector
+#' Calculate Evolutionary Distinctiveness for a vector
 #'
-#' This function calculates evolutionary distinctiveness according to the fair-proportion index (Isaac et al., 2007).
-#'
+#' @description This function calculates evolutionary distinctiveness for a set of species using the fair-proportion index (Isaac et al., 2007).
+#' @usage .evol.distin(x, branch.length, n.descen)
 #' @param x numeric. A Named numeric vector of presence-absence
-#' @param branch.length branch.length numeric. A Named numeric vector of branch length for each specie
+#' @param branch.length numeric. A Named numeric vector of branch length for each specie
 #' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. & Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @return numeric
-#'
-#' @return
-#' @export
-#'
-#' @examples
+# #' @export
 
 .evol.distin <- function(x, branch.length, n.descen){
 
-  x[is.na(x)] <- 0
+  x[is.na(x)] <- 0 # 0 for all value = NA
 
-  if(sum(x) == 0) {
+  if(sum(x) == 0) { # return NA if x = 0
     return(c(NA,NA))
   }
 
-  if(sum(x) != 0){
-    pres <- x == 1
-    species <- names(x)
-    ed <- sum(branch.length[pres]/n.descen[pres])
-    ed1 <- ed # tive que adicionar pq a funcao nao funcionava se eu retornasse apenas um raster
+  if(sum(x) != 0){ # if the sum of x is non-zero then do this:
+    pres <- x == 1 # only species present in the vector
+    # species <- names(x)
+    ed <- sum(branch.length[pres]/n.descen[pres]) # evolutionary distinctiveness
+    ed1 <- ed # terra::app function does not work when this intern function returns only one raster
   }
+
   return(c(ed = ed, ed1 = ed1))
+
 }
 
-#' Calculate phylogenetic diversity (PD. Faith, 1992) for a raster
+#' Calculate species richness for each raster cell
 #'
-#' Calculate phylogenetic diversity using rasters as input and output. This function follows Faith (1992).
-#'
-#' @inheritParams rast.we
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
+#' @description Calculate the species richness for each raster cell.
+#' @usage rast.se(x, filename = NULL, cores = 1, ...)
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param filename character. Output filename.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Gabriela Alves Ferreira and Neander Marcel Heming
 #' @return SpatRaster
 #' @export
+#' @examples
+#' \dontrun{
+#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' rse <- rast.se(ras)
+#' terra::plot(rse)
+#' }
+#'
+rast.se <- function(x, filename = NULL, cores = 1, ...){
+
+  # richness
+  if(cores > 1){ # calculates rich using more than 1 core
+
+    # richness
+    rse <- terra::app(x, sum, na.rm = TRUE, cores = cores, ...)
+    names(rse) <- c("SE")
+
+  } else { # using only one core- default
+
+    # richness
+    rse <- terra::app(x, sum, na.rm = TRUE, ...)
+    names(rse) <- c("SE")
+
+  }
+
+  if (!is.null(filename)){ # to save the rasters when the output filename is provide
+    rse <- terra::writeRaster(rse, filename)
+  }
+
+  return(rse)
+
+}
+
+#' Calculate phylogenetic diversity for each raster cell
+#'
+#' @description Calculate the sum of the branch length for species present in each cell of the raster.
+#' @usage rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numerical vector containing the branch length for a set of species.
+#' @param filename character. Output filename.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @return SpatRaster
+#' @export
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
@@ -81,48 +127,53 @@
 rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   if(!all.equal(names(x), names(branch.length))){
+
     stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+
   } else {
-    # phylogenetic diversity and richness-relative phylogenetic diversity
-    if(cores>1){
+
+    # phylogenetic diversity
+    if(cores > 1){ # calculates pd using a built-in function for vectors
+
       rpd <- terra::app(x, fun = .vec.pd,
-                        branch.length = branch.length, cores = cores)
+                        branch.length = branch.length, cores = cores, ...)
       rpd <- rpd[[1]] # select only the first raster
       names(rpd) <- c("PD")
-    } else{
+
+    } else {
+
       rpd <- terra::app(x, fun = .vec.pd,
-                        branch.length = branch.length)
+                        branch.length = branch.length, ...)
       rpd <- rpd[[1]] # select only the first raster
       names(rpd) <- c("PD")
+
     }
   }
 
   if (!is.null(filename)){ # to save the rasters when the output filename is provide
-    rpd <- terra::writeRaster(rpd, filename, ...)
+    rpd <- terra::writeRaster(rpd, filename)
   }
 
   return(rpd)
 }
 
 
-#' Calculate Evolutionary distinctiveness for a raster
+#' Calculate Evolutionary distinctiveness for each raster cell
 #'
-#' This function calculates evolutionary distinctiveness according to the fair-proportion index (Isaac et al., 2007).
-#'
-#' @inheritParams rast.pd
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
+#' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
+#' @usage rast.ed(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
 #' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. & Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
-#'
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @return SpatRaster
 #' @export
-#'
 #' @examples
 #' \dontrun{
-#' # raster
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' # phylogenetic tree
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
@@ -134,43 +185,49 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...){
 
   if(!all.equal(names(x), names(branch.length))){
+
     stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
-  }
-
-  # Evolutionary distinctiveness
-
-  if(cores>1){
-    red <- terra::app(x, fun = .evol.distin,
-                      branch.length, n.descen, cores = 1)
-    red <- red[[1]] # separando so pro primeiro raster devido o problema da funcao app de nao calcular quando eh pra retornar apenas um raster
-    names(red) <- c("ED")
 
   } else {
-    red <- terra::app(x, fun = .evol.distin,
-                      branch.length, n.descen)
-    red <- red[[1]] # separando so pro primeiro raster devido o problema da funcao app de nao calcular quando eh pra retornar apenas um raster
-    names(red) <- "ED"
+
+    # weighted endemism
+    if(cores > 1){ # if cores > 1 then do this
+      red <- terra::app(x, fun = .evol.distin,
+                        branch.length, n.descen, cores = cores, ...)
+      red <- red[[1]] # only the first raster
+      names(red) <- "ED" # layer name
+
+    } else { # if cores = 1 then do this
+
+      red <- terra::app(x, fun = .evol.distin,
+                        branch.length, n.descen, ...)
+      red <- red[[1]] # only the first raster
+      names(red) <- "ED" # layer name
+
+    }
   }
 
   if (!is.null(filename)){ # to save the rasters when the output filename is provide
-    red <- terra::writeRaster(red, filename, ...)
+    red <- terra::writeRaster(red, filename)
   }
 
   return(red)
+
 }
 
-#' Calculate phylogenetic endemism (PE. Rosauer et al. 2009) for a raster
+#' Calculate phylogenetic endemism for each raster cell
 #'
-#' Calculate phylogenetic endemism following Rosauer et al. (2009) using rasters as input and output.
-#'
-#' @inheritParams rast.we
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order
+#' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
+#' @usage rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
 #' @param filename character. Output filename.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @return SpatRaster
 #' @export
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
@@ -182,224 +239,305 @@ rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 rast.pe <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   if(!all.equal(names(x), names(branch.length))){
+
     stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+
   } else{
-    area.branch <- phylogrid::inv.range(x, branch.length)
+
+    area.branch <- phylogrid::inv.range(x, branch.length) # calculate the inverse of range size multiplied by branch lenght of each species
+
     # phylogenetic endemism
-    # message("Calculating the phylogenetic endemism")
-    if(cores>1){
+    if(cores > 1){ # if cores > 1 then do this
+
       rpe <- terra::app(area.branch$LR,
                         function(x){
                           if(all(is.na(x))){
                             return(NA)
                           }
                           sum(x, na.rm = T)
-                        }, cores = cores)
-      rpe <- terra::app(rpe, function(x, m){ # to reescale the values from 0 to 1
+                        }, cores = cores, ...)
+
+      rpe <- terra::app(rpe, function(x, m){ # reescale the values from 0 to 1
         (x/m)
       }, m = terra::minmax(rpe)[2,])
-    } else {
+
+    } else {  # if cores = 1 then do this
+
       rpe <- terra::app(area.branch$LR,
                         function(x){
                           if(all(is.na(x))){
                             return(NA)
                           }
                           sum(x, na.rm = T)
-                        })
+                        }, ...)
       rpe <- terra::app(rpe, function(x, m){ # to reescale the values from 0 to 1
         (x/m)
       }, m = terra::minmax(rpe)[2,])
+
     }
 
-    names(rpe) <- c("PE")
+    names(rpe) <- "PE" # layer name
+
   }
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
-    rpe <- terra::writeRaster(rpe, filename, ...)
+    rpe <- terra::writeRaster(rpe, filename)
   }
 
   return(rpe)
+
 }
 
-#' Calculate Weighted Endemism (WE. Williams et al. 1994, Crisp et al. 2001) for a raster
+#' Calculate weighted endemism for each raster cell
 #'
-#' Calculate weighted endemism following (Williams et al. 1994, Crisp et al. 2001) using rasters as input and output
-#'
-#' @param x SpatRaster. A presence-absence SpatRaster with 0 representing absence and 1 representing presence.
+#' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
+#' @usage rast.we(x, filename = NULL, cores = 1, ...)
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param filename character. Output filename.
-#' @param cores numeric. A positive integer indicating the number of clusters used for parallelization
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #' @return SpatRaster
-#' @export
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#' @export
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' rast.we(ras)
 #' }
-
+#'
 rast.we <- function(x, filename = NULL, cores = 1, ...){
 
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
-  rs <- range.size(x)
+  rs <- range(x)
+
   # inverse of range size
   inv.R <- terra::ifel(x == 0, 0, 1/(x * rs),
                        filename = temp[[1]], overwrite = TRUE) # calculating the inverse of range size
   # weighted endemism
-  if(cores>1) {
+  if(cores > 1) {
+
     # calculating we
     rend <- terra::app(inv.R,
                        function(x){
                          if(all(is.na(x))){
                            return(NA)}
                          sum(x, na.rm = T)
-                       }, cores = cores)
+                       }, cores = cores, ...)
 
-    rend <- terra::app(rend, function(x, m){ # to reescale the values
+    rend <- terra::app(rend, function(x, m){ # reescale the values
       (x/m)
     }, m = terra::minmax(rend)[2,]) # 2 is the max
+
   } else {
+
     rend <- terra::app(inv.R,
                        function(x){
                          if(all(is.na(x))){
                            return(NA)}
-                         sum(x, na.rm = T)
+                         sum(x, na.rm = T, ...)
                        })
 
-    rend <- terra::app(rend, function(x, m){ # to reescale the values
+    rend <- terra::app(rend, function(x, m){ # reescale the values
       (x/m)
     }, m = terra::minmax(rend)[2,])
+
   }
 
-  names(rend) <- c("WE")
+  names(rend) <- "WE" # layer name
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
-    rend <- terra::writeRaster(rend, filename, ...)
+    rend <- terra::writeRaster(rend, filename = filename)
   }
-  unlink(temp[[1]]) # delete the archive
+
+  unlink(temp[[1]]) # delete the files
 
   return(rend)
 }
 
-#' Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism for a raster
+#' Calculate community metrics for each raster cell
 #'
 #' Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism using rasters as input and output.
 #'
 #' @inheritParams rast.ed
+#' @inheritParams phylo.pres
+#' @param metric character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.
 #' @return SpatRaster
 #' @export
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#' @details Community metrics available:
+#' \itemize{
+##'    \item{Phylogenetic diversity (Faith 1992)}
+##'    \item{Richness}
+##'    \item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
+##'    \item{Phylogenetic endemism (Rosauer et al. 2009)}
+##'    \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
+##'}
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
-#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
-#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. & Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' geo.phylo(ras, tree, metric = 'phylo.diversity')
+#' geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1)
 #' }
+#'
+geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'), filename = NULL, cores = 1){
 
-geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'), filename = NULL, cores = 1, ...){
-
-  {
-    # reordering the raster according to tree
-    # getting branch length
-    # getting ancestor number
-    pp <- phylo.pres(x, tree)
-    branch.length <- pp$branch.length # branch length
-    x <- pp$x # raster reordered
-    n.descen <- pp$n.descen # number of descendants by each branch
-  }
-
-  {
-    ir <- inv.range(x, branch.length) # calculating inverse of range size
-    area.inv <- ir$inv.R # subletting only the inverse of range size
-    area.tips <- ir$LR # inverse of range size multiplied by branch length
-  }
-
-  # if(!all.equal(names(x), names(branch.length))){
-  #   stop('Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.')
-  # }
-
-  # calculating PD, SE, WE, PE, and ED
-  if (cores>1){
+  ### calculating PD, SE, WE, PE, and ED
+  if (cores>1){ # parallel processing
 
     if(metric == 'phylo.diversity'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+
       # phylogenetic diversity
       resu <- phylogrid::rast.pd(x, branch.length, cores = cores)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'evol.distinct'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      # getting ancestor number
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+      n.descen <- pp$n.descen # number of descendants by each branch
+
       # evolutionary distinctiveness
       resu <- phylogrid::rast.ed(x, branch.length, n.descen, cores = cores)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'richness'){
       # richness
       resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'weigh.endemism'){
+
+      ### inverse of range size
+      ir <- inv.range(x, branch.length) # calculating inverse of range size
+      area.inv <- ir$inv.R # subletting only the inverse of range size
+
       #  weighted endemism
       resu <- phylogrid::rast.we(x, cores = cores)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'phylo.endemism'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      # getting ancestor number
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+
+      ### inverse of range size
+      ir <- inv.range(x, branch.length) # calculating inverse of range size
+      area.tips <- ir$LR # inverse of range size multiplied by branch length
+
       # phylogenetic endemism
       resu <- phylogrid::rast.pe(x, branch.length, cores = cores)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else {
       stop("Choose a valid metric! The community metrics currently available are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'.")
     }
-  } else {
+  } else { # with cores < 1, no parallel processing
     if(metric == 'phylo.diversity'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      # getting ancestor number
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+
       # phylogenetic diversity
-      resu <- phylogrid::rast.pd(x, branch.length, cores = cores)
+      resu <- phylogrid::rast.pd(x, branch.length)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'evol.distinct'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      # getting ancestor number
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+      n.descen <- pp$n.descen # number of descendants by each branch
+
       # evolutionary distinctiveness
-      resu <- phylogrid::rast.ed(x, branch.length, n.descen, cores = cores)
+      resu <- phylogrid::rast.ed(x, branch.length, n.descen)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'richness'){
       # richness
-      resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
+      resu <- terra::app(x, sum, na.rm = TRUE)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'weigh.endemism'){
+
+      ### inverse of range size
+      ir <- inv.range(x, branch.length) # calculating inverse of range size
+      area.inv <- ir$inv.R # subletting only the inverse of range size
+
+
       # weighted endemism
-      resu <- phylogrid::rast.we(x, cores = cores)
+      resu <- phylogrid::rast.we(x)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else if (metric == 'phylo.endemism'){
+
+      ### preparing data
+      # reordering the raster according to tree
+      # getting branch length
+      # getting ancestor number
+      pp <- phylo.pres(x, tree)
+      branch.length <- pp$branch.length # branch length
+      x <- pp$x # raster reordered
+
+      ### inverse of range size
+      ir <- inv.range(x, branch.length) # calculating inverse of range size
+      area.tips <- ir$LR # inverse of range size multiplied by branch length
+
       # phylogenetic endemism
-      resu <- phylogrid::rast.pe(x, branch.length, cores = cores)
+      resu <- phylogrid::rast.pe(x, branch.length)
       if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename, ...)
+        resu <- terra::writeRaster(resu, filename)
       }
 
     } else {
@@ -408,3 +546,4 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity', 'evol.d
   }
   return(resu)
 }
+

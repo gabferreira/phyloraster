@@ -1,21 +1,20 @@
-#' Randomize branch lengths for x times
+#' Randomize branch lengths for n times
 #'
-#' This function randomize branch lengths or another vector for a determined number of aleatorizations.
-#' @param x numeric. A numeric vector.
-#' @param aleats numeric. A number indicating how many times the calculation should be repeated.
-#'
+#' @description This function randomize branch lengths or another vector for n times.
+#' @param x numeric. A numeric vector containing the branch lengths.
+#' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
 #' @return list
 #' @author Gabriela Alves-Ferreira
 #' @export
-#'
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' aleats = 10
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(x = ras, tree = tree)
 #' sa <- tip.rand(data$branch.length, aleats = 10)
 #' }
+#'
 tip.rand <- function(x, aleats){
   aleats <- aleats # number of null models
 

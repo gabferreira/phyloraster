@@ -1,12 +1,11 @@
-#' Reorder stack according to tree order and get branch length
+#' Prepare rasters and phylogenetic tree to run community metrics
 #'
-#' Reorder stack according to tree order and get branch length
-#' @param x SpatRaster. A raster of presence-absence
-#' @param tree phylo. A dated tree
-#'
+#' @description Reorder stack according to tree order and get branch length for each species.
+#' @param x SpatRaster. A stack containing binary presence-absence rasters for each species.
+#' @param tree phylo. A dated tree.
 #' @return SpatRaster, phylo and numeric vector
+#' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
@@ -16,15 +15,21 @@
 
 phylo.pres <- function(x, tree) {
 
-  if(ape::is.rooted(tree) == FALSE){
-    warning("A rooted phylogeny is required for meaningful output of this function",
-            call. = FALSE)
-  }
+  # if(ape::is.rooted(tree) == FALSE){
+  #   warning("A rooted phylogeny is required for meaningful output of this function",
+  #           call. = FALSE)
+  # }
   spat.names <- as.character(names(x)) # to extract species names in the raster
   tree.phy4 <- phylobase::phylo4(tree) # transform phylo in phylo4 class
   labels <- as.character(phylobase::tipLabels(tree.phy4)) # extracting species names in the tree
   on.tree <- intersect(spat.names, labels) # species of the raster that are in the tree
   subtree <- ape::keep.tip(tree, on.tree) # to make a subset of the tree and keep only the species that are in the raster
+
+  cbind(names(x) , subtree$tip.label)
+unique(subtree[["tip.label"]])
+unique(names(x))
+names(x)
+
   stack.reord <- x[[subtree[["tip.label"]]]] # to reorder the stack according to the tree
   if(!class(stack.reord) == "SpatRaster"){ # class "Raster" in "SpatRaster"
     x <- terra::rast(stack.reord)
@@ -42,8 +47,7 @@ phylo.pres <- function(x, tree) {
   n.descen <- as.numeric(phylobase::ancestor(subtree,
                                              1:phylobase::nTips(subtree)))
   names(n.descen) <- labels # add names
-  bl.desc <- branch.length / n.descen
 
-  pp <- list(x = x, branch.length = branch.length, n.descendents = n.descen, bl.desc = bl.desc, tree = subtree)
+  pp <- list(x = x, branch.length = branch.length, n.descendents = n.descen, subtree = subtree)
   return(pp)
 }

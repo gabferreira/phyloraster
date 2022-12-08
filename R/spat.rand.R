@@ -2,7 +2,6 @@
 #'
 #' @param x numeric. A vector containing values to resampling.
 #' @param fr data.frame A data.frame with 3 columns (layer, value, count).
-#'
 #' @return vector
 # #' @export
 #'
@@ -19,7 +18,7 @@
 
 #' Randomize a set of rasters according to the observed frequency.
 #'
-#' Randomize a set of rasters according to the observed frequency using the sites (by cells), species (by layer) or both (layers and cells).
+#' Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells).
 #'
 #' @param x SpatRaster. A presence-absence SpatRaster.
 #' @param aleats numeric. A number indicating how many times the calculation should be repeated.
@@ -51,7 +50,6 @@ spat.rand <- function(x, aleats, random = c("site", "specie", "fullspat")){
                                         terra::app(r[[i]], fun=.lyr.sample, fr=fr[fr$layer==i,])
                                       }, r = x, fr = fr))
     }
-
     resu <- terra::rast(resu) # to transform a list in raster
 
   } else if (random == "specie") {
@@ -62,7 +60,6 @@ spat.rand <- function(x, aleats, random = c("site", "specie", "fullspat")){
       ### randomize by cells- species in each site
       resu[[i]] <- terra::app(x, sample)
     }
-
     resu <- terra::rast(resu) # to transform a list in raster
 
   } else if (random == "fullspat") {
@@ -73,13 +70,10 @@ spat.rand <- function(x, aleats, random = c("site", "specie", "fullspat")){
       ### randomize by sites and species!
       resu[[i]] <- terra::app(x, fun = .lyr.sample, fr = fr)
     }
-
     resu <- terra::rast(resu) # to transform a list in raster
 
   } else {
-
     stop("Choose a valid randomization method! The methods currently available are: 'site', 'specie', 'fullspat'.")
-
   }
 
   return(resu)
