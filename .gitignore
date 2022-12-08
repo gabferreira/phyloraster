@@ -5,3 +5,5 @@
 .DS_Store
 proj_setup/
 inst/doc
+/doc/
+/Meta/
