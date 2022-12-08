@@ -24,6 +24,8 @@ Depends:
 Suggests: 
     knitr,
     rmarkdown,
+    qpdf,
+    maps,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 2
