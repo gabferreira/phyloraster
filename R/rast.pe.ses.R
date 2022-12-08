@@ -55,7 +55,7 @@
 #' }
 #'
 rast.pe.ses <- function(x, branch.length, aleats,
-                        random = c("area.size", "site", "specie", "fullspat"),
+                        random = c("area.size", "site", "species", "fullspat"),
                         filename = NULL){
 
   aleats <- aleats # number of null models
@@ -94,14 +94,14 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
 
-  } else if (random == "specie") {
+  } else if (random == "species") {
 
     ### randomize by cells - species in each site
     pe.rand <- list() # to store the rasters in the loop
 
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, aleats = 1, random = "specie")
+      sp.rand <- spat.rand(x, aleats = 1, random = "species")
       pe.rand[[i]] <- .rast.pe.B(sp.rand, branch.length = branch.length,
                                  filename = temp[[i]])
     }
@@ -124,7 +124,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
 
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'tip','site', 'specie', 'fullspat'.")
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'fullspat'.")
   }
 
   ## PE observed
