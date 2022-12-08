@@ -1,7 +1,7 @@
 #' Calculate weighted endemism for each raster cell
 #'
 #' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
-#' @usage rast.we2(x, range.size, filename = NULL, ...)
+#' @usage .rast.we.B(x, range.size, filename = NULL, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param range.size numeric. A numerical vector containing the range size for each species. See the function range.size.
 #' @param filename character. Output filename.

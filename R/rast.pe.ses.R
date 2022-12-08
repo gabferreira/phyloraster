@@ -128,7 +128,9 @@ rast.pe.ses <- function(x, branch.length, aleats,
   }
 
   ## PE observed
-  pe.obs <- phylogrid::rast.pe(x, branch.length = branch.length, filename = filename)
+  x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
+
+  pe.obs <- phylogrid::rast.pe(x.reord, branch.length = branch.length, filename = filename)
 
   ## PD rand mean and PD rand SD
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
