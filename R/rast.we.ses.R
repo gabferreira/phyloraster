@@ -142,7 +142,7 @@ rast.we.ses <- function(x, aleats,
   }
 
   ## WE observed
-  we.obs <- rast.we(pres.rast = x, filename = filename)
+  we.obs <- rast.we(x = x, filename = filename)
 
   ## WE rand mean and WE rand SD
   we.rand.mean <- terra::mean(we.rand, na.rm = TRUE, filename = filename) # mean pd
