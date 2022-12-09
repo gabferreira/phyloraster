@@ -7,7 +7,7 @@
 rast.we.ses(
   x,
   aleats,
-  random = c("area.size", "site", "specie", "fullspat"),
+  random = c("area.size", "site", "species", "fullspat"),
   filename = NULL
 )
 }
@@ -16,7 +16,7 @@ rast.we.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating what type of randomization. Could be by tip, site, specie or full spat(site and specie).}
+\item{random}{character. A character indicating what type of randomization. Could be by "area.size", "site", "species" or "fullspat" (site and species).}
 
 \item{filename}{character. Output filename.}
 }
