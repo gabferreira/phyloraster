@@ -147,8 +147,8 @@ rast.pe.ses <- function(x, branch.length, aleats,
   }
 
   names(pe.ses) <- "SES"
-  out <- c(pe.obs, pe.rand.mean, pe.rand.sd, pe.ses)
-  names(out) <- c("PE Observed", "Mean", "SD", "SES" )
+  out <- c(pe.rand.mean, pe.rand.sd, pe.obs, pe.ses)
+  names(out) <- c("Mean", "SD", "PE Observed", "SES")
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
     out <- terra::writeRaster(out, filename)

@@ -159,8 +159,8 @@ rast.we.ses <- function(x, aleats,
   }
 
   names(we.ses) <- "SES"
-  out <- c(we.obs, we.rand.mean, we.rand.sd, we.ses)
-  names(out) <- c("WE Observed", "Mean", "SD", "SES" )
+  out <- c(we.rand.mean, we.rand.sd, we.obs, we.ses)
+  names(out) <- c("Mean", "SD", "WE Observed", "SES")
 
   if(!is.null(filename)){ # to save the rasters when the path is provide
     out <- terra::writeRaster(out, filename)
