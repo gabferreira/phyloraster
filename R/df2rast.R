@@ -8,7 +8,7 @@
 #' @examples
 #' \dontrun{
 #' dat <- phylogrid::load.data.rosauer()
-#' df2rast(dat$presab, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+#' df2rast(dat$presab, resolution = 0.1, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 #' }
 
 df2rast <- function(x, CRS){
