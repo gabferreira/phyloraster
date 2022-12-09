@@ -8,7 +8,7 @@ rast.pe.ses(
   x,
   branch.length,
   aleats,
-  random = c("area.size", "site", "specie", "fullspat"),
+  random = c("area.size", "site", "species", "fullspat"),
   filename = NULL
 )
 }
@@ -19,7 +19,7 @@ rast.pe.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are tip, site, specie or full spat (site and species).}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).}
 
 \item{filename}{character. Output filename.}
 }

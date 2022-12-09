@@ -2,13 +2,13 @@
 % Please edit documentation in R/rast.pd.ses.R
 \name{rast.pd.ses}
 \alias{rast.pd.ses}
-\title{Phylogenetic diversity standardized for specie richness}
+\title{Phylogenetic diversity standardized for species richness}
 \usage{
 rast.pd.ses(
   x,
   branch.length,
   aleats,
-  random = c("tip", "site", "specie", "fullspat"),
+  random = c("tip", "site", "species", "fullspat"),
   filename = NULL
 )
 }
@@ -19,7 +19,7 @@ rast.pd.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are tip, site, specie or full spat (site and species).}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).}
 
 \item{filename}{character. Output filename.}
 }

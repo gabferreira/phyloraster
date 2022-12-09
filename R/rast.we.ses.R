@@ -58,7 +58,7 @@
 #' @param x SpatRaster. A SpatRaster of presence-absence.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
 #' @param filename character. Output filename.
-#' @param random character. A character indicating what type of randomization. Could be by tip, site, specie or full spat(site and specie).
+#' @param random character. A character indicating what type of randomization. Could be by "area.size", "site", "species" or "fullspat" (site and species).
 #' @return SpatRaster
 #' @details The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
 #' @export
@@ -71,7 +71,7 @@
 #' }
 #'
 rast.we.ses <- function(x, aleats,
-                        random = c("area.size", "site", "specie", "fullspat"),
+                        random = c("area.size", "site", "species", "fullspat"),
                         filename = NULL){
 
   aleats <- aleats # number of randomizations
@@ -109,14 +109,14 @@ rast.we.ses <- function(x, aleats,
 
     we.rand <- terra::rast(we.rand) # to transform a list in raster
 
-  } else if(random == "specie"){
+  } else if(random == "species"){
 
     ### randomize by cells - species in each site
     we.rand <- list() # to store the rasters in the loop
 
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, aleats = 1, random = "specie")
+      sp.rand <- spat.rand(x, aleats = 1, random = "species")
       we.rand[[i]] <- .rast.we.B(sp.rand, range.size = rs,
                               filename = temp[[i]])
     }
@@ -138,7 +138,7 @@ rast.we.ses <- function(x, aleats,
     we.rand <- terra::rast(we.rand) # to transform a list in raster
 
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'site', 'specie', 'fullspat'.")
+    stop("Choose a valid randomization method! The methods currently available are: 'site', 'species', 'fullspat'.")
   }
 
   ## WE observed
