@@ -4,12 +4,12 @@
 \alias{df2rast}
 \title{Transform a data.frame to raster}
 \usage{
-df2rast(x, CRS)
+df2rast(x, ...)
 }
 \arguments{
 \item{x}{data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide longitude and latitude, respectively.}
 
-\item{CRS}{character. A coordinate reference system (projection) for a Raster object.}
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
@@ -20,6 +20,6 @@ The function transform a data.frame or a matrix of presence-absence in a raster 
 \examples{
 \dontrun{
 dat <- phylogrid::load.data.rosauer()
-df2rast(dat$presab, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+df2rast(dat$presab)
 }
 }
