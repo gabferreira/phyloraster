@@ -1,0 +1,140 @@
+---
+title: "phylogrid-performance"
+author: "Gabriela Alves-Ferreira, Neander Heming"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{phylogrid-performance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, echo = FALSE, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning=FALSE,comment = "#>")
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+-   [Performance Comparisons](#Performance)
+-   [Diversity Metrics](#Metrics)
+-   [Session Information](#Session Info)
+-   [References](#References)
+
+## Performance Comparisons {#Performance}
+
+In this vignette, we compared the performance of `phylogrid` with three packages (`epm`, `phyloregion` and `picante`) that have similar functionalities. For the comparison, we used a dataset of geographical distribution (presence and absence) for treefrog species of the subfamily Pelodryadinae. This dataset is available in our package and can be loaded through the `load.data.rosauer` function. To conduct the performance tests we used geographic distribution rasters with spatial resolution of 0.1° and 0.05°. We performed some data transformations to make them compatible for comparisons between different packages. Let's start with this step.
+
+```{r setup}
+library(phylogrid)
+```
+
+```{r}
+# load data from phylogrid package
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                               package="phylogrid"))
+
+# transform shapefile to raster using phylogrid
+x.high <- shp2rast(shp, sps.col = "BINOMIAL", ymask = TRUE, background = 0, resolution = 0.05)
+res(x.high)
+
+x.low <- shp2rast(shp, sps.col = "BINOMIAL", ymask = TRUE, background = 0, resolution = 0.1)
+res(x.low)
+
+```
+
+```{r}
+### Data transformation to fit with EcoPhyloMapper
+library(epm)
+datepm.h <- createEPMgrid(x.high, resolution = 0.05)
+datepm.l <- createEPMgrid(x.low, resolution = 0.1)
+
+# MB
+object.size(datepm.h)
+object.size(datepm.l)
+```
+
+To use the phyloregion, we need to convert the rasters into a community matrix. 
+Let's create a folder named "rasters" and "rasters_hihg_res" to store the species distribution rasters. After that, we'll load the data using the `file.path` function and finally, we'll transform the rasters into a sparse matrix of the class "dgCMatrix" using the `raster2comm` function. 
+
+```{r}
+### Data transformation to fit with phyloregion
+library(phyloregion)
+
+# low resolution
+gdir.l <- system.file("rasters", package="phylogrid")
+files.l <- file.path(gdir.l, dir(gdir.l))
+com.l <- raster2comm(files.l)
+
+# high resolution
+gdir.h <- system.file("rasters_high_res", package="phylogrid")
+files.h <- file.path(gdir.h, dir(gdir.h))
+com.h <- raster2comm(files.h)
+
+# MB
+object.size(com.l$comm_dat)
+object.size(com.h$comm_dat)
+
+```
+
+## Diversity Metrics {#Metrics}
+
+-   **Endemism measurements**
+
+We will use the `bench` package to conduct performance comparisons. In this example below, we will evaluate the performance with weighted endemism calculation using a dataset with spatial resolution of 0.05° and 0.1°.
+
+```{r}
+library(bench)
+
+res_we <- bench::mark(
+  phylogrid = {
+    rast.we(x)
+  },
+  epm = {
+    epm::gridMetrics(datepm, metric = "weightedEndemism")
+  },
+  phyloregion = {
+    phyloregion::weighted_endemism(com$comm_dat)
+  },
+  check = F
+)
+
+summary(res_we)
+```
+
+-   **Evolutionary measurements**
+
+Performance comparison tests were also performed for the calculation of phylogenetic diversity using datasets of 0.1° and 0.05°.
+
+```{r}
+library(bench)
+
+res_pd <- bench::mark(
+  phylogrid = {
+    rast.pd(x, tree)
+  },
+  epm = {
+    epm::gridMetrics(datepm, metric = "pd")
+  },
+  phyloregion = {
+    phyloregion::weighted_endemism(com$comm_dat)
+  },
+  check = F
+)
+
+summary(res_we)
+```
+
+## Session Information {#Session Info}
+
+```{r}
+sessionInfo()
+```
+
+## Rererences {#References}
