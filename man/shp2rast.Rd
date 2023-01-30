@@ -4,25 +4,59 @@
 \alias{shp2rast}
 \title{Rasterize shapefile}
 \usage{
-shp2rast(shp, sps, resolution)
+shp2rast(
+  x,
+  y = NULL,
+  sps.col,
+  ymask = FALSE,
+  background = NA,
+  touches = TRUE,
+  resolution,
+  filename = NULL,
+  ...
+)
 }
 \arguments{
-\item{shp}{SpatialPolygonsDataFrame or a SpatVector. A shapefile representing species distribution}
+\item{x}{SpatVector or a two-column matrix (point coordinates)}
 
-\item{sps}{vector. A vector of characters with unique (not duplicated) species names presents in the shapefile}
+\item{y}{SpatRaster}
+
+\item{sps.col}{character. It should a variable name in x}
+
+\item{ymask}{SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example}
+
+\item{background}{numeric. Value to put in the cells that are not covered by any of the features of \code{x}. Default is \code{NA}}
+
+\item{touches}{logical. If \code{TRUE}, all cells touched by lines or polygons are affected, not just those on the line render path, or whose center point is within the polygon. If \code{touches=TRUE}, \code{add} cannot be \code{TRUE}}
 
 \item{resolution}{numeric. A numeric vector of length 1 or 2 to set the resolution}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed to \code{fun} if \code{x} has point geometries}
 }
 \value{
 SpatRaster
 }
 \description{
-The function transform a shapefile to a raster with the same extent.
+The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
 }
 \examples{
 \dontrun{
-shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
-spps <- shp$BINOMIAL
-shp2rast(shp, spps, resolution = 0.1)
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                              package="phylogrid"))
+library(rnaturalearth)
+countries <- terra::vect(ne_countries()) # mapa mundi
+coun.crop <- crop(countries, ext(shp)) # cut by the total extension of the polygons
+coun.rast <- rasterize(coun.crop,
+                      terra::rast(ext(shp), resolution = 0.5))
+plot(coun.rast, col = "green")
+
+rasterizing with a mask of a country for example
+teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
+plot(teste[[1:3]], col = c("grey", "green"))
+
+teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
+plot(teste2[[1:3]], col = c("grey", "green"))
 }
 }

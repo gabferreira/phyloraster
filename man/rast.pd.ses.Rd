@@ -43,10 +43,9 @@ The "tip" method shuffles the taxon names among all those in the phylogeny. The 
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylogrid::phylo.pres(ras, tree)
-t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
+t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 plot(t)
 }
-
 }
 \references{
 Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.

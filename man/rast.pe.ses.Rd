@@ -46,7 +46,6 @@ data <- phylo.pres(ras, tree)
 t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
 plot(t)
 }
-
 }
 \references{
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
