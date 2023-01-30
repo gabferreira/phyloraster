@@ -4,15 +4,17 @@
 \alias{phylo.pres}
 \title{Prepare rasters and phylogenetic tree to run community metrics}
 \usage{
-phylo.pres(x, tree)
+phylo.pres(x, tree, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A stack containing binary presence-absence rasters for each species.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
-SpatRaster, phylo and numeric vector
+Returns a list containing a SpatRaster reordered according to the order that the species appear in the phylogenetic tree, a subtree containing only the species that are in the stack of rasters and finally two named numerical vectors containing the branch length and the number of descendants of each species.
 }
 \description{
 Reorder stack according to tree order and get branch length for each species.

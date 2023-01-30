@@ -4,12 +4,14 @@
 \alias{.rast.pe.B}
 \title{Calculate phylogenetic endemism for a raster}
 \usage{
-.rast.pe.B(x, branch.length, filename = NULL, ...)
+.rast.pe.B(x, branch.length, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A named numerical vector containing the branch length of each specie.}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
@@ -22,7 +24,12 @@ SpatRaster
 Calculate phylogenetic endemism using rasters as input and output.
 }
 \examples{
-
+\dontrun{
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+data <- phylo.pres(ras, tree)
+.rast.pe.B(data$x, data$branch.length, cores = 1)
+}
 }
 \references{
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.

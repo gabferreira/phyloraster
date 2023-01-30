@@ -4,7 +4,7 @@
 \alias{inv.range}
 \title{Calculate the inverse of range size}
 \usage{
-inv.range(x, branch.length, filename = NULL)
+inv.range(x, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
@@ -12,6 +12,10 @@ inv.range(x, branch.length, filename = NULL)
 \item{branch.length}{numeric. A vector containing the branch length of each specie.}
 
 \item{filename}{character. Output filename.}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster and numeric

@@ -4,7 +4,7 @@
 \alias{spat.rand}
 \title{Randomize a set of rasters according to the observed frequency.}
 \usage{
-spat.rand(x, aleats, random = c("site", "specie", "fullspat"))
+spat.rand(x, aleats, random = c("site", "species", "fullspat"), cores = 1)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster.}
@@ -12,6 +12,8 @@ spat.rand(x, aleats, random = c("site", "specie", "fullspat"))
 \item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
 
 \item{random}{character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 }
 \value{
 SpatRaster

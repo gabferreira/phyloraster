@@ -9,7 +9,9 @@ rast.pd.ses(
   branch.length,
   aleats,
   random = c("tip", "site", "species", "fullspat"),
-  filename = NULL
+  cores = 1,
+  filename = NULL,
+  ...
 )
 }
 \arguments{
@@ -21,7 +23,11 @@ rast.pd.ses(
 
 \item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).}
 
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
 \item{filename}{character. Output filename.}
+
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster. The function returns the observed phylogenetic diversity, the mean of the simulations calculated over n times, the standard deviation of the simulations, and the standardized effect size (SES) for the phylogenetic diversity.

@@ -9,8 +9,10 @@ geo.phylo(
   tree,
   metric = c("richness", "phylo.diversity", "evol.distinct", "phylo.endemism",
     "weigh.endemism"),
+  rescale = FALSE,
+  cores = 1,
   filename = NULL,
-  cores = 1
+  ...
 )
 }
 \arguments{
@@ -20,9 +22,13 @@ geo.phylo(
 
 \item{metric}{character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.}
 
-\item{filename}{character. Output filename.}
+\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{filename}{character. Output filename.}
+
+\item{...}{additional arguments to be passed passed for fun.}
 }
 \value{
 SpatRaster
@@ -44,7 +50,9 @@ Community metrics available:
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1)
+geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1, filename = NULL, ...)
+geo.phylo(ras, tree, metric = 'phylo.endemism', rescale = T, cores = 1, filename = NULL, ...)
+geo.phylo(ras, metric = 'weigh.endemism', rescale = T, cores = 1, filename = NULL, ...)
 }
 
 }

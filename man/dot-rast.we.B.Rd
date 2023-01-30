@@ -4,7 +4,7 @@
 \alias{.rast.we.B}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-.rast.we.B(x, range.size, filename = NULL, ...)
+.rast.we.B(x, range.size, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
@@ -12,6 +12,8 @@
 \item{range.size}{numeric. A numerical vector containing the range size for each species. See the function range.size.}
 
 \item{filename}{character. Output filename.}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }

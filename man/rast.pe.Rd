@@ -4,16 +4,18 @@
 \alias{rast.pe}
 \title{Calculate phylogenetic endemism for each raster cell}
 \usage{
-rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
+rast.pe(x, branch.length, rescale = FALSE, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
 
-\item{filename}{character. Output filename.}
+\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -28,7 +30,7 @@ Calculate the sum of the inverse of the range size multiplied by the branch leng
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-rast.pe(data$x, data$branch.length)
+rast.pe(data$x, data$branch.length, rescale = FALSE, cores = 1)
 }
 }
 \references{

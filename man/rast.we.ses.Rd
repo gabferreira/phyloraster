@@ -8,17 +8,23 @@ rast.we.ses(
   x,
   aleats,
   random = c("area.size", "site", "species", "fullspat"),
-  filename = NULL
+  cores = 1,
+  filename = NULL,
+  ...
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster of presence-absence.}
+\item{x}{A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
 \item{random}{character. A character indicating what type of randomization. Could be by "area.size", "site", "species" or "fullspat" (site and species).}
 
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
 \item{filename}{character. Output filename.}
+
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
@@ -32,7 +38,7 @@ The "site" method keeps species richness constant in each pixel, but randomizes 
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-t <- rast.we.ses(ras, aleats = 10)
+t <- rast.we.ses(ras, aleats = 10, random = "site")
 }
 
 }

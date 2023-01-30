@@ -27,7 +27,6 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"
 rse <- rast.se(ras)
 terra::plot(rse)
 }
-
 }
 \author{
 Gabriela Alves Ferreira and Neander Marcel Heming

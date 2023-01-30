@@ -4,14 +4,16 @@
 \alias{rast.we}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-rast.we(x, filename = NULL, cores = 1, ...)
+rast.we(x, rescale = FALSE, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
-\item{filename}{character. Output filename.}
+\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }

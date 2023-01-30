@@ -4,7 +4,7 @@
 \alias{rast.ed}
 \title{Calculate Evolutionary distinctiveness for each raster cell}
 \usage{
-rast.ed(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
+rast.ed(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
@@ -13,9 +13,9 @@ rast.ed(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
 
-\item{filename}{character. Output filename.}
-
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed for fun.}
 }
