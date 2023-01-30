@@ -18,10 +18,9 @@
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylogrid::phylo.pres(ras, tree)
-#' t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
+#' t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 #' plot(t)
 #' }
-#'
 rast.pd.ses <- function(x, branch.length, aleats,
                         random = c("tip", "site", "species", "fullspat"),
                         cores = 1, filename = NULL, ...){
@@ -30,7 +29,9 @@ rast.pd.ses <- function(x, branch.length, aleats,
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
   mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
@@ -47,7 +48,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
       pd.rand[[i]] <- terra::app(x, fun = .vec.pd,
                                  branch.length = bl.random,
-                                 filename = temp[[i]], cores = cores)
+                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
 
@@ -70,7 +71,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
       # calculate pd
       pd.rand[[i]] <- terra::app(pres.site.null, fun = .vec.pd,
                                  branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
+                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -91,7 +92,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
       pd.rand[[i]] <- terra::app(sp.rand,
                                  fun = .vec.pd,
                                  branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
+                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -110,11 +111,11 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
       ### shuffle sites and species - "full.spat"
       pres.null <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
-                              filename = temp.raster, memory = mi)
+                              filename = temp.raster, ..., overwrite = T)
 
       pd.rand[[i]] <- terra::app(pres.null, fun = .vec.pd,
                                  branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
+                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -147,7 +148,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
       (x[1] - x[2])/x[3]
     }
     pd.ses <- terra::app(c(pd.obs, pd.rand.mean, pd.rand.sd),
-                         ses, cores = cores)
+                         ses, cores = cores, ...)
     names(pd.ses) <- "SES"
   }
 
@@ -163,3 +164,4 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
   return(out)
 }
+

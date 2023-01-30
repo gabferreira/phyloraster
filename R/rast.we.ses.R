@@ -69,10 +69,9 @@
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' t <- rast.we.ses(ras, aleats = 10, random = "site")
+# ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+# t <- rast.we.ses(ras, aleats = 10, random = "site")
 #' }
-#'
 rast.we.ses <- function(x, aleats,
                         random = c("area.size", "site", "species", "fullspat"),
                         cores = 1, filename = NULL, ...){
@@ -82,7 +81,9 @@ rast.we.ses <- function(x, aleats,
   rs <- range(x) # Calculating area
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
   mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)

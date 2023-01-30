@@ -67,7 +67,9 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
   # x rasters will be generated in this function, let's see if there is enough
   # memory in the user's pc
+  sink(nullfile())    # suppress output
   mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
@@ -96,7 +98,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif")
       ### shuffle by layer - order of sites for each separate species
       pres.site.null <- spat.rand(x, random = "site", cores = cores,
-                                  filename = temp.raster, memory = mi)
+                                  filename = temp.raster, memory = mi, overwrite = T)
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
                                  filename = temp[[i]], cores = cores)
