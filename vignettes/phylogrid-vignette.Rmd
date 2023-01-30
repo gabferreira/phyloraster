@@ -19,6 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning=FALSE,comment = "#>
 -   [Data processing](#data)
 -   [Analysis](#analysis)
 -   [Null Models](#null)
+-   [Post Processing](#processing)
 -   [References](#references)
 
 ## Introduction {#intro}
@@ -106,8 +107,7 @@ maps::map(add = TRUE)
 ```
 
 ```{r, message = F}
-spps <- shp$BINOMIAL
-r2 <- shp2rast(shp = shp, sps = spps, resolution = 0.1)
+r2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
 r2
 ```
 
@@ -195,51 +195,8 @@ Null models are a widely used method to control for richness effects in diversit
 
 -   **Spatial and phylogenetic randomization**
 
-The function `spat.rand` randomizes raster stacks through three different methods (site, species or fullspat) that can be chosen through the argument random. The function `spat.rand` returns a raster with the number of layers equal to the number of species multiplied by the number of randomizations. 
-The first method (site) keeps species richness constant in each pixel, but randomizes the position of species in the stack. To perform this randomization, we based on the frequency of presences and absences for each species. Thus, the size of the distribution will not change, but the position of the species in space.
-
-```{r}
-aleats = 10
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-sr <- spat.rand(ras, aleats = 10, random = "site")
-```
-
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-plot(sr)
-```
-
-In the second method (species), the order of species in the stack is kept constant, but the pixels where each species are present are randomized in space. This method is based on sampling of the presences and absences in each pixel. 
-
-```{r}
-aleats = 10
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-ss <- spat.rand(ras, aleats = 10, random = "species")
-```
-
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-plot(ss)
-```
-
-In the third method, both the order of species in the stack and the pixels where each species is present are randomized in space.
-
-```{r}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-sa <- spat.rand(ras, aleats = 10, random = "fullspat")
-```
-
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
-plot(sa)
-```
-
-To phylogenetic randomization, we provide the function `tip.rand` that shuffle branch length across all taxas included in phylogeny. The function returns a list with a length equal to the number of randomizations.
-
-```{r}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
-d <- phylo.pres(x = ras, tree = tree)
-sa <- tip.rand(d$branch.length, aleats = 10)
-d$branch.length == sa[[1]]
-```
+The intern function `spat.rand` randomizes raster stacks through three different methods (site, species or fullspat) that can be chosen through the argument random. 
+The first method (site) keeps species richness constant in each pixel, but randomizes the position of species in the stack. To perform this randomization, we based on the frequency of presences and absences for each species. Thus, the size of the distribution will not change, but the position of the species in space. In the second method (species), the order of species in the stack is kept constant, but the pixels where each species are present are randomized in space. This method is based on sampling of the presences and absences in each pixel. The third (fullspat) combines randomization by site and species at the same time. In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
@@ -256,7 +213,12 @@ Plotting the results
 plot(t)
 ```
 
-The package also brings the function delta.grid that allows you to calculate the difference between spatialized diversity metrics between two different times. This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario. For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia. In the map below we can visualize the spatial pattern of species richness.
+## Post processing {#processing}
+
+
+-   **Function** `delta.grid`
+
+The package also brings the function `delta.grid` that allows you to calculate the difference between spatialized diversity metrics between two different times. This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario. For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia. In the map below we can visualize the spatial pattern of species richness.
 
 ```{r}
 # load the data
