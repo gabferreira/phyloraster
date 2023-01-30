@@ -4,16 +4,27 @@
 \alias{spat.rand}
 \title{Randomize a set of rasters according to the observed frequency.}
 \usage{
-spat.rand(x, aleats, random = c("site", "species", "fullspat"), cores = 1)
+spat.rand(
+  x,
+  random = c("site", "species", "fullspat"),
+  filename = "",
+  memory = FALSE,
+  cores = 1,
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster.}
 
-\item{aleats}{numeric. A number indicating how many times the calculation should be repeated.}
-
 \item{random}{character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".}
 
+\item{filename}{character. Output filename.}
+
+\item{memory}{logical.}
+
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
@@ -23,9 +34,8 @@ Randomize a set of rasters according to the observed frequency using the methods
 }
 \examples{
 \dontrun{
-aleats = 10
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-sr <- spat.rand(ras, aleats = 10, random = "site")
+sr <- spat.rand(ras, random = "site")
 plot(sr)
 }
 }
