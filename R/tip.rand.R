@@ -8,7 +8,6 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' aleats = 10
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(x = ras, tree = tree)
