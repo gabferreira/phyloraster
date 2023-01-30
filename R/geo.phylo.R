@@ -1,7 +1,6 @@
 #' Calculate phylogenetic diversity (Faith 1992) for a vector
 #'
 #' @description This function calculates the sum of the branch length for a set of species for one sample.
-#' @usage .vec.pd(x, branch.length)
 #' @param x numeric. A named numerical vector of presence-absence for one sample.
 #' @param branch.length numeric. A named numerical vector containing the branch length for each species.
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
@@ -77,23 +76,20 @@
 #' rse <- rast.se(ras)
 #' terra::plot(rse)
 #' }
-#'
 rast.se <- function(x, filename = NULL, cores = 1, ...){
 
+  # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
+  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
+
+  temp <- vector("list", length = 1) # to create a temporary vector with the raster number
+  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+
   # richness
-  if(cores > 1){ # calculates rich using more than 1 core
-
-    # richness
-    rse <- terra::app(x, sum, na.rm = TRUE, cores = cores, ...)
-    names(rse) <- c("SE")
-
-  } else { # using only one core- default
-
-    # richness
-    rse <- terra::app(x, sum, na.rm = TRUE, ...)
-    names(rse) <- c("SE")
-
-  }
+  rse <- terra::app(x, sum, na.rm = TRUE, cores = cores,
+                    filename = ifelse(mi, "", temp[[1]]))
+  names(rse) <- c("SE")
 
   if (!is.null(filename)){ # to save the rasters when the output filename is provide
     rse <- terra::writeRaster(rse, filename)
@@ -106,7 +102,6 @@ rast.se <- function(x, filename = NULL, cores = 1, ...){
 #' Calculate phylogenetic diversity for each raster cell
 #'
 #' @description Calculate the sum of the branch length for species present in each cell of the raster.
-#' @usage rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numerical vector containing the branch length for a set of species.
 #' @param filename character. Output filename.
@@ -132,22 +127,20 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   } else {
 
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    temp <- vector("list", length = 1) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+
     # phylogenetic diversity
-    if(cores > 1){ # calculates pd using a built-in function for vectors
-
-      rpd <- terra::app(x, fun = .vec.pd,
-                        branch.length = branch.length, cores = cores, ...)
-      rpd <- rpd[[1]] # select only the first raster
-      names(rpd) <- c("PD")
-
-    } else {
-
-      rpd <- terra::app(x, fun = .vec.pd,
-                        branch.length = branch.length, ...)
-      rpd <- rpd[[1]] # select only the first raster
-      names(rpd) <- c("PD")
-
-    }
+    rpd <- terra::app(x, fun = .vec.pd,
+                      branch.length = branch.length, cores = cores,
+                      filename = ifelse(mi, "", temp[[1]]))
+    rpd <- rpd[[1]] # select only the first raster
+    names(rpd) <- c("PD")
   }
 
   if (!is.null(filename)){ # to save the rasters when the output filename is provide
@@ -161,13 +154,12 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' Calculate Evolutionary distinctiveness for each raster cell
 #'
 #' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
-#' @usage rast.ed(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
 #' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @return SpatRaster
@@ -182,7 +174,7 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' }
 #'
 
-rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...){
+rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -190,24 +182,23 @@ rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 
   } else {
 
-    # weighted endemism
-    if(cores > 1){ # if cores > 1 then do this
-      red <- terra::app(x, fun = .evol.distin,
-                        branch.length, n.descen, cores = cores, ...)
-      red <- red[[1]] # only the first raster
-      names(red) <- "ED" # layer name
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
 
-    } else { # if cores = 1 then do this
+    temp <- vector("list", length = 1) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
-      red <- terra::app(x, fun = .evol.distin,
-                        branch.length, n.descen, ...)
-      red <- red[[1]] # only the first raster
-      names(red) <- "ED" # layer name
-
-    }
+    # evolutionary distinctiveness
+    red <- terra::app(x, fun = .evol.distin,
+                      branch.length, n.descen, cores = cores,
+                      filename = ifelse(mi, "", temp[[1]]))
+    red <- red[[1]] # only the first raster
+    names(red) <- "ED" # layer name
   }
 
-  if (!is.null(filename)){ # to save the rasters when the output filename is provide
+  if(!is.null(filename)){ # to save the rasters when the output filename is provide
     red <- terra::writeRaster(red, filename)
   }
 
@@ -218,11 +209,11 @@ rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 #' Calculate phylogenetic endemism for each raster cell
 #'
 #' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
-#' @usage rast.pe(x, branch.length, filename = NULL, cores = 1, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
-#' @param filename character. Output filename.
+#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
@@ -233,52 +224,50 @@ rast.ed <- function(x, branch.length, n.descen, filename = NULL, cores = 1, ...)
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' rast.pe(data$x, data$branch.length)
+#' rast.pe(data$x, data$branch.length, rescale = FALSE, cores = 1)
 #' }
 
-rast.pe <- function(x, branch.length, filename = NULL, cores = 1, ...){
+rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NULL, ...){
 
   if(!all.equal(names(x), names(branch.length))){
 
     stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
 
-  } else{
+  } else {
 
-    area.branch <- phylogrid::inv.range(x, branch.length) # calculate the inverse of range size multiplied by branch lenght of each species
+    # 3 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 3)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    temp <- vector("list", length = 3) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+    temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
+    temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
+
+    area.branch <- phylogrid::inv.range(x, branch.length,
+                                        filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
 
     # phylogenetic endemism
-    if(cores > 1){ # if cores > 1 then do this
-
-      rpe <- terra::app(area.branch$LR,
-                        function(x){
-                          if(all(is.na(x))){
-                            return(NA)
-                          }
-                          sum(x, na.rm = T)
-                        }, cores = cores, ...)
-
-      rpe <- terra::app(rpe, function(x, m){ # reescale the values from 0 to 1
-        (x/m)
-      }, m = terra::minmax(rpe)[2,])
-
-    } else {  # if cores = 1 then do this
-
-      rpe <- terra::app(area.branch$LR,
-                        function(x){
-                          if(all(is.na(x))){
-                            return(NA)
-                          }
-                          sum(x, na.rm = T)
-                        }, ...)
-      rpe <- terra::app(rpe, function(x, m){ # to reescale the values from 0 to 1
-        (x/m)
-      }, m = terra::minmax(rpe)[2,])
-
-    }
-
-    names(rpe) <- "PE" # layer name
+    rpe <- terra::app(area.branch$LR,
+                      function(x){
+                        if(all(is.na(x))){
+                          return(NA)
+                        }
+                        sum(x, na.rm = T)
+                      }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
 
   }
+
+  if(rescale == TRUE){
+    rpe <- terra::app(rpe, function(x, m){ # rescale the values from 0 to 1
+      (x/m)
+    }, m = terra::minmax(rpe)[2,], filename = ifelse(mi, "", temp[[3]]))
+
+  }
+
+  names(rpe) <- "PE" # layer name
+
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
     rpe <- terra::writeRaster(rpe, filename)
@@ -291,10 +280,10 @@ rast.pe <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' Calculate weighted endemism for each raster cell
 #'
 #' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
-#' @usage rast.we(x, filename = NULL, cores = 1, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param filename character. Output filename.
+#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #' @return SpatRaster
@@ -307,44 +296,37 @@ rast.pe <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' rast.we(ras)
 #' }
 #'
-rast.we <- function(x, filename = NULL, cores = 1, ...){
+rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
 
-  temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+  # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
+  mi <- terra::mem_info(x, 3)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
+
+  temp <- vector("list", length = 3) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+  temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
+  temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-  rs <- range(x)
+  rs <- range(x) # return an vector with species's range
 
   # inverse of range size
   inv.R <- terra::ifel(x == 0, 0, 1/(x * rs),
-                       filename = temp[[1]], overwrite = TRUE) # calculating the inverse of range size
+                       filename = ifelse(mi, "", temp[[1]]), overwrite = TRUE) # calculating the inverse of range size
+
   # weighted endemism
-  if(cores > 1) {
+  # calculating we
+  rend <- terra::app(inv.R,
+                     function(x){
+                       if(all(is.na(x))){
+                         return(NA)}
+                       sum(x, na.rm = T)
+                     }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
 
-    # calculating we
-    rend <- terra::app(inv.R,
-                       function(x){
-                         if(all(is.na(x))){
-                           return(NA)}
-                         sum(x, na.rm = T)
-                       }, cores = cores, ...)
-
-    rend <- terra::app(rend, function(x, m){ # reescale the values
+  if(rescale == TRUE){
+    rend <- terra::app(rend, function(x, m){ # rescale the values
       (x/m)
-    }, m = terra::minmax(rend)[2,]) # 2 is the max
-
-  } else {
-
-    rend <- terra::app(inv.R,
-                       function(x){
-                         if(all(is.na(x))){
-                           return(NA)}
-                         sum(x, na.rm = T, ...)
-                       })
-
-    rend <- terra::app(rend, function(x, m){ # reescale the values
-      (x/m)
-    }, m = terra::minmax(rend)[2,])
-
+    }, m = terra::minmax(rend)[2,], cores = cores, filename = ifelse(mi, "", temp[[3]])) # 2 is the max
   }
 
   names(rend) <- "WE" # layer name
@@ -361,10 +343,13 @@ rast.we <- function(x, filename = NULL, cores = 1, ...){
 #' Calculate community metrics for each raster cell
 #'
 #' Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism using rasters as input and output.
-#'
-#' @inheritParams rast.ed
-#' @inheritParams phylo.pres
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param tree phylo. A dated tree.
 #' @param metric character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.
+#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed for fun.
 #' @return SpatRaster
 #' @export
 #' @details Community metrics available:
@@ -384,165 +369,117 @@ rast.we <- function(x, filename = NULL, cores = 1, ...){
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1)
+#' geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1, filename = NULL, ...)
+#' geo.phylo(ras, tree, metric = 'phylo.endemism', rescale = T, cores = 1, filename = NULL, ...)
+#' geo.phylo(ras, metric = 'weigh.endemism', rescale = T, cores = 1, filename = NULL, ...)
 #' }
 #'
-geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'), filename = NULL, cores = 1){
+geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
+                                          'evol.distinct', 'phylo.endemism',
+                                          'weigh.endemism'), rescale = FALSE, cores = 1,
+                      filename = NULL, ...){
 
   ### calculating PD, SE, WE, PE, and ED
-  if (cores>1){ # parallel processing
 
-    if(metric == 'phylo.diversity'){
+  if(metric == 'phylo.diversity'){
 
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
 
-      # phylogenetic diversity
-      resu <- phylogrid::rast.pd(x, branch.length, cores = cores)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
+    ### preparing data
+    # reordering the raster according to tree
+    # getting branch length
+    pp <- phylo.pres(x, tree)
+    branch.length <- pp$branch.length # branch length
+    x <- pp$x # raster reordered
 
-    } else if (metric == 'evol.distinct'){
-
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      # getting ancestor number
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
-      n.descen <- pp$n.descen # number of descendants by each branch
-
-      # evolutionary distinctiveness
-      resu <- phylogrid::rast.ed(x, branch.length, n.descen, cores = cores)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'richness'){
-      # richness
-      resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'weigh.endemism'){
-
-      ### inverse of range size
-      ir <- inv.range(x, branch.length) # calculating inverse of range size
-      area.inv <- ir$inv.R # subletting only the inverse of range size
-
-      #  weighted endemism
-      resu <- phylogrid::rast.we(x, cores = cores)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'phylo.endemism'){
-
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      # getting ancestor number
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
-
-      ### inverse of range size
-      ir <- inv.range(x, branch.length) # calculating inverse of range size
-      area.tips <- ir$LR # inverse of range size multiplied by branch length
-
-      # phylogenetic endemism
-      resu <- phylogrid::rast.pe(x, branch.length, cores = cores)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else {
-      stop("Choose a valid metric! The community metrics currently available are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'.")
+    # phylogenetic diversity
+    resu <- phylogrid::rast.pd(x, branch.length, cores = cores)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
     }
-  } else { # with cores < 1, no parallel processing
-    if(metric == 'phylo.diversity'){
 
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      # getting ancestor number
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
+  } else if (metric == 'evol.distinct'){
 
-      # phylogenetic diversity
-      resu <- phylogrid::rast.pd(x, branch.length)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
 
-    } else if (metric == 'evol.distinct'){
+    ### preparing data
+    # reordering the raster according to tree
+    # getting branch length
+    # getting ancestor number
+    pp <- phylo.pres(x, tree)
+    branch.length <- pp$branch.length # branch length
+    x <- pp$x # raster reordered
+    n.descen <- pp$n.descen # number of descendants by each branch
 
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      # getting ancestor number
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
-      n.descen <- pp$n.descen # number of descendants by each branch
-
-      # evolutionary distinctiveness
-      resu <- phylogrid::rast.ed(x, branch.length, n.descen)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'richness'){
-      # richness
-      resu <- terra::app(x, sum, na.rm = TRUE)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'weigh.endemism'){
-
-      ### inverse of range size
-      ir <- inv.range(x, branch.length) # calculating inverse of range size
-      area.inv <- ir$inv.R # subletting only the inverse of range size
-
-
-      # weighted endemism
-      resu <- phylogrid::rast.we(x)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else if (metric == 'phylo.endemism'){
-
-      ### preparing data
-      # reordering the raster according to tree
-      # getting branch length
-      # getting ancestor number
-      pp <- phylo.pres(x, tree)
-      branch.length <- pp$branch.length # branch length
-      x <- pp$x # raster reordered
-
-      ### inverse of range size
-      ir <- inv.range(x, branch.length) # calculating inverse of range size
-      area.tips <- ir$LR # inverse of range size multiplied by branch length
-
-      # phylogenetic endemism
-      resu <- phylogrid::rast.pe(x, branch.length)
-      if (!is.null(filename)){ # to save the rasters when the path is provide
-        resu <- terra::writeRaster(resu, filename)
-      }
-
-    } else {
-      stop("Choose a valid metric! The community metrics currently available are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'.")
+    # evolutionary distinctiveness
+    resu <- phylogrid::rast.ed(x, branch.length, n.descen, cores = cores)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
     }
+
+  } else if (metric == 'richness'){
+
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    # richness
+    resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
+    }
+
+  } else if (metric == 'weigh.endemism'){
+
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    ### inverse of range size
+    ir <- inv.range(x, branch.length, rescale = rescale) # calculating inverse of range size
+    area.inv <- ir$inv.R # subletting only the inverse of range size
+
+    #  weighted endemism
+    resu <- phylogrid::rast.we(x, cores = cores, rescale = rescale)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
+    }
+
+  } else if (metric == 'phylo.endemism'){
+
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    ### preparing data
+    # reordering the raster according to tree
+    # getting branch length
+    # getting ancestor number
+    pp <- phylo.pres(x, tree)
+    branch.length <- pp$branch.length # branch length
+    x <- pp$x # raster reordered
+
+    ### inverse of range size
+    ir <- inv.range(x, branch.length) # calculating inverse of range size
+    area.tips <- ir$LR # inverse of range size multiplied by branch length
+
+    # phylogenetic endemism
+    resu <- phylogrid::rast.pe(x, branch.length, cores = cores, rescale = rescale)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
+    }
+
+  } else {
+    stop("Choose a valid metric! The community metrics currently available are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'.")
   }
   return(resu)
 }
