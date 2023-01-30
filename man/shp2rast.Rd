@@ -23,7 +23,6 @@ The function transform a shapefile to a raster with the same extent.
 \dontrun{
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
 spps <- shp$BINOMIAL
-shp2rast(dat$IUCN_shapefile, spps, resolution = 0.1)
+shp2rast(shp, spps, resolution = 0.1)
 }
-
 }

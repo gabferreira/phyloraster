@@ -1,51 +1,68 @@
 #' Rasterize shapefile
 #'
-#' The function transform a shapefile to a raster with the same extent.
+#' The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
 #'
-#' @param shp SpatialPolygonsDataFrame or a SpatVector. A shapefile representing species distribution
-#' @param sps vector. A vector of characters with unique (not duplicated) species names presents in the shapefile
+#' @inheritParams terra::rasterize
+#' @param sps.col
 #' @param resolution numeric. A numeric vector of length 1 or 2 to set the resolution
 #' @return SpatRaster
 #' @export
 #' @examples
 #' \dontrun{
-#' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
-#' spps <- shp$BINOMIAL
-#' shp2rast(dat$IUCN_shapefile, spps, resolution = 0.1)
-#' }
+#' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+#'                               package="phylogrid"))
+#' library(rnaturalearth)
+#' countries <- terra::vect(ne_countries()) # mapa mundi
+#' coun.crop <- crop(countries, ext(shp)) # cut by the total extension of the polygons
+#' coun.rast <- rasterize(coun.crop,
+#'                       terra::rast(ext(shp), resolution = 0.5))
+#' plot(coun.rast, col = "green")
 #'
-shp2rast <- function(shp, sps, resolution){
+#' rasterizing with a mask of a country for example
+#' teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
+#' plot(teste[[1:3]], col = c("grey", "green"))
+#'
+# rasterizing based on extent and without using mask
+#' teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
+#' plot(teste2[[1:3]], col = c("grey", "green"))
+#' }
+shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
+                     touches = TRUE, resolution, filename = NULL, ...){
 
-  if(!class(shp) == "SpatVector"){
-
-    shp <- terra::vect(shp)
-    exte <- terra::ext(shp) # extent
-    rr <- terra::rast(exte, resolution = resolution) # extent raster
-
-    r_list <- list() # list to store the objects created in a loop for
-
-    for(i in 1:length(sps)){
-      r_list[[i]] <- terra::rasterize(shp[i,], rr)
-      }
-
-    rt <- terra::rast(r_list) # raster stack
-    names(rt) <- sps # names
-
-    return(rt)
-  } else {
-
-    exte <- terra::ext(shp) # extent
-    rr <- terra::rast(exte, resolution = resolution) # extent raster
-
-    r_list <- list() # list to store the objects created in a loop for
-
-    for(i in 1:length(sps)){
-      r_list[[i]] <- terra::rasterize(shp[i,], rr)
-    }
-
-    rt <- terra::rast(r_list) # raster stack
-    names(rt) <- sps # names
-
-    return(rt)
+  if(!class(x) == "SpatVector"){
+    x <- terra::vect(x)
   }
+
+  nm <- unique(data.frame(x)[,sps.col])
+
+  ynull <- is.null(y) # y is null?
+
+  if(ynull){
+    exte <- terra::ext(x) # extent
+    y <- terra::rast(exte, resolution = resolution) # extent raster
+  }
+
+  r_list <- list() # list to store the objects created in a loop for
+
+  for(i in 1:length(nm)){
+    r_list[[i]] <- terra::rasterize(x[data.frame(x)[,sps.col] == nm[i],], y,
+                                    field = NULL,
+                                    value = 1,
+                                    background = background,
+                                    touches = touches, filename = "", ...)
+  }
+
+  rt <- terra::rast(r_list) # raster stack
+  names(rt) <- nm # names
+
+  # aplicando uma mascara
+  if(!ynull & ymask){
+    rt <- mask(rt, y)
+  }
+
+  if (!is.null(filename)){ # to save the rasters when the path is provide
+    rt <- terra::writeRaster(rt, filename, ...)
+  }
+
+  return(rt)
 }
