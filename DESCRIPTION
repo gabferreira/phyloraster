@@ -18,14 +18,14 @@ Imports:
     terra,
     ape,
     phylobase,
-    devtools
+    qpdf
 Depends: 
     R (>= 2.10)
 Suggests: 
     knitr,
     rmarkdown,
-    qpdf,
     maps,
+    devtools,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 2
