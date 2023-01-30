@@ -35,7 +35,10 @@
 #' Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells).
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param x SpatRaster. A presence-absence SpatRaster.
+#' @param memory logical.
 #' @param random character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @export
@@ -47,12 +50,12 @@
 #' plot(sr)
 #' }
 spat.rand <- function(x, random = c("site", "species", "fullspat"),
-                      filename = "", memory = FALSE, cores = 1){
+                      filename = "", memory = FALSE, cores = 1, ...){
 
   fr <- terra::freq(x)
 
   if (random == "species"){
-    if(memory){ # quando cabe na memoria
+    if(memory == TRUE){ # quando cabe na memoria
 
       # randomize by layers- sites
       resu <- terra::rast(lapply(1:terra::nlyr(x),
@@ -75,19 +78,19 @@ spat.rand <- function(x, random = c("site", "species", "fullspat"),
 
   } else if (random == "site") {
 
-    if(memory){
+    if(memory == TRUE){
       ### randomize by cells- species in each site
-      resu <- terra::app(x, sample, cores = cores, filename = filename)
+      resu <- terra::app(x, sample, cores = cores, filename = filename, overwrite = T)
 
     } else {
       ### randomize by cells- species in each site
-      resu <- terra::app(x, sample, cores = cores, filename = filename)
+      resu <- terra::app(x, sample, cores = cores, filename = filename, overwrite = T)
 
     }
 
   } else if (random == "fullspat") {
 
-    if(memory){
+    if(memory == TRUE){
       ### randomize by sites and species!
       resu <- x
       resu[] <- .sample.not.NA(x[])
@@ -95,7 +98,7 @@ spat.rand <- function(x, random = c("site", "species", "fullspat"),
     } else {
       ### randomize by sites and species!
       resu <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
-                         filename = filename)
+                         filename = filename, overwrite = T)
 
     }
 
