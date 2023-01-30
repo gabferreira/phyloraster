@@ -1,17 +1,22 @@
 #' Calculate phylogenetic endemism for a raster
 #'
 #' Calculate phylogenetic endemism using rasters as input and output.
-#'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A named numerical vector containing the branch length of each specie.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster
 # #' @export
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
-#'
-.rast.pe.B <- function(x, branch.length, filename = NULL, ...){
+#' \dontrun{
+#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' data <- phylo.pres(ras, tree)
+#' .rast.pe.B(data$x, data$branch.length, cores = 1)
+#' }
+.rast.pe.B <- function(x, branch.length, cores = 1, filename = NULL, ...){
 
   {
     area.branch <- phylogrid::inv.range(x, branch.length)
@@ -22,10 +27,10 @@
                           return(NA)
                         }
                         sum(x, na.rm = T)
-                      })
+                      }, cores = cores)
     rpe <- terra::app(rpe, function(x, m){ # to reescale values from 0 to 1
       (x/m)
-    }, m = terra::minmax(rpe)[2,])
+    }, m = terra::minmax(rpe)[2,], cores = cores)
   }
 
   names(rpe) <- c("PE")
@@ -53,13 +58,17 @@
 #' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
 #' plot(t)
 #' }
-#'
 rast.pe.ses <- function(x, branch.length, aleats,
                         random = c("area.size", "site", "species", "fullspat"),
-                        filename = NULL){
+                        cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
+
+  # x rasters will be generated in this function, let's see if there is enough
+  # memory in the user's pc
+  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
   if(random == "tip"){
@@ -73,7 +82,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
       # branch.length == bl.random
       temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
       pe.rand[[i]] <- .rast.pe.B(x, branch.length = bl.random,
-                                 filename = temp[[i]])
+                                 filename = temp[[i]], cores = cores)
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
@@ -86,10 +95,11 @@ rast.pe.ses <- function(x, branch.length, aleats,
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
       ### shuffle by layer - order of sites for each separate species
-      pres.site.null <- spat.rand(x, aleats = 1, random = "site")
+      pres.site.null <- spat.rand(x, random = "site", cores = cores,
+                                  filename = temp.raster, memory = mi)
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
-                                 filename = temp[[i]])
+                                 filename = temp[[i]], cores = cores)
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
@@ -101,9 +111,10 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, aleats = 1, random = "species")
+      sp.rand <- spat.rand(x, random = "species", cores = cores,
+                           filename = temp.raster, memory = mi)
       pe.rand[[i]] <- .rast.pe.B(sp.rand, branch.length = branch.length,
-                                 filename = temp[[i]])
+                                 filename = temp[[i]], cores = cores)
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
@@ -116,9 +127,10 @@ rast.pe.ses <- function(x, branch.length, aleats,
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
       ### randomize sites and species
-      pres.null <- terra::app(x, fun=.lyr.sample, fr=fr)
+      pres.null <- spat.rand(x, random = "fullspat", cores = cores,
+                             filename = temp.raster, memory = mi)
       pe.rand[[i]] <- .rast.pe.B(pres.null, branch.length = branch.length,
-                                 filename = temp[[i]])
+                                 filename = temp[[i]], cores = cores)
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
@@ -130,20 +142,23 @@ rast.pe.ses <- function(x, branch.length, aleats,
   ## PE observed
   x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
-  pe.obs <- phylogrid::rast.pe(x.reord, branch.length = branch.length, filename = filename)
+  pe.obs <- phylogrid::rast.pe(x.reord, branch.length = branch.length,
+                               filename = filename, cores = cores)
 
   ## PD rand mean and PD rand SD
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
   pe.rand.sd <- terra::stdev(pe.rand, na.rm = TRUE, filename = filename) # sd pd
 
   unlink(temp) # delete the file that will not be used
+  unlink(temp.raster) # delete the file that will not be used
 
   ## Calculating the standard effect size (SES)
   {
     ses <- function(x){
       (x[1] - x[2])/x[3]
     }
-    pe.ses <- terra::app(c(pe.obs, pe.rand.mean, pe.rand.sd), fun = ses)
+    pe.ses <- terra::app(c(pe.obs, pe.rand.mean, pe.rand.sd),
+                         fun = ses, cores = cores)
   }
 
   names(pe.ses) <- "SES"

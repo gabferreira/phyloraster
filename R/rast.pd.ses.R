@@ -4,8 +4,10 @@
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param branch.length numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
-#' @param filename character. Output filename.
 #' @param random character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster. The function returns the observed phylogenetic diversity, the mean of the simulations calculated over n times, the standard deviation of the simulations, and the standardized effect size (SES) for the phylogenetic diversity.
 #' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
 #' @export
@@ -21,10 +23,15 @@
 #' }
 #'
 rast.pd.ses <- function(x, branch.length, aleats,
-                        random = c("tip", "site", "species", "fullspat"), filename = NULL){
+                        random = c("tip", "site", "species", "fullspat"),
+                        cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
+
+  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
   if(random == "tip"){
@@ -39,7 +46,8 @@ rast.pd.ses <- function(x, branch.length, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
 
       pd.rand[[i]] <- terra::app(x, fun = .vec.pd,
-                                 branch.length = bl.random, filename = temp[[i]])
+                                 branch.length = bl.random,
+                                 filename = temp[[i]], cores = cores)
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
 
@@ -56,11 +64,13 @@ rast.pd.ses <- function(x, branch.length, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
       ### shuffle by layer - order of sites for each separate species
-      pres.site.null <- spat.rand(x, aleats = 1, random = "site")
+      pres.site.null <- spat.rand(x, random = "site", cores = cores,
+                                  filename = temp.raster, memory = mi)
 
       # calculate pd
       pd.rand[[i]] <- terra::app(pres.site.null, fun = .vec.pd,
-                                 branch.length = branch.length, filename = temp[[i]])
+                                 branch.length = branch.length,
+                                 filename = temp[[i]], cores = cores)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -76,10 +86,12 @@ rast.pd.ses <- function(x, branch.length, aleats,
     for(i in 1:aleats){
 
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, aleats = 1, random = "species")
+      sp.rand <- spat.rand(x, random = "species", cores = cores,
+                           filename = temp.raster, memory = mi)
       pd.rand[[i]] <- terra::app(sp.rand,
                                  fun = .vec.pd,
-                                 branch.length = branch.length, filename = temp[[i]])
+                                 branch.length = branch.length,
+                                 filename = temp[[i]], cores = cores)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -97,10 +109,12 @@ rast.pd.ses <- function(x, branch.length, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
 
       ### shuffle sites and species - "full.spat"
-      pres.null <- terra::app(x, fun=.lyr.sample, fr=fr)
+      pres.null <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
+                              filename = temp.raster, memory = mi)
 
       pd.rand[[i]] <- terra::app(pres.null, fun = .vec.pd,
-                                 branch.length = branch.length, filename = temp[[i]])
+                                 branch.length = branch.length,
+                                 filename = temp[[i]], cores = cores)
 
       pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
     }
@@ -120,7 +134,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
   {
     x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
-    pd.obs <- phylogrid::rast.pd(x.reord, branch.length)
+    pd.obs <- phylogrid::rast.pd(x.reord, branch.length, cores = cores)
     pd.obs <- pd.obs$PD # selecting only PD
   }
 
@@ -133,7 +147,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
       (x[1] - x[2])/x[3]
     }
     pd.ses <- terra::app(c(pd.obs, pd.rand.mean, pd.rand.sd),
-                         ses)
+                         ses, cores = cores)
     names(pd.ses) <- "SES"
   }
 
@@ -145,6 +159,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
   }
 
   unlink(temp) # delete the archive that will not be used
+  unlink(temp.raster) # delete the archive that will not be used
 
   return(out)
 }
