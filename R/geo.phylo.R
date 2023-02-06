@@ -435,25 +435,26 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
-
-  } else if (metric == 'weigh.endemism'){
-
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
-
-    ### inverse of range size
-    ir <- inv.range(x, branch.length, rescale = rescale) # calculating inverse of range size
-    area.inv <- ir$inv.R # subletting only the inverse of range size
-
-    #  weighted endemism
-    resu <- phylogrid::rast.we(x, cores = cores, rescale = rescale)
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
-    }
-
-  } else if (metric == 'phylo.endemism'){
+}
+  # } else if (metric == 'weigh.endemism'){
+  #
+  #   # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  #   sink(nullfile())    # suppress output
+  #   mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  #   sink()
+  #
+  #   ### inverse of range size
+  #   ir <- inv.range(x, branch.length, rescale = rescale) # calculating inverse of range size
+  #   area.inv <- ir$inv.R # subletting only the inverse of range size
+  #
+  #   #  weighted endemism
+  #   resu <- phylogrid::rast.we(x, cores = cores, rescale = rescale)
+  #   if (!is.null(filename)){ # to save the rasters when the path is provide
+  #     resu <- terra::writeRaster(resu, filename)
+  #   }
+  #
+  # }
+    else if (metric == 'phylo.endemism'){
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
