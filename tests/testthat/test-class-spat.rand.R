@@ -6,5 +6,4 @@ test_that("check if the object class is correct", {
 
   # tests
   expect_s4_class(sr, "SpatRaster")
-
 })
