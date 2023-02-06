@@ -2,6 +2,8 @@
 # phylogrid
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.com/gabferreira/phylogrid.svg?branch=master)](https://travis-ci.com/gabferreira/phylogrid)
+[![.travis](https://github.com/gabferreira/phylogrid/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phylogrid/actions/workflows/.travis.yml)
 <!-- badges: end -->
 
 The goal of *phylogrid* package is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), phylogenetic endemism (PE. Rosauer et al. 2009), weighted endemism (WE)) for presence-absence rasters and return a raster object as an output.
