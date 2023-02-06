@@ -195,8 +195,10 @@ Null models are a widely used method to control for richness effects in diversit
 
 -   **Spatial and phylogenetic randomization**
 
-The intern function `spat.rand` randomizes raster stacks through three different methods (site, species or fullspat) that can be chosen through the argument random. 
-The first method (site) keeps species richness constant in each pixel, but randomizes the position of species in the stack. To perform this randomization, we based on the frequency of presences and absences for each species. Thus, the size of the distribution will not change, but the position of the species in space. In the second method (species), the order of species in the stack is kept constant, but the pixels where each species are present are randomized in space. This method is based on sampling of the presences and absences in each pixel. The third (fullspat) combines randomization by site and species at the same time. In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
+The intern function `spat.rand` randomizes raster stacks through three different methods (site, species or both) that can be chosen through the argument random. 
+The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). 
+The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time.
+ In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
@@ -205,7 +207,7 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogri
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
 data <- phylogrid::phylo.pres(ras, tree)
 
-t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
+t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "both")
 ```
 
 Plotting the results
