@@ -55,21 +55,20 @@
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "fullspat")
+#' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "both")
 #' plot(t)
 #' }
 rast.pe.ses <- function(x, branch.length, aleats,
-                        random = c("area.size", "site", "species", "fullspat"),
+                        random = c("area.size", "site", "species", "both"),
                         cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
 
+
   # x rasters will be generated in this function, let's see if there is enough
   # memory in the user's pc
-  sink(nullfile())    # suppress output
-  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-  sink()
+  mi <- .fit.memory(x)
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
@@ -121,7 +120,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
 
-  } else if (random == "fullspat") {
+  } else if (random == "both") {
 
     pe.rand <- list() # to store the rasters in the loop
     fr <- terra::freq(x)
@@ -129,7 +128,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
       ### randomize sites and species
-      pres.null <- spat.rand(x, random = "fullspat", cores = cores,
+      pres.null <- spat.rand(x, random = "both", cores = cores,
                              filename = temp.raster, memory = mi)
       pe.rand[[i]] <- .rast.pe.B(pres.null, branch.length = branch.length,
                                  filename = temp[[i]], cores = cores)
@@ -138,7 +137,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
 
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'fullspat'.")
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'both'.")
   }
 
   ## PE observed

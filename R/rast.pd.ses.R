@@ -4,7 +4,7 @@
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param branch.length numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
-#' @param random character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).
+#' @param random character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -22,16 +22,15 @@
 #' plot(t)
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
-                        random = c("tip", "site", "species", "fullspat"),
+                        random = c("tip", "site", "species", "both"),
                         cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  sink(nullfile())    # suppress output
-  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-  sink()
+  mi <- .fit.memory(x)
+
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
@@ -99,7 +98,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
     pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
 
-  } else if(random == "fullspat") {
+  } else if(random == "both") {
 
     pd.rand <- list() # to store the rasters in the loop
     pd.rand2 <- list() # list to store the rasters
@@ -123,7 +122,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
     pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
 
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'fullspat'.")
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'both'.")
   }
 
   ### PD rand mean
