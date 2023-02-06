@@ -8,7 +8,7 @@ spat.rand(
   x,
   random = c("site", "species", "fullspat"),
   filename = "",
-  memory = FALSE,
+  memory = NULL,
   cores = 1,
   ...
 )
