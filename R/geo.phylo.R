@@ -308,7 +308,7 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
   temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
   temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-  rs <- range.size(x) # return an vector with species's range
+  rs <- range_size(x) # return an vector with species's range
 
   # inverse of range size
   inv.R <- terra::ifel(x == 0, 0, 1/(x * rs),

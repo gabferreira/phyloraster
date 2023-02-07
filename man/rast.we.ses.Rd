@@ -7,7 +7,7 @@
 rast.we.ses(
   x,
   aleats,
-  random = c("site", "species", "fullspat"),
+  random = c("site", "species", "both"),
   cores = 1,
   filename = NULL,
   ...
@@ -18,7 +18,7 @@ rast.we.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating what type of randomization. Could be by "site", "species" or "fullspat" (site and species).}
+\item{random}{character. A character indicating what type of randomization. Could be by "site", "species" or "both" (site and species).}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 

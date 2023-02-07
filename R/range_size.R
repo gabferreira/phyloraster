@@ -10,9 +10,9 @@
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' range.size(ras, scale = TRUE)
+#' range_size(ras, scale = TRUE)
 #' }
-range.size <- function(x, scale = FALSE, ...){
+range_size <- function(x, scale = FALSE, ...){
 
     temp <- vector("list", length = 2) # to create a temporary vector with the raster number
     temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster

@@ -2,7 +2,7 @@
 #'
 #' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param range.size numeric. A numerical vector containing the range size for each species. See the function range.size.
+#' @param range_size numeric. A numerical vector containing the range size for each species. See the function range_size.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -14,17 +14,17 @@
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' rs <- range.size(ras)
+#' rs <- range_size(ras)
 #' .rast.we.B(ras, rs)
 #' }
 #'
-.rast.we.B <- function(x, range.size, filename = NULL, cores = 1, ...){
+.rast.we.B <- function(x, range_size, filename = NULL, cores = 1, ...){
 
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
   # inverse of range size
-  inv.R <- terra::ifel(x == 0, 0, 1/(x * range.size),
+  inv.R <- terra::ifel(x == 0, 0, 1/(x * range_size),
                        filename = temp[[1]],
                        overwrite = TRUE) # calculating the inverse of range size
   # weighted endemism
@@ -95,7 +95,7 @@ rast.we.ses <- function(x, aleats,
   #     ## check if the values are differents
   #     # rs == rs.random
   #     temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
-  #     we.rand[[i]] <- .rast.we.B(x, range.size = rs.random,
+  #     we.rand[[i]] <- .rast.we.B(x, range_size = rs.random,
   #                             filename = temp[[i]], cores = cores)
   #   }
   #
@@ -112,7 +112,7 @@ rast.we.ses <- function(x, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif")
       ### embaralha por lyr - ordem dos sítios de cada espécie separada
       site.rand <- spat.rand(x, random = "site", filename = temp.raster, memory = mi)
-      we.rand[[i]] <- .rast.we.B(site.rand, range.size = rs,
+      we.rand[[i]] <- .rast.we.B(site.rand, range_size = rs,
                                  filename = temp[[i]], cores = cores)
     }
 
@@ -126,7 +126,7 @@ rast.we.ses <- function(x, aleats,
     for(i in 1:aleats){
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
       sp.rand <- spat.rand(x, random = "species", filename = temp.raster, memory = mi)
-      we.rand[[i]] <- .rast.we.B(sp.rand, range.size = rs,
+      we.rand[[i]] <- .rast.we.B(sp.rand, range_size = rs,
                                  filename = temp[[i]], cores = cores)
     }
 
@@ -141,7 +141,7 @@ rast.we.ses <- function(x, aleats,
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
       ### randomize sites and species
       full.rand <- spat.rand(x, random = "both", filename = temp.raster, memory = mi)
-      we.rand[[i]] <- .rast.we.B(full.rand, range.size = rs,
+      we.rand[[i]] <- .rast.we.B(full.rand, range_size = rs,
                                  filename = temp[[i]], cores = cores)
     }
 

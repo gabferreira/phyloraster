@@ -4,12 +4,12 @@
 \alias{.rast.we.B}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-.rast.we.B(x, range.size, filename = NULL, cores = 1, ...)
+.rast.we.B(x, range_size, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
-\item{range.size}{numeric. A numerical vector containing the range size for each species. See the function range.size.}
+\item{range_size}{numeric. A numerical vector containing the range size for each species. See the function range_size.}
 
 \item{filename}{character. Output filename.}
 
@@ -26,7 +26,7 @@ Calculate the sum of the inverse of the range size for species present in each r
 \examples{
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-rs <- range.size(ras)
+rs <- range_size(ras)
 .rast.we.B(ras, rs)
 }
 

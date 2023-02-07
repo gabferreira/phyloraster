@@ -8,7 +8,7 @@ rast.pd.ses(
   x,
   branch.length,
   aleats,
-  random = c("tip", "site", "species", "fullspat"),
+  random = c("tip", "site", "species", "both"),
   cores = 1,
   filename = NULL,
   ...
@@ -21,7 +21,7 @@ rast.pd.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "fullspat" (site and species).}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 

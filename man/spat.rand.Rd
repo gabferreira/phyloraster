@@ -6,7 +6,7 @@
 \usage{
 spat.rand(
   x,
-  random = c("site", "species", "fullspat"),
+  random = c("site", "species", "both"),
   filename = "",
   memory = NULL,
   cores = 1,
@@ -16,7 +16,7 @@ spat.rand(
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster.}
 
-\item{random}{character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "fullspat".}
+\item{random}{character. Character indicating the type of randomization to be used. The available types are by "site", "specie" or "both". The first method (site) keeps species richness constant within each site (cell)pixel by randomizing the position (presence/absence) of the species within each cell of the stack.}
 
 \item{filename}{character. Output filename.}
 
@@ -31,6 +31,9 @@ SpatRaster
 }
 \description{
 Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells).
+}
+\details{
+The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space (Figure 1b). This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time.
 }
 \examples{
 \dontrun{
