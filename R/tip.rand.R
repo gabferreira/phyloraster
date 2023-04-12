@@ -3,7 +3,7 @@
 #' @description This function randomize branch lengths or another vector for n times.
 #' @param x numeric. A numeric vector containing the branch lengths.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
-#' @return list
+#' @return list of numeric vectors
 #' @author Gabriela Alves-Ferreira
 #' @export
 #' @examples
