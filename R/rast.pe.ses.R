@@ -18,7 +18,12 @@
 #' }
 .rast.pe.B <- function(x, branch.length, cores = 1, filename = NULL, ...){
 
-  {
+  # if(!all.equal(names(x), names(branch.length))){
+  #
+  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  #
+  # } else {
+
     area.branch <- phylogrid::inv.range(x, branch.length)
 
     rpe <- terra::app(area.branch$LR,
@@ -31,7 +36,7 @@
     rpe <- terra::app(rpe, function(x, m){ # to reescale values from 0 to 1
       (x/m)
     }, m = terra::minmax(rpe)[2,], cores = cores)
-  }
+  # }
 
   names(rpe) <- c("PE")
 
@@ -60,7 +65,7 @@
 #' }
 rast.pe.ses <- function(x, branch.length, aleats,
                         random = c("area.size", "site", "species", "both"),
-                        cores = 1, filename = NULL, ...){
+                        cores = 1, filename = "", ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number

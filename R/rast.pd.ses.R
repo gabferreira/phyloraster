@@ -23,7 +23,7 @@
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
                         random = c("tip", "site", "species", "both"),
-                        cores = 1, filename = NULL, ...){
+                        cores = 1, filename = "", ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
