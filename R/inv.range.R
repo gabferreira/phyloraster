@@ -34,7 +34,7 @@ inv.range <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   # calculating area
   {
-    area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
+    cell.area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
 
     # area.to <- terra::expanse(terra::ifel(any(!is.na(x)), 1, NA)) #  to calculate total area
 
@@ -43,7 +43,7 @@ inv.range <- function(x, branch.length, filename = NULL, cores = 1, ...){
       az <- terra::zonal(a, Z[[i]], sum)
       az <- az[az[,1]==1,2]
       ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
-    }, a= area, Z = x)
+    }, a= cell.area, Z = x)
 
     # rs[] <- rs/area.to # to reescale
     names(rs) <- names(x) # to add names
@@ -52,7 +52,7 @@ inv.range <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   # calculating inverse of area and inv area x branch length
   {
-    inv.R <- terra::ifel(x == 0, 0, 1/(x*rs),
+    inv.R <- terra::ifel(x == 0, 0, cell.area/(x*rs),
                          filename = temp[[2]], overwrite = T) # calculating the inverse of range size
 
     LR <- terra::app(inv.R, function(x, bl){

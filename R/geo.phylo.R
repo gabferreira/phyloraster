@@ -308,10 +308,10 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
   temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
   temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-  rs <- range_size(x) # return an vector with species's range
+  rs <- phylogrid::range_size(x) # return an vector with species's range
 
   # inverse of range size
-  inv.R <- terra::ifel(x == 0, 0, 1/(x * rs),
+  inv.R <- terra::ifel(x == 0, 0, cell.area/(x * rs),
                        filename = ifelse(mi, "", temp[[1]]), overwrite = TRUE) # calculating the inverse of range size
 
   # weighted endemism
@@ -392,11 +392,9 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     # reordering the raster according to tree
     # getting branch length
     pp <- phylo.pres(x, tree)
-    branch.length <- pp$branch.length # branch length
-    x <- pp$x # raster reordered
 
     # phylogenetic diversity
-    resu <- phylogrid::rast.pd(x, branch.length, cores = cores)
+    resu <- phylogrid::rast.pd(pp$x, pp$branch.length, cores = cores)
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
@@ -413,12 +411,9 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     # getting branch length
     # getting ancestor number
     pp <- phylo.pres(x, tree)
-    branch.length <- pp$branch.length # branch length
-    x <- pp$x # raster reordered
-    n.descen <- pp$n.descen # number of descendants by each branch
 
     # evolutionary distinctiveness
-    resu <- phylogrid::rast.ed(x, branch.length, n.descen, cores = cores)
+    resu <- phylogrid::rast.ed(pp$x, pp$branch.length, pp$n.descen, cores = cores)
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
@@ -435,25 +430,20 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
-}
-  # } else if (metric == 'weigh.endemism'){
-  #
-  #   # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  #   sink(nullfile())    # suppress output
-  #   mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-  #   sink()
-  #
-  #   ### inverse of range size
-  #   ir <- inv.range(x, branch.length, rescale = rescale) # calculating inverse of range size
-  #   area.inv <- ir$inv.R # subletting only the inverse of range size
-  #
-  #   #  weighted endemism
-  #   resu <- phylogrid::rast.we(x, cores = cores, rescale = rescale)
-  #   if (!is.null(filename)){ # to save the rasters when the path is provide
-  #     resu <- terra::writeRaster(resu, filename)
-  #   }
-  #
-  # }
+  } else if (metric == 'weigh.endemism'){
+
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    #  weighted endemism
+    resu <- phylogrid::rast.we(x, cores = cores)
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      resu <- terra::writeRaster(resu, filename)
+    }
+
+  }
     else if (metric == 'phylo.endemism'){
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
@@ -464,17 +454,10 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     ### preparing data
     # reordering the raster according to tree
     # getting branch length
-    # getting ancestor number
-    pp <- phylo.pres(x, tree)
-    branch.length <- pp$branch.length # branch length
-    x <- pp$x # raster reordered
-
-    ### inverse of range size
-    ir <- inv.range(x, branch.length) # calculating inverse of range size
-    area.tips <- ir$LR # inverse of range size multiplied by branch length
+    pp <- phylogrid::phylo.pres(x, tree)
 
     # phylogenetic endemism
-    resu <- phylogrid::rast.pe(x, branch.length, cores = cores, rescale = rescale)
+    resu <- phylogrid::rast.pe(pp$x, pp$branch.length, cores = cores, rescale = rescale)
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
