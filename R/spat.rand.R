@@ -30,13 +30,12 @@
   x
 }
 
-#' Title
+#' Function to evaluate if the rasters generated in the function fits on memory
 #'
-#' @param x
+#' @param x number of rasters generated in the function
 #'
-#' @return
-#' @export
-#'
+#' @return logical
+# #' @export
 #' @examples
 .fit.memory <- function(x){
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
@@ -48,7 +47,7 @@
 
 #' Randomize a set of rasters according to the observed frequency.
 #'
-#' Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells).
+#' Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells). The randomization not assign values to cells with nodata.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param x SpatRaster. A presence-absence SpatRaster.
 #' @param memory logical.
