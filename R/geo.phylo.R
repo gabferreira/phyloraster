@@ -216,6 +216,7 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @return SpatRaster
 #' @export
@@ -287,6 +288,7 @@ rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NUL
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #' @return SpatRaster
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @export
@@ -308,7 +310,8 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
   temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
   temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-  rs <- phylogrid::range_size(x) # return an vector with species's range
+  rs <- range_size(x) # return an vector with species's range
+  cell.area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
 
   # inverse of range size
   inv.R <- terra::ifel(x == 0, 0, cell.area/(x * rs),
@@ -365,13 +368,14 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1, filename = NULL, ...)
-#' geo.phylo(ras, tree, metric = 'phylo.endemism', rescale = T, cores = 1, filename = NULL, ...)
-#' geo.phylo(ras, metric = 'weigh.endemism', rescale = T, cores = 1, filename = NULL, ...)
+#' geo.phylo(ras, tree, metric = 'phylo.diversity')
+#' geo.phylo(ras, tree, metric = 'phylo.endemism')
+#' geo.phylo(ras, metric = 'weigh.endemism')
 #' }
 #'
 geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
@@ -430,18 +434,42 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
+
   } else if (metric == 'weigh.endemism'){
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+
+    # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    mi <- terra::mem_info(x, 2)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
     sink()
 
-    #  weighted endemism
-    resu <- phylogrid::rast.we(x, cores = cores)
+    temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+    temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
+
+    rs <- range_size(x) # return an vector with species's range
+    cell.area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
+
+    # inverse of range size
+    inv.R <- terra::ifel(x == 0, 0, cell.area/(x * rs),
+                         filename = ifelse(mi, "", temp[[1]]), overwrite = TRUE) # calculating the inverse of range size
+
+    # weighted endemism
+    # calculating we
+    resu <- terra::app(inv.R,
+                       function(x){
+                         if(all(is.na(x))){
+                           return(NA)}
+                         sum(x, na.rm = T)
+                       }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
+
+    names(resu) <- "WE" # layer name
+
     if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
+      rend <- terra::writeRaster(rend, filename = filename)
     }
+
+    unlink(temp[[1]]) # delete the files
 
   }
     else if (metric == 'phylo.endemism'){
