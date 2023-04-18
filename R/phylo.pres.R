@@ -46,6 +46,6 @@ phylo.pres <- function(x, tree, ...) {
                                              1:phylobase::nTips(subtree)))
   names(n.descen) <- subtree@label # add names
 
-  pp <- list(x = x, branch.length = branch.length, n.descendents = n.descen, subtree = subtree)
+  pp <- list(x = x, branch.length = branch.length, n.descendants = n.descen, subtree = subtree)
   return(pp)
 }
