@@ -12,7 +12,7 @@ tip.rand(x, aleats)
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 }
 \value{
-list
+list of numeric vectors
 }
 \description{
 This function randomize branch lengths or another vector for n times.
