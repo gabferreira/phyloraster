@@ -2,16 +2,16 @@
 % Please edit documentation in R/spat.rand.R
 \name{.fit.memory}
 \alias{.fit.memory}
-\title{Title}
+\title{Function to evaluate if the rasters generated in the function fits on memory}
 \usage{
 .fit.memory(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{number of rasters generated in the function}
 }
 \value{
-
+logical
 }
 \description{
-Title
+Function to evaluate if the rasters generated in the function fits on memory
 }
