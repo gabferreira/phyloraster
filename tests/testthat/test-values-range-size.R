@@ -1,9 +1,14 @@
 test_that("Are the returned values correct", {
 
-  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-  phylogrid::range_size(ras, scale = TRUE)
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 
-  expect_equivalent(phylogrid::range_size(ras, scale = TRUE)[1:5], c(0.01500945, 0.58801338,
-                                                                0.01352102, 0.08045583,
-                                                                0.64801865))
+  rs.obs <- phylogrid::range_size(x, scale = TRUE)
+  rs.expec <- c(0.015009453, 0.588013379, 0.013521024, 0.080455827, 0.648018646, 0.943431089,
+              0.139427422, 0.846053051, 0.007046942, 0.385549225, 0.083342918, 0.191366365,
+              0.315098335, 0.139397933, 0.295151965, 0.081513232, 0.001427741, 0.821967394,
+              0.050730082, 0.042240971, 0.372012822, 0.739673168, 0.982321926, 0.002717766,
+              0.142586960, 0.863337991, 0.030141342, 0.072137635, 0.077788966, 0.009196508,
+              0.074386911, 0.061550105, 0.253646520)
+
+  expect_equivalent(rs.obs, rs.expec)
 })

@@ -3,10 +3,22 @@ test_that("Are the returned values correct?", {
   shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
                                  package="phylogrid"))
 
-  mvalues <- terra::values(phylogrid::shp2rast(shp, sps.col = "BINOMIAL",
-                                               ymask = FALSE, background = 0,
-                                               resolution = 0.1))[111722:111725,3:6]
-  expect_equivalent(mvalues, matrix(data = c(rep(1, 4), rep(0, 4), rep(1, 8)),
-                                    nrow = 4, ncol = 4))
+  # getting fewer cells to test all values
+  r <- terra::rast()
+  terra::ext(r) <- c(113.380470276, 114.55355835, -28.06026001, -27.65233326)
+  shpc <- terra::crop(shp, terra::ext(r))
+  terra::plot(shpc)
+  unique(shpc$BINOMIAL)
+
+  ob.values <- terra::values(phylogrid::shp2rast(shpc, sps.col = "BINOMIAL",
+                                                 ymask = FALSE, background = 0,
+                                                 resolution = 0.1))
+
+  # c(ob.values[,3])
+  expec.values <- matrix(data = c(0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                  0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
+                         ncol = 3, byrow = F)
+  expect_equivalent(ob.values, expec.values)
 
 })
