@@ -4,14 +4,12 @@
 \alias{rast.pe}
 \title{Calculate phylogenetic endemism for each raster cell}
 \usage{
-rast.pe(x, branch.length, rescale = FALSE, cores = 1, filename = NULL, ...)
+rast.pe(x, branch.length, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie}
-
-\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
@@ -30,10 +28,12 @@ Calculate the sum of the inverse of the range size multiplied by the branch leng
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylo.pres(ras, tree)
-rast.pe(data$x, data$branch.length, rescale = FALSE, cores = 1)
+rast.pe(data$x, data$branch.length, cores = 1)
 }
 }
 \references{
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 }
 \author{

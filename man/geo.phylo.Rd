@@ -9,7 +9,6 @@ geo.phylo(
   tree,
   metric = c("richness", "phylo.diversity", "evol.distinct", "phylo.endemism",
     "weigh.endemism"),
-  rescale = FALSE,
   cores = 1,
   filename = NULL,
   ...
@@ -21,8 +20,6 @@ geo.phylo(
 \item{tree}{phylo. A dated tree.}
 
 \item{metric}{character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.}
-
-\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
@@ -50,9 +47,9 @@ Community metrics available:
 \dontrun{
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-geo.phylo(ras, tree, metric = 'phylo.diversity', cores = 1, filename = NULL, ...)
-geo.phylo(ras, tree, metric = 'phylo.endemism', rescale = T, cores = 1, filename = NULL, ...)
-geo.phylo(ras, metric = 'weigh.endemism', rescale = T, cores = 1, filename = NULL, ...)
+geo.phylo(ras, tree, metric = 'phylo.diversity')
+geo.phylo(ras, tree, metric = 'phylo.endemism')
+geo.phylo(ras, metric = 'weigh.endemism')
 }
 
 }
@@ -66,4 +63,6 @@ Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.
 Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }

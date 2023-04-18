@@ -4,12 +4,10 @@
 \alias{rast.we}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-rast.we(x, rescale = FALSE, cores = 1, filename = NULL, ...)
+rast.we(x, cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
-
-\item{rescale}{logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
@@ -31,6 +29,8 @@ rast.we(ras)
 
 }
 \references{
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
 Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
