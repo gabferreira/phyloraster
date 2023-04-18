@@ -77,6 +77,7 @@
 #' terra::plot(rse)
 #' }
 rast.se <- function(x, filename = NULL, cores = 1, ...){
+  warning("Geographic coordinates are assumed for the calculations.")
 
   # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
@@ -120,6 +121,7 @@ rast.se <- function(x, filename = NULL, cores = 1, ...){
 #' }
 
 rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
+  warning("Geographic coordinates are assumed for the calculations.")
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -175,6 +177,7 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #'
 
 rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
+  warning("Geographic coordinates are assumed for the calculations.")
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -211,7 +214,6 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 #' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
-#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -225,10 +227,11 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 #' data <- phylo.pres(ras, tree)
-#' rast.pe(data$x, data$branch.length, rescale = FALSE, cores = 1)
+#' rast.pe(data$x, data$branch.length, cores = 1)
 #' }
 
-rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NULL, ...){
+rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
+  warning("Geographic coordinates are assumed for the calculations.")
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -260,12 +263,12 @@ rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NUL
 
   }
 
-  if(rescale == TRUE){
-    rpe <- terra::app(rpe, function(x, m){ # rescale the values from 0 to 1
-      (x/m)
-    }, m = terra::minmax(rpe)[2,], filename = ifelse(mi, "", temp[[3]]))
-
-  }
+  # if(rescale == TRUE){
+  #   rpe <- terra::app(rpe, function(x, m){ # rescale the values from 0 to 1
+  #     (x/m)
+  #   }, m = terra::minmax(rpe)[2,], filename = ifelse(mi, "", temp[[3]]))
+  #
+  # }
 
   names(rpe) <- "PE" # layer name
 
@@ -282,7 +285,6 @@ rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NUL
 #'
 #' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -298,7 +300,8 @@ rast.pe <- function(x, branch.length, rescale = FALSE, cores = 1, filename = NUL
 #' rast.we(ras)
 #' }
 #'
-rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
+rast.we <- function(x, cores = 1, filename = NULL, ...){
+  warning("Geographic coordinates are assumed for the calculations.")
 
   # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
@@ -326,11 +329,11 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
                        sum(x, na.rm = T)
                      }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
 
-  if(rescale == TRUE){
-    rend <- terra::app(rend, function(x, m){ # rescale the values
-      (x/m)
-    }, m = terra::minmax(rend)[2,], cores = cores, filename = ifelse(mi, "", temp[[3]])) # 2 is the max
-  }
+  # if(rescale == TRUE){
+  #   rend <- terra::app(rend, function(x, m){ # rescale the values
+  #     (x/m)
+  #   }, m = terra::minmax(rend)[2,], cores = cores, filename = ifelse(mi, "", temp[[3]])) # 2 is the max
+  # }
 
   names(rend) <- "WE" # layer name
 
@@ -349,7 +352,6 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param tree phylo. A dated tree.
 #' @param metric character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.
-#' @param rescale logical. If TRUE, the values are scaled from 0 to 1. The default is FALSE.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
@@ -380,12 +382,13 @@ rast.we <- function(x, rescale = FALSE, cores = 1, filename = NULL, ...){
 #'
 geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
                                           'evol.distinct', 'phylo.endemism',
-                                          'weigh.endemism'), rescale = FALSE, cores = 1,
+                                          'weigh.endemism'), cores = 1,
                       filename = NULL, ...){
 
   ### calculating PD, SE, WE, PE, and ED
 
   if(metric == 'phylo.diversity'){
+    warning("Geographic coordinates are assumed for the calculations.")
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
@@ -404,6 +407,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     }
 
   } else if (metric == 'evol.distinct'){
+    warning("Geographic coordinates are assumed for the calculations.")
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
@@ -423,6 +427,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     }
 
   } else if (metric == 'richness'){
+    warning("Geographic coordinates are assumed for the calculations.")
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
@@ -436,7 +441,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     }
 
   } else if (metric == 'weigh.endemism'){
-
+    warning("Geographic coordinates are assumed for the calculations.")
 
     # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
@@ -472,7 +477,8 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     unlink(temp[[1]]) # delete the files
 
   }
-    else if (metric == 'phylo.endemism'){
+  else if (metric == 'phylo.endemism'){
+    warning("Geographic coordinates are assumed for the calculations.")
 
     # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
     sink(nullfile())    # suppress output
@@ -485,7 +491,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     pp <- phylogrid::phylo.pres(x, tree)
 
     # phylogenetic endemism
-    resu <- phylogrid::rast.pe(pp$x, pp$branch.length, cores = cores, rescale = rescale)
+    resu <- phylogrid::rast.pe(pp$x, pp$branch.length, cores = cores)
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
