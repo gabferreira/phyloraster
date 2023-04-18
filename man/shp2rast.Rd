@@ -46,9 +46,10 @@ The function will rasterize the shapefile using the parameters of y, a spatraste
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
                               package="phylogrid"))
 library(rnaturalearth)
+library(terra)
 countries <- terra::vect(ne_countries()) # mapa mundi
-coun.crop <- crop(countries, ext(shp)) # cut by the total extension of the polygons
-coun.rast <- rasterize(coun.crop,
+coun.crop <- terra::crop(countries, ext(shp)) # cut by the total extension of the polygons
+coun.rast <- terra::rasterize(coun.crop,
                       terra::rast(ext(shp), resolution = 0.5))
 plot(coun.rast, col = "green")
 
@@ -56,7 +57,7 @@ rasterizing with a mask of a country for example
 teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
 plot(teste[[1:3]], col = c("grey", "green"))
 
-teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
+teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.5)
 plot(teste2[[1:3]], col = c("grey", "green"))
 }
 }
