@@ -35,13 +35,7 @@
                            return(NA)}
                          sum(x, na.rm = T)
                        }, cores = cores)
-
-
-    rend <- terra::app(rend, function(x, m){ # to reescale the values
-      (x/m)
-    }, m = terra::minmax(rend)[2,], cores = cores)
   }
-
   names(rend) <- "WE" # layer name
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
@@ -86,6 +80,7 @@ rast.we.ses <- function(x, aleats,
   temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
 
   ## Null model (bootstrap structure)
+
   # if(random == "area.size"){
   #
   #   we.rand <- list() # to store the rasters in the loop

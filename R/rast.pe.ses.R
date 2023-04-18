@@ -33,9 +33,6 @@
                         }
                         sum(x, na.rm = T)
                       }, cores = cores)
-    rpe <- terra::app(rpe, function(x, m){ # to reescale values from 0 to 1
-      (x/m)
-    }, m = terra::minmax(rpe)[2,], cores = cores)
   # }
 
   names(rpe) <- c("PE")
@@ -65,7 +62,7 @@
 #' }
 rast.pe.ses <- function(x, branch.length, aleats,
                         random = c("area.size", "site", "species", "both"),
-                        cores = 1, filename = "", ...){
+                        cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
