@@ -13,9 +13,10 @@
 #' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
 #'                               package="phylogrid"))
 #' library(rnaturalearth)
+#' library(terra)
 #' countries <- terra::vect(ne_countries()) # mapa mundi
-#' coun.crop <- crop(countries, ext(shp)) # cut by the total extension of the polygons
-#' coun.rast <- rasterize(coun.crop,
+#' coun.crop <- terra::crop(countries, ext(shp)) # cut by the total extension of the polygons
+#' coun.rast <- terra::rasterize(coun.crop,
 #'                       terra::rast(ext(shp), resolution = 0.5))
 #' plot(coun.rast, col = "green")
 #'
@@ -24,7 +25,7 @@
 #' plot(teste[[1:3]], col = c("grey", "green"))
 #'
 # rasterizing based on extent and without using mask
-#' teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
+#' teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.5)
 #' plot(teste2[[1:3]], col = c("grey", "green"))
 #' }
 shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
@@ -56,7 +57,7 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
   rt <- terra::rast(r_list) # raster stack
   names(rt) <- nm # names
 
-  # aplicando uma mascara
+  # applying a mask
   if(!ynull & ymask){
     rt <- terra::mask(rt, y)
   }
