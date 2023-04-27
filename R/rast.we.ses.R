@@ -18,18 +18,18 @@
 #' .rast.we.B(x, rs)
 #' }
 #'
-.rast.we.B <- function(x, range_size, filename = NULL, cores = 1, ...){
+.rast.we.B <- function(x, filename = NULL, cores = 1, ...){
 
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
   # inverse of range size
-  inv.R <- terra::ifel(x == 0, 0, 1/(x * range_size),
-                       filename = temp[[1]],
-                       overwrite = TRUE) # calculating the inverse of range size
+  # inverse of range size
+  inv.R <- inv.range(x, filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
+
   # weighted endemism
   { # calculating we
-    rend <- terra::app(inv.R,
+    rend <- terra::app(inv.R$inv.R,
                        function(x){
                          if(all(is.na(x))){
                            return(NA)}
@@ -73,7 +73,6 @@ rast.we.ses <- function(x, aleats,
 
   aleats <- aleats # number of randomizations
   temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
-  rs <- range_size(x) # Calculating area
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   mi <- .fit.memory(x)
@@ -98,8 +97,8 @@ rast.we.ses <- function(x, aleats,
       ### embaralha por lyr - ordem dos sítios de cada espécie separada
       ### shuffle
       site.rand <- SESraster::bootspat_str(x = x, rich = rich,
-                                                prob = prob)
-      we.rand[[i]] <- .rast.we.B(site.rand, range_size = rs,
+                                                prob = NULL)
+      we.rand[[i]] <- .rast.we.B(site.rand,
                                  filename = temp[[i]], cores = cores)
     }
 

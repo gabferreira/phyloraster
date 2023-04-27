@@ -18,29 +18,57 @@
 #' }
 .rast.pe.B <- function(x, branch.length, cores = 1, filename = NULL, ...){
 
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
   # if(!all.equal(names(x), names(branch.length))){
   #
   #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   #
-  # } else {
+  # }
+  else {
 
-    area.branch <- inv.range(x, LR = T, branch.length = branch.length)
+    # 3 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 3)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
 
+    temp <- vector("list", length = 3) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+    temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
+    temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
+
+    area.branch <- phyloraster::inv.range(x, branch.length, LR = T,
+                                          filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
+
+    # phylogenetic endemism
     rpe <- terra::app(area.branch$LR,
                       function(x){
                         if(all(is.na(x))){
                           return(NA)
                         }
                         sum(x, na.rm = T)
-                      }, cores = cores)
+                      }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
+
+  }
+
+  # if(rescale == TRUE){
+  #   rpe <- terra::app(rpe, function(x, m){ # rescale the values from 0 to 1
+  #     (x/m)
+  #   }, m = terra::minmax(rpe)[2,], filename = ifelse(mi, "", temp[[3]]))
+  #
   # }
 
-  names(rpe) <- c("PE")
+  names(rpe) <- "PE" # layer name
+
 
   if (!is.null(filename)){ # to save the rasters when the path is provide
-    rpe <- terra::writeRaster(rpe, filename, ...)
+    rpe <- terra::writeRaster(rpe, filename)
   }
+
   return(rpe)
+
 }
 
 #' Phylogenetic endemism standardized for specie richness
@@ -94,17 +122,17 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
     pe.rand <- list() # to store the rasters in the loop
     rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
+    # prob <- terra::app(x,
+    #                    function(x){
+    #                      ifelse(is.na(x), 0, 1)
+    #                    })
 
     for(i in 1:aleats){
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
       ### shuffle
-      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = prob)
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = NULL)
 
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
@@ -120,7 +148,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
   x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
   pe.obs <- rast.pe(x.reord, branch.length = branch.length,
-                               filename = filename, cores = cores)
+                    filename = filename, cores = cores)
 
   ## PD rand mean and PD rand SD
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
