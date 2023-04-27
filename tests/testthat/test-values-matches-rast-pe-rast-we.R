@@ -1,7 +1,5 @@
 test_that("PE function returns the same result as WE when the tree is a rake", {
 
-  require(glottoTrees)
-
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 

@@ -8,7 +8,7 @@ rast.pd.ses(
   x,
   branch.length,
   aleats,
-  random = c("tip", "site", "species", "both"),
+  random = c("tip", "spat"),
   cores = 1,
   filename = NULL,
   ...
@@ -40,9 +40,9 @@ The "tip" method shuffles the taxon names among all those in the phylogeny. The 
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylogrid::phylo.pres(ras, tree)
+data <- phylogrid::phylo.pres(x, tree)
 t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 plot(t)
 }

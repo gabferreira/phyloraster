@@ -25,9 +25,9 @@ Calculate phylogenetic endemism using rasters as input and output.
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylo.pres(ras, tree)
+data <- phylo.pres(x, tree)
 .rast.pe.B(data$x, data$branch.length, cores = 1)
 }
 }

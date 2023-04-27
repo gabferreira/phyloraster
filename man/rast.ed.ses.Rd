@@ -9,7 +9,7 @@ rast.ed.ses(
   branch.length,
   n.descen,
   aleats,
-  random = c("tip", "site", "species", "both"),
+  random = c("tip", "spat"),
   cores = 1,
   filename = NULL,
   ...
@@ -19,6 +19,8 @@ rast.ed.ses(
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
 
 \item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
@@ -41,16 +43,18 @@ The "tip" method shuffles the taxon names among all those in the phylogeny. The 
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylogrid::phylo.pres(ras, tree)
-t <- rast.ed.ses(data$x, data$branch.length, data$n.descendents, aleats = 5,
+data <- phylogrid::phylo.pres(x, tree)
+t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5,
                  random = "both")
 terra::plot(t)
 }
 }
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
 \author{
 Gabriela Alves-Ferreira and Neander Heming

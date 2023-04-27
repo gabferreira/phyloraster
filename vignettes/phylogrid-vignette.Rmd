@@ -11,7 +11,7 @@ vignette: >
 
 ```{r setup, echo = FALSE, include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning=FALSE,comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,comment = "#>")
 ```
 
 -   [Introduction](#intro)
@@ -195,10 +195,9 @@ Null models are a widely used method to control for richness effects in diversit
 
 -   **Spatial and phylogenetic randomization**
 
-The intern function `spat.rand` randomizes raster stacks through three different methods (site, species or both) that can be chosen through the argument random. 
-The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). 
-The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time.
- In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
+The randomization procedure for the calculation of SES is done internally in the functions rast.we.ses(), rast.ed.ses(), rast.pd.ses(), and rast.pe.ses() through the package SESraster (Heming et al., 2023).
+The function bootspat_str() from the package SESraster keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
+In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
@@ -207,7 +206,7 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogri
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
 data <- phylogrid::phylo.pres(ras, tree)
 
-t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "both")
+t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 ```
 
 Plotting the results

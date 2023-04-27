@@ -25,9 +25,9 @@ Calculate the sum of the inverse of the range size for species present in each r
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-rs <- range_size(ras)
-.rast.we.B(ras, rs)
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+rs <- range_size(x)
+.rast.we.B(x, rs)
 }
 
 }

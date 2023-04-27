@@ -7,7 +7,5 @@ test_that("check if the object class is correct", {
 
   # tests
   expect_s4_class(phylogrid::rast.pd.ses(data$x[[1:3]], data$branch.length[1:3], aleats = 2, random = "tip"), "SpatRaster")
-  expect_s4_class(phylogrid::rast.pd.ses(data$x[[1:3]], data$branch.length[1:3], aleats = 2, random = "species"), "SpatRaster")
-  expect_s4_class(phylogrid::rast.pd.ses(data$x[[1:3]], data$branch.length[1:3], aleats = 2, random = "site"), "SpatRaster")
-  expect_s4_class(phylogrid::rast.pd.ses(data$x[[1:3]], data$branch.length[1:3], aleats = 2, random = "both"), "SpatRaster")
+  expect_s4_class(phylogrid::rast.pd.ses(data$x[[1:3]], data$branch.length[1:3], aleats = 2, random = "spat"), "SpatRaster")
 })

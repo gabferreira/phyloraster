@@ -13,9 +13,9 @@
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' rs <- range_size(ras)
-#' .rast.we.B(ras, rs)
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' rs <- range_size(x)
+#' .rast.we.B(x, rs)
 #' }
 #'
 .rast.we.B <- function(x, range_size, filename = NULL, cores = 1, ...){
@@ -63,16 +63,17 @@
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
-# ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-# t <- rast.we.ses(ras, aleats = 10, random = "site")
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
+#' plot(t)
 #' }
 rast.we.ses <- function(x, aleats,
-                        random = c("site", "species", "both"),
+                        random = c("spat"),
                         cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of randomizations
   temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
-  rs <- range(x) # Calculating area
+  rs <- range_size(x) # Calculating area
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   mi <- .fit.memory(x)
@@ -81,69 +82,31 @@ rast.we.ses <- function(x, aleats,
 
   ## Null model (bootstrap structure)
 
-  # if(random == "area.size"){
-  #
-  #   we.rand <- list() # to store the rasters in the loop
-  #
-  #   for(i in 1:aleats){
-  #     rs.random <- sample(rs, replace = TRUE) # randomize the range size
-  #     ## check if the values are differents
-  #     # rs == rs.random
-  #     temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
-  #     we.rand[[i]] <- .rast.we.B(x, range_size = rs.random,
-  #                             filename = temp[[i]], cores = cores)
-  #   }
-  #
-  #     we.rand <- terra::rast(we.rand) # to transform a list in raster
-  #
-  #   } else if(random == "site"){
-
-  if(random == "site"){
+  if(random == "spat"){
 
     we.rand <- list() # to store the rasters in the loop
+    rich <- rast.se(x)
+    prob <- terra::app(x,
+                       function(x){
+                         ifelse(is.na(x), 0, 1)
+                       })
 
     for(i in 1:aleats){
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
+
       ### embaralha por lyr - ordem dos sítios de cada espécie separada
-      site.rand <- spat.rand(x, random = "site", filename = temp.raster, memory = mi)
+      ### shuffle
+      site.rand <- SESraster::bootspat_str(x = x, rich = rich,
+                                                prob = prob)
       we.rand[[i]] <- .rast.we.B(site.rand, range_size = rs,
                                  filename = temp[[i]], cores = cores)
     }
 
     we.rand <- terra::rast(we.rand) # to transform a list in raster
 
-  } else if(random == "species"){
-
-    ### randomize by cells - species in each site
-    we.rand <- list() # to store the rasters in the loop
-
-    for(i in 1:aleats){
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, random = "species", filename = temp.raster, memory = mi)
-      we.rand[[i]] <- .rast.we.B(sp.rand, range_size = rs,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-  } else if (random == "both") {
-
-    we.rand <- list() # to store the rasters in the loop
-    fr <- terra::freq(x)
-
-    for(i in 1:aleats){
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      ### randomize sites and species
-      full.rand <- spat.rand(x, random = "both", filename = temp.raster, memory = mi)
-      we.rand[[i]] <- .rast.we.B(full.rand, range_size = rs,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    we.rand <- terra::rast(we.rand) # to transform a list in raster
-
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'site', 'species', 'both'.")
+    stop("Choose a valid randomization method! The method currently available is: 'spat'.")
   }
 
   ## WE observed

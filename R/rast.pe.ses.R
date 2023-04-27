@@ -11,9 +11,9 @@
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(ras, tree)
+#' data <- phylo.pres(x, tree)
 #' .rast.pe.B(data$x, data$branch.length, cores = 1)
 #' }
 .rast.pe.B <- function(x, branch.length, cores = 1, filename = NULL, ...){
@@ -24,7 +24,7 @@
   #
   # } else {
 
-    area.branch <- phylogrid::inv.range(x, branch.length)
+    area.branch <- inv.range(x, LR = T, branch.length = branch.length)
 
     rpe <- terra::app(area.branch$LR,
                       function(x){
@@ -54,14 +54,14 @@
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(ras, tree)
-#' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "both")
+#' data <- phylo.pres(x, tree)
+#' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 #' plot(t)
 #' }
 rast.pe.ses <- function(x, branch.length, aleats,
-                        random = c("area.size", "site", "species", "both"),
+                        random = c("tip", "spat"),
                         cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
@@ -90,62 +90,36 @@ rast.pe.ses <- function(x, branch.length, aleats,
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
 
-  } else if (random == "site"){
+  } else if (random == "spat"){
 
     pe.rand <- list() # to store the rasters in the loop
+    rich <- rast.se(x)
+    prob <- terra::app(x,
+                       function(x){
+                         ifelse(is.na(x), 0, 1)
+                       })
 
     for(i in 1:aleats){
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
-      ### shuffle by layer - order of sites for each separate species
-      pres.site.null <- spat.rand(x, random = "site", cores = cores,
-                                  filename = temp.raster, memory = mi, overwrite = T)
+
+      ### shuffle
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = prob)
+
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
                                  filename = temp[[i]], cores = cores)
     }
 
     pe.rand <- terra::rast(pe.rand) # to transform a list in raster
-
-  } else if (random == "species") {
-
-    ### randomize by cells - species in each site
-    pe.rand <- list() # to store the rasters in the loop
-
-    for(i in 1:aleats){
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, random = "species", cores = cores,
-                           filename = temp.raster, memory = mi)
-      pe.rand[[i]] <- .rast.pe.B(sp.rand, branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    pe.rand <- terra::rast(pe.rand) # to transform a list in raster
-
-  } else if (random == "both") {
-
-    pe.rand <- list() # to store the rasters in the loop
-    fr <- terra::freq(x)
-
-    for(i in 1:aleats){
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      ### randomize sites and species
-      pres.null <- spat.rand(x, random = "both", cores = cores,
-                             filename = temp.raster, memory = mi)
-      pe.rand[[i]] <- .rast.pe.B(pres.null, branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    pe.rand <- terra::rast(pe.rand) # to transform a list in raster
-
   } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'both'.")
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
   }
 
   ## PE observed
   x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
-  pe.obs <- phylogrid::rast.pe(x.reord, branch.length = branch.length,
+  pe.obs <- rast.pe(x.reord, branch.length = branch.length,
                                filename = filename, cores = cores)
 
   ## PD rand mean and PD rand SD

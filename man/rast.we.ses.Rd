@@ -4,14 +4,7 @@
 \alias{rast.we.ses}
 \title{Calculate weighted endemism standardized for species richness}
 \usage{
-rast.we.ses(
-  x,
-  aleats,
-  random = c("site", "species", "both"),
-  cores = 1,
-  filename = NULL,
-  ...
-)
+rast.we.ses(x, aleats, random = c("spat"), cores = 1, filename = NULL, ...)
 }
 \arguments{
 \item{x}{A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
@@ -37,6 +30,9 @@ The "site" method keeps species richness constant in each pixel, but randomizes 
 }
 \examples{
 \dontrun{
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
+plot(t)
 }
 }
 \references{

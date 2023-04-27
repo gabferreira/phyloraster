@@ -40,7 +40,7 @@
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @return SpatRaster
-#' @export
+# #' @export
 #' @examples
 .rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
 
@@ -78,24 +78,24 @@
 #'
 #' @description Calculates the standardized effect size for evolutionary distinctiveness. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
 #' @inheritParams rast.pd.ses
+#' @inheritParams rast.ed
 #' @return SpatRaster
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @export
 #' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylogrid::phylo.pres(ras, tree)
-#' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendents, aleats = 5,
+#' data <- phylogrid::phylo.pres(x, tree)
+#' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5,
 #'                  random = "both")
 #' terra::plot(t)
 #' }
-
-
 rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
-                          c("tip", "site", "species", "both"),
+                          c("tip", "spat"),
                         cores = 1, filename = NULL, ...){
   aleats <- aleats
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
@@ -110,81 +110,46 @@ rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
 
     ed.rand <- list() # to store the rasters in the loop
     bl.random <- branch.length # to store the branch length in the loop
-    dn.random <- n.descen # to store the branch length in the loop
 
     for(i in 1:aleats){
 
       bl.random[] <- sample(branch.length) # randomize branch lengths
-      dn.random[] <- sample(n.descen)  # randomize number of descendants
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
 
-      ed.rand[[i]] <- .rast.ed.B(x, branch.length = bl.random, n.descen = dn.random,
+      ed.rand[[i]] <- .rast.ed.B(x, branch.length = bl.random, n.descen,
                                  filename = temp[[i]], cores = cores)
     }
 
     ed.rand <- terra::rast(ed.rand) # to transform a list in raster
 
-  } else if(random == "site"){
+  } else if(random == "spat"){
 
     ed.rand <- list() # to store the rasters in the loop
+    rich <- rast.se(x)
+    prob <- terra::app(x,
+                       function(x){
+                         ifelse(is.na(x), 0, 1)
+                       })
 
     for(i in 1:aleats){
 
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
-      ### shuffle by layer - order of sites for each separate species
-      pres.site.null <- spat.rand(x, random = "site", cores = cores,
-                                  filename = temp.raster, memory = mi)
+      ### shuffle
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
+                                                prob = prob)
 
       # calculate ed
-      ed.rand[[i]] <- .rast.ed.B(pres.site.null, branch.length = branch.length, n.descen = n.descen,
+      ed.rand[[i]] <- .rast.ed.B(pres.site.null, branch.length = branch.length,
+                                 n.descen = n.descen,
                                filename = temp[[i]], cores = cores)
     }
 
     ed.rand <- terra::rast(ed.rand) # to transform a list in raster
 
-  } else if(random == "species") {
-
-    ### shuffle by cells - species in each site
-    ed.rand <- list() # to store the rasters in the loop
-
-    for(i in 1:aleats){
-
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, random = "species", cores = cores,
-                           filename = temp.raster, memory = mi)
-      # calculate ed
-      ed.rand[[i]] <- .rast.ed.B(sp.rand, branch.length = branch.length,
-                               n.descen = n.descen,
-                               filename = temp[[i]], cores = cores)
-    }
-
-    ed.rand <- terra::rast(ed.rand) # to transform a list in raster
-
-  } else if(random == "both") {
-
-    ed.rand <- list() # to store the rasters in the loop
-    fr <- terra::freq(x)
-
-    for(i in 1:aleats){
-
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
-      ### shuffle sites and species - "full.spat"
-      pres.null <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
-                              filename = temp.raster, ..., overwrite = T)
-
-      # calculate ed
-      ed.rand[[i]] <- .rast.ed.B(pres.null, branch.length = branch.length,
-                               n.descen = n.descen,
-                               filename = temp[[i]], cores = cores)
-    }
-
-    ed.rand <- terra::rast(ed.rand) # to transform a list in raster
-
-  } else {
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'both'.")
+  }  else {
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
   }
 
   ## ed observed

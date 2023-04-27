@@ -1,3 +1,57 @@
+#' Calculate phylogenetic diversity for each raster cell
+#'
+#' @description Calculate the sum of the branch length for species present in each cell of the raster.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numerical vector containing the branch length for a set of species.
+#' @param filename character. Output filename.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @return SpatRaster
+#' @export
+#' @examples
+#' \dontrun{
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' data <- phylo.pres(x, tree)
+#' rast.pd(data$x, data$branch.length)
+#' }
+.rast.pd.B <- function(x, branch.length, filename = NULL, cores = 1, ...){
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
+  # if(!all.equal(names(x), names(branch.length))){
+  #
+  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  #
+  # } else {
+
+    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+    sink(nullfile())    # suppress output
+    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+    sink()
+
+    temp <- vector("list", length = 1) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+
+    # phylogenetic diversity
+    rpd <- terra::app(x, fun = .vec.pd,
+                      branch.length = branch.length, cores = cores,
+                      filename = ifelse(mi, "", temp[[1]]))
+    rpd <- rpd[[1]] # select only the first raster
+    names(rpd) <- c("PD")
+  # }
+
+  if(!is.null(filename)){ # to save the rasters when the output filename is provide
+    rpd <- terra::writeRaster(rpd, filename)
+  }
+
+  return(rpd)
+}
+
 #' Phylogenetic diversity standardized for species richness
 #'
 #' @description Calculates the standardized effect size for phylogenetic diversity. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
@@ -15,14 +69,14 @@
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylogrid::phylo.pres(ras, tree)
+#' data <- phylogrid::phylo.pres(x, tree)
 #' t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 #' plot(t)
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
-                        random = c("tip", "site", "species", "both"),
+                        random = c("tip", "spat"),
                         cores = 1, filename = NULL, ...){
 
   aleats <- aleats # number of null models
@@ -37,7 +91,6 @@ rast.pd.ses <- function(x, branch.length, aleats,
   if(random == "tip"){
 
     pd.rand <- list() # to store the rasters in the loop
-    pd.rand2 <- list() # list to store the rasters
     bl.random <- branch.length # to store the branch length in the loop
 
     for(i in 1:aleats){
@@ -45,90 +98,47 @@ rast.pd.ses <- function(x, branch.length, aleats,
       bl.random[] <- sample(branch.length) # randomize branch lengths
       temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
 
-      pd.rand[[i]] <- terra::app(x, fun = .vec.pd,
-                                 branch.length = bl.random,
-                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
-      pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
+      pd.rand[[i]] <- .rast.pd.B(x, branch.length = bl.random,
+                                 filename = temp[[i]],
+                                 cores = cores, ..., overwrite = T)
     }
 
-    pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
+    pd.rand <- terra::rast(pd.rand) # to transform a list in raster
 
-  } else if(random == "site"){
+  } else if(random == "spat"){
 
     pd.rand <- list() # to store the rasters in the loop
-    pd.rand2 <- list() # list to store the rasters
+    rich <- rast.se(x)
+    prob <- terra::app(x,
+                       function(x){
+                         ifelse(is.na(x), 0, 1)
+                       })
 
     for(i in 1:aleats){
 
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
-      ### shuffle by layer - order of sites for each separate species
-      pres.site.null <- spat.rand(x, random = "site", cores = cores,
-                                  filename = temp.raster, memory = mi)
+      ### shuffle
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
+                                                prob = prob)
 
       # calculate pd
-      pd.rand[[i]] <- terra::app(pres.site.null, fun = .vec.pd,
-                                 branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
-
-      pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
+      pd.rand[[i]] <- .rast.pd.B(pres.site.null, branch.length = branch.length,
+                                 filename = temp[[i]],
+                                 cores = cores, ..., overwrite = T)
     }
 
-    pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
-
-  } else if(random == "species") {
-
-    ### shuffle by cells - species in each site
-    pd.rand <- list() # to store the rasters in the loop
-    pd.rand2 <- list() # list to store the rasters
-
-    for(i in 1:aleats){
-
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-      sp.rand <- spat.rand(x, random = "species", cores = cores,
-                           filename = temp.raster, memory = mi)
-      pd.rand[[i]] <- terra::app(sp.rand,
-                                 fun = .vec.pd,
-                                 branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
-
-      pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
-    }
-
-    pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
-
-  } else if(random == "both") {
-
-    pd.rand <- list() # to store the rasters in the loop
-    pd.rand2 <- list() # list to store the rasters
-    fr <- terra::freq(x)
-
-    for(i in 1:aleats){
-
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
-      ### shuffle sites and species - "full.spat"
-      pres.null <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
-                              filename = temp.raster, ..., overwrite = T)
-
-      pd.rand[[i]] <- terra::app(pres.null, fun = .vec.pd,
-                                 branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores, ..., overwrite = T)
-
-      pd.rand2[[i]] <- pd.rand[[i]][[1]] # only the first layer for each specie
-    }
-
-    pd.rand2 <- terra::rast(pd.rand2) # to transform a list in raster
+    pd.rand <- terra::rast(pd.rand) # to transform a list in raster
 
   } else {
     stop("Choose a valid randomization method! The methods currently available are: 'tip', 'site', 'species', 'both'.")
   }
 
   ### PD rand mean
-  pd.rand.mean <- terra::mean(pd.rand2, na.rm = TRUE) # mean pd
+  pd.rand.mean <- terra::mean(pd.rand, na.rm = TRUE) # mean pd
   ### PD rand SD
-  pd.rand.sd <- terra::stdev(pd.rand2, na.rm = TRUE) # sd pd
+  pd.rand.sd <- terra::stdev(pd.rand, na.rm = TRUE) # sd pd
 
   ### PD observed
   {
@@ -163,4 +173,3 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
   return(out)
 }
-
