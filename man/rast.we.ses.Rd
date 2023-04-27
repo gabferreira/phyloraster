@@ -23,15 +23,15 @@ rast.we.ses(x, aleats, random = c("spat"), cores = 1, filename = NULL, ...)
 SpatRaster
 }
 \description{
-Calculates the standardized effect size for weighted endemism. The function has three different methods for spatial randomization. See Details for more information.
+Calculates the standardized effect size for weighted endemism. See Details for more information.
 }
 \details{
-The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
 }
 \examples{
 \dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
+t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 plot(t)
 }
 }

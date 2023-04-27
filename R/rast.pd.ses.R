@@ -54,7 +54,7 @@
 
 #' Phylogenetic diversity standardized for species richness
 #'
-#' @description Calculates the standardized effect size for phylogenetic diversity. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+#' @description Calculates the standardized effect size for phylogenetic diversity. See Details for more information.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param branch.length numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
@@ -63,7 +63,7 @@
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster. The function returns the observed phylogenetic diversity, the mean of the simulations calculated over n times, the standard deviation of the simulations, and the standardized effect size (SES) for the phylogenetic diversity.
-#' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
 #' @export
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
@@ -72,7 +72,7 @@
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phyloraster::phylo.pres(x, tree)
-#' t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
+#' t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 #' plot(t)
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
@@ -109,20 +109,30 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
     pd.rand <- list() # to store the rasters in the loop
     rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
+    # prob <- terra::app(x,
+    #                    function(x){
+    #                      ifelse(is.na(x), 0, 1)
+    #                    })
+    fr2prob <- function(x){
+      value <- NULL
+      fr <- subset(terra::freq(x), value==1)[,"count"]
+      all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+      p <- fr/all
+      pin <- sapply(seq_along(p),
+                    function(i, p){
+                      sum(p[-i])
+                    }, p=p)
+      p*pin/(1-p)
+    }
+    fr_prob <- fr2prob(x)
 
     for(i in 1:aleats){
-
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
       ### shuffle
       pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
-                                                prob = prob)
-
+                                                fr_prob = fr_prob)
       # calculate pd
       pd.rand[[i]] <- .rast.pd.B(pres.site.null, branch.length = branch.length,
                                  filename = temp[[i]],
@@ -139,6 +149,9 @@ rast.pd.ses <- function(x, branch.length, aleats,
   pd.rand.mean <- terra::mean(pd.rand, na.rm = TRUE) # mean pd
   ### PD rand SD
   pd.rand.sd <- terra::stdev(pd.rand, na.rm = TRUE) # sd pd
+
+  unlink(temp) # delete the archive that will not be used
+  unlink(temp.raster) # delete the archive that will not be used
 
   ### PD observed
   {
@@ -167,9 +180,6 @@ rast.pd.ses <- function(x, branch.length, aleats,
   if (!is.null(filename)){ # to save the rasters when the path is provide
     out <- terra::writeRaster(out, filename)
   }
-
-  unlink(temp) # delete the archive that will not be used
-  unlink(temp.raster) # delete the archive that will not be used
 
   return(out)
 }

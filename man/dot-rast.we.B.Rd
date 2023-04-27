@@ -4,12 +4,10 @@
 \alias{.rast.we.B}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-.rast.we.B(x, range_size, filename = NULL, cores = 1, ...)
+.rast.we.B(x, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
-
-\item{range_size}{numeric. A numerical vector containing the range size for each species. See the function range_size.}
 
 \item{filename}{character. Output filename.}
 

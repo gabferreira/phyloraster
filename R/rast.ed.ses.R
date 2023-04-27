@@ -76,13 +76,13 @@
 
 #' Evolutionary distinctiveness standardized for specie richness
 #'
-#' @description Calculates the standardized effect size for evolutionary distinctiveness. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+#' @description Calculates the standardized effect size for evolutionary distinctiveness. See Details for more information.
 #' @inheritParams rast.pd.ses
 #' @inheritParams rast.ed
 #' @return SpatRaster
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @export
-#' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
@@ -90,8 +90,7 @@
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phyloraster::phylo.pres(x, tree)
-#' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5,
-#'                  random = "both")
+#' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat")
 #' terra::plot(t)
 #' }
 rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
@@ -126,10 +125,22 @@ rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
 
     ed.rand <- list() # to store the rasters in the loop
     rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
+    # prob <- terra::app(x,
+    #                    function(x){
+    #                      ifelse(is.na(x), 0, 1)
+    #                    })
+    fr2prob <- function(x){
+      value <- NULL
+      fr <- subset(terra::freq(x), value==1)[,"count"]
+      all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+      p <- fr/all
+      pin <- sapply(seq_along(p),
+                    function(i, p){
+                      sum(p[-i])
+                    }, p=p)
+      p*pin/(1-p)
+    }
+    fr_prob <- fr2prob(x)
 
     for(i in 1:aleats){
 
@@ -138,7 +149,7 @@ rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
 
       ### shuffle
       pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
-                                                prob = prob)
+                                                fr_prob = fr_prob)
 
       # calculate ed
       ed.rand[[i]] <- .rast.ed.B(pres.site.null, branch.length = branch.length,

@@ -73,12 +73,12 @@
 
 #' Phylogenetic endemism standardized for specie richness
 #'
-#' @description Calculates the standardized effect size for phylogenetic endemism. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+#' @description Calculates the standardized effect size for phylogenetic endemism. See Details for more information.
 #' @inheritParams rast.pd.ses
 #' @return SpatRaster
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @export
-#' @details The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
@@ -126,13 +126,25 @@ rast.pe.ses <- function(x, branch.length, aleats,
     #                    function(x){
     #                      ifelse(is.na(x), 0, 1)
     #                    })
+    fr2prob <- function(x){
+      value <- NULL
+      fr <- subset(terra::freq(x), value==1)[,"count"]
+      all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+      p <- fr/all
+      pin <- sapply(seq_along(p),
+                    function(i, p){
+                      sum(p[-i])
+                    }, p=p)
+      p*pin/(1-p)
+    }
+    fr_prob <- fr2prob(x)
 
     for(i in 1:aleats){
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
       ### shuffle
-      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = NULL)
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, fr_prob = fr_prob)
 
       # calculate pe
       pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
@@ -150,7 +162,7 @@ rast.pe.ses <- function(x, branch.length, aleats,
   pe.obs <- rast.pe(x.reord, branch.length = branch.length,
                     filename = filename, cores = cores)
 
-  ## PD rand mean and PD rand SD
+  ## PE rand mean and PE rand SD
   pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
   pe.rand.sd <- terra::stdev(pe.rand, na.rm = TRUE, filename = filename) # sd pd
 

@@ -36,18 +36,17 @@ rast.ed.ses(
 SpatRaster
 }
 \description{
-Calculates the standardized effect size for evolutionary distinctiveness. The function has four different methods for spatial and phylogenetic randomization. See Details for more information.
+Calculates the standardized effect size for evolutionary distinctiveness. See Details for more information.
 }
 \details{
-The "tip" method shuffles the taxon names among all those in the phylogeny. The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
 }
 \examples{
 \dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phyloraster::phylo.pres(x, tree)
-t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5,
-                 random = "both")
+t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat")
 terra::plot(t)
 }
 }

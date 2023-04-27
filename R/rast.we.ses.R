@@ -2,7 +2,6 @@
 #'
 #' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param range_size numeric. A numerical vector containing the range size for each species. See the function range_size.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
@@ -49,7 +48,7 @@
 
 #' Calculate weighted endemism standardized for species richness
 #'
-#' @description Calculates the standardized effect size for weighted endemism. The function has three different methods for spatial randomization. See Details for more information.
+#' @description Calculates the standardized effect size for weighted endemism. See Details for more information.
 #' @param x  A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
 #' @param random character. A character indicating what type of randomization. Could be by "site", "species" or "both" (site and species).
@@ -57,14 +56,14 @@
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster
-#' @details The "site" method keeps species richness constant in each pixel, but randomizes the position of species in the stack. In the "species" method, the order of species in the stack is kept constant, but the pixels where each species is present are randomized in space. The third method, "full.spat", combines site and species randomization at the same time.
+#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
 #' @export
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
+#' t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 #' plot(t)
 #' }
 rast.we.ses <- function(x, aleats,
@@ -85,10 +84,22 @@ rast.we.ses <- function(x, aleats,
 
     we.rand <- list() # to store the rasters in the loop
     rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
+    # prob <- terra::app(x,
+    #                    function(x){
+    #                      ifelse(is.na(x), 0, 1)
+    #                    })
+    fr2prob <- function(x){
+      value <- NULL
+      fr <- subset(terra::freq(x), value==1)[,"count"]
+      all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+      p <- fr/all
+      pin <- sapply(seq_along(p),
+                    function(i, p){
+                      sum(p[-i])
+                    }, p=p)
+      p*pin/(1-p)
+    }
+    fr_prob <- fr2prob(x)
 
     for(i in 1:aleats){
       # temporary names to rasters
@@ -97,7 +108,7 @@ rast.we.ses <- function(x, aleats,
       ### embaralha por lyr - ordem dos sítios de cada espécie separada
       ### shuffle
       site.rand <- SESraster::bootspat_str(x = x, rich = rich,
-                                                prob = NULL)
+                                                fr_prob = fr_prob)
       we.rand[[i]] <- .rast.we.B(site.rand,
                                  filename = temp[[i]], cores = cores)
     }
@@ -116,6 +127,7 @@ rast.we.ses <- function(x, aleats,
   we.rand.sd <- terra::stdev(we.rand, na.rm = TRUE, filename = filename) # sd pd
 
   unlink(temp) # delete the file that will not be used
+  unlink(temp.raster) # delete the file that will not be used
 
   ## Calculating the standard effect size (SES)
   {
