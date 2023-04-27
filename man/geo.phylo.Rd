@@ -45,11 +45,11 @@ Community metrics available:
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-geo.phylo(ras, tree, metric = 'phylo.diversity')
-geo.phylo(ras, tree, metric = 'phylo.endemism')
-geo.phylo(ras, metric = 'weigh.endemism')
+geo.phylo(x, tree, metric = 'phylo.diversity')
+geo.phylo(x, tree, metric = 'phylo.endemism')
+geo.phylo(x, metric = 'weigh.endemism')
 }
 
 }

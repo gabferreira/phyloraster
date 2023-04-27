@@ -9,9 +9,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' phylo.pres(ras, tree)
+#' phylo.pres(x, tree)
 #' }
 
 phylo.pres <- function(x, tree, ...) {

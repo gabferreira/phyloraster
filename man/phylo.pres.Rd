@@ -21,9 +21,9 @@ Reorder stack according to tree order and get branch length for each species. Th
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-phylo.pres(ras, tree)
+phylo.pres(x, tree)
 }
 }
 \author{

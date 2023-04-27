@@ -8,9 +8,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(x = ras, tree = tree)
+#' data <- phylo.pres(x = x, tree = tree)
 #' sa <- tip.rand(data$branch.length, aleats = 10)
 #' }
 #'

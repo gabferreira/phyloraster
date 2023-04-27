@@ -21,8 +21,8 @@ This function calculate range size in square kilometers for all cells that are n
 }
 \examples{
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-range_size(ras, scale = TRUE)
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+range_size(x, scale = TRUE)
 }
 }
 \author{

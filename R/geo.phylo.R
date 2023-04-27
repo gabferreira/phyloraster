@@ -1,3 +1,18 @@
+#' Function to evaluate if the rasters generated in the function fits on memory
+#'
+#' @param x number of rasters generated in the function
+#'
+#' @return logical
+# #' @export
+#' @examples
+.fit.memory <- function(x){
+  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
+  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
+  return(mi)
+}
+
 #' Calculate phylogenetic diversity (Faith 1992) for a vector
 #'
 #' @description This function calculates the sum of the branch length for a set of species for one sample.
@@ -7,7 +22,6 @@
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @return numeric
 # #' @export
-
 .vec.pd <- function(x, branch.length){
 
   x[is.na(x)] <- 0 # 0 for all value = NA
@@ -39,7 +53,6 @@
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @return numeric
 # #' @export
-
 .evol.distin <- function(x, branch.length, n.descen){
 
   x[is.na(x)] <- 0 # 0 for all value = NA
@@ -72,12 +85,15 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' rse <- rast.se(ras)
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' rse <- rast.se(x)
 #' terra::plot(rse)
 #' }
 rast.se <- function(x, filename = NULL, cores = 1, ...){
-  warning("Geographic coordinates are assumed for the calculations.")
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
   # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
@@ -114,14 +130,16 @@ rast.se <- function(x, filename = NULL, cores = 1, ...){
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(ras, tree)
+#' data <- phylo.pres(x, tree)
 #' rast.pd(data$x, data$branch.length)
 #' }
-
 rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
-  warning("Geographic coordinates are assumed for the calculations.")
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -174,10 +192,11 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' data <- phylogrid::phylo.pres(x, tree)
 #' ed <- phylogrid::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
 #' }
-#'
-
 rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
-  warning("Geographic coordinates are assumed for the calculations.")
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -224,14 +243,17 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylo.pres(ras, tree)
+#' data <- phylo.pres(x, tree)
 #' rast.pe(data$x, data$branch.length, cores = 1)
 #' }
 
 rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
-  warning("Geographic coordinates are assumed for the calculations.")
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
   if(!all.equal(names(x), names(branch.length))){
 
@@ -249,7 +271,7 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
     temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
     temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-    area.branch <- phylogrid::inv.range(x, branch.length,
+    area.branch <- phylogrid::inv.range(x, branch.length, LR = T,
                                         filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
 
     # phylogenetic endemism
@@ -296,33 +318,33 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
 #' @export
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' rast.we(ras)
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' rast.we(x)
 #' }
 #'
 rast.we <- function(x, cores = 1, filename = NULL, ...){
-  warning("Geographic coordinates are assumed for the calculations.")
 
-  # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
+  # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
-  mi <- terra::mem_info(x, 3)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  mi <- terra::mem_info(x, 2)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
   sink()
 
-  temp <- vector("list", length = 3) # to create a temporary vector with the raster number
-  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-  temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
-  temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
-
-  rs <- range_size(x) # return an vector with species's range
-  cell.area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
+  # if(!mi){
+    temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+    temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
+  # }
 
   # inverse of range size
-  inv.R <- terra::ifel(x == 0, 0, cell.area/(x * rs),
-                       filename = ifelse(mi, "", temp[[1]]), overwrite = TRUE) # calculating the inverse of range size
+  inv.R <- inv.range(x, filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
 
   # weighted endemism
   # calculating we
-  rend <- terra::app(inv.R,
+  rend <- terra::app(inv.R$inv.R,
                      function(x){
                        if(all(is.na(x))){
                          return(NA)}
@@ -373,12 +395,12 @@ rast.we <- function(x, cores = 1, filename = NULL, ...){
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
-#' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' geo.phylo(ras, tree, metric = 'phylo.diversity')
-#' geo.phylo(ras, tree, metric = 'phylo.endemism')
-#' geo.phylo(ras, metric = 'weigh.endemism')
-#' }
+#' geo.phylo(x, tree, metric = 'phylo.diversity')
+#' geo.phylo(x, tree, metric = 'phylo.endemism')
+#' geo.phylo(x, metric = 'weigh.endemism')
+#'}
 #'
 geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
                                           'evol.distinct', 'phylo.endemism',
@@ -388,12 +410,10 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
   ### calculating PD, SE, WE, PE, and ED
 
   if(metric == 'phylo.diversity'){
-    warning("Geographic coordinates are assumed for the calculations.")
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
+    if(!terra::is.lonlat(x)){
+      stop("Geographic coordinates are needed for the calculations.")
+    }
 
     ### preparing data
     # reordering the raster according to tree
@@ -407,12 +427,10 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     }
 
   } else if (metric == 'evol.distinct'){
-    warning("Geographic coordinates are assumed for the calculations.")
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
+    if(!terra::is.lonlat(x)){
+      stop("Geographic coordinates are needed for the calculations.")
+    }
 
     ### preparing data
     # reordering the raster according to tree
@@ -422,68 +440,42 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
 
     # evolutionary distinctiveness
     resu <- phylogrid::rast.ed(pp$x, pp$branch.length, pp$n.descen, cores = cores)
+
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
 
   } else if (metric == 'richness'){
-    warning("Geographic coordinates are assumed for the calculations.")
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
+    if(!terra::is.lonlat(x)){
+      stop("Geographic coordinates are needed for the calculations.")
+    }
 
     # richness
     resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
+
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
 
   } else if (metric == 'weigh.endemism'){
-    warning("Geographic coordinates are assumed for the calculations.")
 
-    # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 2)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
-
-    temp <- vector("list", length = 2) # to create a temporary vector with the raster number
-    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-    temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
-
-    rs <- range_size(x) # return an vector with species's range
-    cell.area <- terra::cellSize(terra::rast(x), filename = temp[[1]]) # to calculate cell size
-
-    # inverse of range size
-    inv.R <- terra::ifel(x == 0, 0, cell.area/(x * rs),
-                         filename = ifelse(mi, "", temp[[1]]), overwrite = TRUE) # calculating the inverse of range size
-
-    # weighted endemism
-    # calculating we
-    resu <- terra::app(inv.R,
-                       function(x){
-                         if(all(is.na(x))){
-                           return(NA)}
-                         sum(x, na.rm = T)
-                       }, cores = cores, filename = ifelse(mi, "", temp[[2]]))
-
-    names(resu) <- "WE" # layer name
-
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      rend <- terra::writeRaster(rend, filename = filename)
+    if(!terra::is.lonlat(x)){
+      stop("Geographic coordinates are needed for the calculations.")
     }
 
-    unlink(temp[[1]]) # delete the files
+    # weighted endemism
+    resu <- phylogrid::rast.we(x, cores = cores)
 
+    if (!is.null(filename)){ # to save the rasters when the path is provide
+      rend <- terra::writeRaster(resu, filename = filename)
+    }
   }
   else if (metric == 'phylo.endemism'){
-    warning("Geographic coordinates are assumed for the calculations.")
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
+    if(!terra::is.lonlat(x)){
+      stop("Geographic coordinates are needed for the calculations.")
+    }
 
     ### preparing data
     # reordering the raster according to tree
@@ -492,6 +484,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
 
     # phylogenetic endemism
     resu <- phylogrid::rast.pe(pp$x, pp$branch.length, cores = cores)
+
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }

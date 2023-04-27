@@ -4,10 +4,12 @@
 \alias{inv.range}
 \title{Calculate the inverse of range size}
 \usage{
-inv.range(x, branch.length, filename = NULL, cores = 1, ...)
+inv.range(x, LR = F, branch.length, filename = NULL, cores = 1, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
+
+\item{LR}{logical. If LR = TRUE, the function will returns a raster with the clade range.}
 
 \item{branch.length}{numeric. A vector containing the branch length of each specie.}
 
@@ -21,7 +23,7 @@ inv.range(x, branch.length, filename = NULL, cores = 1, ...)
 SpatRaster and numeric
 }
 \description{
-Get range size, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
+Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

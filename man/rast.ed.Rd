@@ -33,7 +33,6 @@ tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 data <- phylogrid::phylo.pres(x, tree)
 ed <- phylogrid::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
 }
-
 }
 \references{
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
