@@ -1,8 +1,8 @@
 test_that("Are the returned values correct", {
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
-  rs.obs <- phylogrid::range_size(x, scale = TRUE)
+  rs.obs <- phyloraster::range_size(x, scale = TRUE)
   rs.expec <- c(0.015009453, 0.588013379, 0.013521024, 0.080455827, 0.648018646, 0.943431089,
               0.139427422, 0.846053051, 0.007046942, 0.385549225, 0.083342918, 0.191366365,
               0.315098335, 0.139397933, 0.295151965, 0.081513232, 0.001427741, 0.821967394,

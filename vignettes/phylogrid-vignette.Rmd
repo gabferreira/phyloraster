@@ -1,10 +1,10 @@
 ---
-title: "Introduction to the phylogrid package and its functionalities"
+title: "Introduction to the phyloraster package and its functionalities"
 author: "Gabriela Alves-Ferreira, Neander Heming"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-   %\VignetteIndexEntry{Introduction to the phylogrid package and its functionalities}
+   %\VignetteIndexEntry{Introduction to the phyloraster package and its functionalities}
    %\VignetteEngine{knitr::rmarkdown}
    %\usepackage[utf8]\n 
 ---
@@ -24,27 +24,27 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,comment = "
 
 ## Introduction {#intro}
 
-[`phylogrid`](https://github.com/gabferreira/phylogrid) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
+[`phyloraster`](https://github.com/gabferreira/phyloraster) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
 A lot of packages such as `phyloregion` (Daru et al., 2020), `picante` (Kembel et al., 2010) and `pez` (Pearse et al. 2015) can be used to calculate patterns of endemism and evolutionary diversity. However, most of these packages use matrices that can be computationally expensive if the user is working with global or local data with high resolution. `phylorgid` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, reducing the amount of RAM required for data processing. The functions are focused on the steps of pre-processing, processing and post-processing of macroecological and phylogenetic data.
 
 The pre-processing step offers basic functions for preparing the data before running the analyses. The processing step brings together functions to calculate Faith’s phylogenetic diversity, phylogenetic endemism, weighted endemism and evolutionary distinctiveness. This step also provides functions to calculate standardized effect size for each metric through different methods of spatial and phylogenetic randomization, aiming to control for richness effects. The user can applying these methods of randomization to test hypotheses about the community structure when richness patterns are correlated with endemism and evolutionary patterns (Kembel et al. 2010). The post processing stage includes functions to calculate the delta of metrics between different times (e.g. present and future).
-We have shown that the package has a slightly longer computation time than comparable packages, but takes up a considerably smaller portion of RAM memory, which will allow users to work with high-resolution datasets from local to global scales. This enhances the application of the package by enabling users to work with large datasets on computers with less RAM available. In this vignette, we demonstrate the use of the functions of the `phylogrid` package in detail.
+We have shown that the package has a slightly longer computation time than comparable packages, but takes up a considerably smaller portion of RAM memory, which will allow users to work with high-resolution datasets from local to global scales. This enhances the application of the package by enabling users to work with large datasets on computers with less RAM available. In this vignette, we demonstrate the use of the functions of the `phyloraster` package in detail.
 
 ## Installation {#install}
 
-The development version of `phylogrid` can be downloaded from [GitHub](https://github.com/gabferreira/phylogrid). If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phylogrid/issues). To install the package, run the following code:
+The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster). If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues). To install the package, run the following code:
 
 ```{r}
 require(devtools)
 devtools::load_all()
-#devtools::install_github("gabferreira/phylogrid")
-# library(phylogrid) 
+#devtools::install_github("gabferreira/phyloraster")
+# library(phyloraster) 
 ```
 
-`phylogrid` uses some R packages as dependencies such as `terra` (version >= 1.6) (Hijmans, 2022), `ape` (version >= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version >= 0.810) (Hackathon et al. 2020). Once installed, packages can be loaded into R using `library()`:
+`phyloraster` uses some R packages as dependencies such as `terra` (version >= 1.6) (Hijmans, 2022), `ape` (version >= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version >= 0.810) (Hackathon et al. 2020). Once installed, packages can be loaded into R using `library()`:
 
 ```{r, warning = FALSE, message = FALSE}
-library(phylogrid)
+library(phyloraster)
 library(terra)
 library(ape)
 library(phylobase)
@@ -91,7 +91,7 @@ The `shp2rast` function transform a shapefile to a raster stack with the same ex
 This function allows to work, for example, with the shapes of species distribution provided by the [International Union for the Conservation of Nature's Spatial Database](https://www.iucnredlist.org/resources/spatial-data-download). We provide a set of shapefiles for 27 species of Australian tree frogs. You can visualize this data through the following code:
 
 ```{r}
-shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package = "phylogrid"))
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package = "phyloraster"))
 ```
 
 ```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
@@ -123,9 +123,9 @@ names(data$raster) == data$tree$tip.label
 The function `phylo.pres` reorder the raster stack according to phylogenetic tree order, extract a subtree containing only species present in the raster stack and get the branch length for each species.
 
 ```{r}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
-dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
 ```
 
 Now, the raster stack and the tip label of the tree are in the same order!
@@ -140,11 +140,11 @@ Great!! Now, we are already able to calculate the measures of endemism and evolu
 
 -   **Endemism measurements**
 
-The `phylogrid` package implements functions for calculating spatial patterns of endemism based on the weighted endemism method (WE; Williams et al. 1994, Crisp et al. 2001) through the function `rast.we`. The function returns a raster with the values of weighted endemism by each pixel. Endemism values range from 0 to 1.
+The `phyloraster` package implements functions for calculating spatial patterns of endemism based on the weighted endemism method (WE; Williams et al. 1994, Crisp et al. 2001) through the function `rast.we`. The function returns a raster with the values of weighted endemism by each pixel. Endemism values range from 0 to 1.
 
 ```{r, warning= FALSE}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-wer <- phylogrid::rast.we(x = ras, filename = NULL)
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+wer <- phyloraster::rast.we(x = ras, filename = NULL)
 wer
 ```
 
@@ -160,11 +160,11 @@ plot(wer$WE, main ="Weigthed Endemism")
 The first evolutionary measure is Faith's phylogenetic diversity (PD, Faith 1994), which is calculated as the sum of the branch length for all species occurring in a given region (Faith 1994).
 
 ```{r, warning= FALSE}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
-dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
 
-pdr <- phylogrid::rast.pd(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
+pdr <- phyloraster::rast.pd(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
 pdr[[1]]
 ```
 
@@ -175,11 +175,11 @@ plot(pdr$PD, main = "Phylogenetic diversity")
 The second measure is phylogenetic endemism (PE, Rosauer et al. 2009), which calculates the degree to which PD are restricted to a specific region (Rosauer et al. 2009). The function `rast.pe` returns a raster layer containing PE the region of interest.
 
 ```{r, warning= FALSE}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
-dataprep <- phylogrid::phylo.pres(x = ras, tree = tree)
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
 
-per <- phylogrid::rast.pe(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
+per <- phyloraster::rast.pe(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
 per
 ```
 
@@ -191,7 +191,7 @@ plot(per$PE, main = "Phylogenetic Endemism")
 
 ## Null models {#null}
 
-Null models are a widely used method to control for richness effects in diversity measures (Gotelli and Ulrich, 2012). The standardized effect size (SES) measure, also known as z-score or z-value, is used to calculate null models from randomization tests (Gotelli and McCabe 2002). `phylogrid` implements three methods to calculate SES using spatial and phylogenetic randomization: rast.pe.ses, rast.pd.ses, and rast.we.ses.
+Null models are a widely used method to control for richness effects in diversity measures (Gotelli and Ulrich, 2012). The standardized effect size (SES) measure, also known as z-score or z-value, is used to calculate null models from randomization tests (Gotelli and McCabe 2002). `phyloraster` implements three methods to calculate SES using spatial and phylogenetic randomization: rast.pe.ses, rast.pd.ses, and rast.we.ses.
 
 -   **Spatial and phylogenetic randomization**
 
@@ -202,9 +202,9 @@ In turn, for phylogenetic randomization, we provide the function tip.rand that s
 Now that we have presented the randomization methods, we can start to build the null models.
 
 ```{r}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phylogrid"))
-data <- phylogrid::phylo.pres(ras, tree)
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+data <- phyloraster::phylo.pres(ras, tree)
 
 t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 ```
@@ -223,7 +223,7 @@ The package also brings the function `delta.grid` that allows you to calculate t
 
 ```{r}
 # load the data
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness
 riq.pres <- rast.se(x)
 plot(riq.pres)
@@ -233,7 +233,7 @@ Now imagine that as climate change progresses, 16 relatively more vulnerable spe
 
 ```{r}
 # load the data
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness future
 riq.fut <- rast.se(x[[c(1:15)]]) # imagine we lost some species in the future
 plot(riq.fut)
@@ -246,7 +246,7 @@ dg <- delta.grid(riq.pres, riq.fut)
 plot(dg)
 ```
 
-On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species. The delta.grid function can be used for any of the other metrics that are available in the phylogrid package.
+On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species. The delta.grid function can be used for any of the other metrics that are available in the phyloraster package.
 
 ## References {#references}
 

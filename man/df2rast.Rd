@@ -19,7 +19,7 @@ The function transform a data.frame or a matrix of presence-absence in a raster 
 }
 \examples{
 \dontrun{
-dat <- phylogrid::load.data.rosauer()
+dat <- phyloraster::load.data.rosauer()
 df2rast(dat$presab)
 }
 }

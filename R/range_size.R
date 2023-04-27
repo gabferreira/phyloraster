@@ -9,7 +9,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' range_size(x, scale = TRUE)
 #' }
 range_size <- function(x, scale = FALSE, ...){

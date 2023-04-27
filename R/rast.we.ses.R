@@ -13,7 +13,7 @@
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' rs <- range_size(x)
 #' .rast.we.B(x, rs)
 #' }
@@ -63,7 +63,7 @@
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
 #' plot(t)
 #' }

@@ -30,7 +30,7 @@ The "site" method keeps species richness constant in each pixel, but randomizes 
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "both")
 plot(t)
 }

@@ -27,11 +27,11 @@ This function calculates evolutionary distinctiveness according to the fair-prop
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # phylogenetic tree
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylogrid::phylo.pres(x, tree)
-ed <- phylogrid::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+data <- phyloraster::phylo.pres(x, tree)
+ed <- phyloraster::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
 }
 }
 \references{

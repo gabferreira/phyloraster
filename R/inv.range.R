@@ -12,7 +12,7 @@
 #' @export
 #' @example
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' inv.range(x)
 #' }
 inv.range <- function(x, LR = F, branch.length, filename = NULL, cores = 1, ...){

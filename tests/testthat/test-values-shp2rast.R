@@ -1,7 +1,7 @@
 test_that("Are the returned values correct?", {
 
   shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
-                                 package="phylogrid"))
+                                 package="phyloraster"))
 
   # getting fewer cells to test all values
   r <- terra::rast()
@@ -10,7 +10,7 @@ test_that("Are the returned values correct?", {
   terra::plot(shpc)
   unique(shpc$BINOMIAL)
 
-  ob.values <- terra::values(phylogrid::shp2rast(shpc, sps.col = "BINOMIAL",
+  ob.values <- terra::values(phyloraster::shp2rast(shpc, sps.col = "BINOMIAL",
                                                  ymask = FALSE, background = 0,
                                                  resolution = 0.1))
 

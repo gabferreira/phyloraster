@@ -1,15 +1,15 @@
 test_that("Are the returned values correct?", {
 
   # load data
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   # getting fewer cells to test all values
   r <- terra::rast()
   terra::ext(r) <- c(150.0157, 150.8157, -23.044, -22.8563)
   xcrop <- terra::crop(x, terra::ext(r))
 
-  pp.obs <- phylogrid::phylo.pres(xcrop[[1:10]], tree)
+  pp.obs <- phyloraster::phylo.pres(xcrop[[1:10]], tree)
   descen.expect <- c(12, 12, 13, 13, 12, 14, 15, 16, 16, 15)
   # (terra::values(pp.obs[[1]]))[,10]
   rast.expect <- matrix(data = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

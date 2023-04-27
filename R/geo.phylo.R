@@ -85,7 +85,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' rse <- rast.se(x)
 #' terra::plot(rse)
 #' }
@@ -130,8 +130,8 @@ rast.se <- function(x, filename = NULL, cores = 1, ...){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' rast.pd(data$x, data$branch.length)
 #' }
@@ -143,7 +143,7 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 
   if(!all.equal(names(x), names(branch.length))){
 
-    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
 
   } else {
 
@@ -186,11 +186,11 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' # phylogenetic tree
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylogrid::phylo.pres(x, tree)
-#' ed <- phylogrid::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phyloraster::phylo.pres(x, tree)
+#' ed <- phyloraster::rast.ed(data$x, data$branch.length, data$n.descen, cores = 2)
 #' }
 rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
 
@@ -200,7 +200,7 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 
   if(!all.equal(names(x), names(branch.length))){
 
-    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
 
   } else {
 
@@ -243,8 +243,8 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' rast.pe(data$x, data$branch.length, cores = 1)
 #' }
@@ -257,7 +257,7 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
 
   if(!all.equal(names(x), names(branch.length))){
 
-    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
 
   } else {
 
@@ -271,7 +271,7 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
     temp[[2]] <- paste0(tempfile(), ".tif")  # to store the second raster
     temp[[3]] <- paste0(tempfile(), ".tif")  # to store the third raster
 
-    area.branch <- phylogrid::inv.range(x, branch.length, LR = T,
+    area.branch <- phyloraster::inv.range(x, branch.length, LR = T,
                                         filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
 
     # phylogenetic endemism
@@ -318,7 +318,7 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' rast.we(x)
 #' }
 #'
@@ -395,8 +395,8 @@ rast.we <- function(x, cores = 1, filename = NULL, ...){
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' geo.phylo(x, tree, metric = 'phylo.diversity')
 #' geo.phylo(x, tree, metric = 'phylo.endemism')
 #' geo.phylo(x, metric = 'weigh.endemism')
@@ -421,7 +421,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     pp <- phylo.pres(x, tree)
 
     # phylogenetic diversity
-    resu <- phylogrid::rast.pd(pp$x, pp$branch.length, cores = cores)
+    resu <- phyloraster::rast.pd(pp$x, pp$branch.length, cores = cores)
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
     }
@@ -439,7 +439,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     pp <- phylo.pres(x, tree)
 
     # evolutionary distinctiveness
-    resu <- phylogrid::rast.ed(pp$x, pp$branch.length, pp$n.descen, cores = cores)
+    resu <- phyloraster::rast.ed(pp$x, pp$branch.length, pp$n.descen, cores = cores)
 
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)
@@ -465,7 +465,7 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     }
 
     # weighted endemism
-    resu <- phylogrid::rast.we(x, cores = cores)
+    resu <- phyloraster::rast.we(x, cores = cores)
 
     if (!is.null(filename)){ # to save the rasters when the path is provide
       rend <- terra::writeRaster(resu, filename = filename)
@@ -480,10 +480,10 @@ geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
     ### preparing data
     # reordering the raster according to tree
     # getting branch length
-    pp <- phylogrid::phylo.pres(x, tree)
+    pp <- phyloraster::phylo.pres(x, tree)
 
     # phylogenetic endemism
-    resu <- phylogrid::rast.pe(pp$x, pp$branch.length, cores = cores)
+    resu <- phyloraster::rast.pe(pp$x, pp$branch.length, cores = cores)
 
     if (!is.null(filename)){ # to save the rasters when the path is provide
       resu <- terra::writeRaster(resu, filename)

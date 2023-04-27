@@ -1,18 +1,18 @@
 test_that("results of the analyses replicate those of other packages", {
 
   library(epm)
-  library(phylogrid)
+  library(phyloraster)
   library(phyloregion)
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-  data <- phylogrid::phylo.pres(x, tree)
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  data <- phyloraster::phylo.pres(x, tree)
 
-  # phylogrid
-  pg <- phylogrid::rast.pd(data$x, data$branch.length)
+  # phyloraster
+  pg <- phyloraster::rast.pd(data$x, data$branch.length)
 
   # # phyloregion
-  # fdir <- system.file("extdata/rasters", package="phylogrid")
+  # fdir <- system.file("extdata/rasters", package="phyloraster")
   # files <- file.path(fdir, dir(fdir))
   # com <- phyloregion::raster2comm(files)
   # pr <- phyloregion::PD(com$comm_dat, tree)

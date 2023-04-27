@@ -19,8 +19,8 @@ This function randomize branch lengths or another vector for n times.
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x = x, tree = tree)
 sa <- tip.rand(data$branch.length, aleats = 10)
 }

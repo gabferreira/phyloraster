@@ -44,7 +44,7 @@ The function will rasterize the shapefile using the parameters of y, a spatraste
 \examples{
 \dontrun{
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
-                              package="phylogrid"))
+                              package="phyloraster"))
 library(rnaturalearth)
 library(terra)
 countries <- terra::vect(ne_countries()) # mapa mundi

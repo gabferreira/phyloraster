@@ -6,7 +6,7 @@
 #'
 #' @description Calculates the delta of spatialized diversity metrics (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism, evolutionary distinctiveness) between different time periods
 #' @inheritParams geo.phylo
-#' @param r1 SpatRaster Spatialized diversity metrics for time 1 (e.g phylogenetic diversity in present). To calculate some diversity metrics for rasters see phylogrid::geo.phylo function.
+#' @param r1 SpatRaster Spatialized diversity metrics for time 1 (e.g phylogenetic diversity in present). To calculate some diversity metrics for rasters see phyloraster::geo.phylo function.
 #' @param r2 SpatRaster Spatialized diversity metrics for time 2 (e.g phylogenetic diversity in future).
 #'
 #' @return SpatRaster
@@ -15,8 +15,8 @@
 #' @examples
 #' \dontrun{
 #' # data
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #'
 #' # metric SE richness
 #' riq.pres <- rast.se(x)

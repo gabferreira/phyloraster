@@ -7,7 +7,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' dat <- phylogrid::load.data.rosauer()
+#' dat <- phyloraster::load.data.rosauer()
 #' df2rast(dat$presab)
 #' }
 

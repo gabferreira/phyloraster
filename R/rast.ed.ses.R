@@ -46,7 +46,7 @@
 
   # if(!all.equal(names(x), names(branch.length))){
   #
-  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   #
   # } else {
 
@@ -87,9 +87,9 @@
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylogrid::phylo.pres(x, tree)
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phyloraster::phylo.pres(x, tree)
 #' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5,
 #'                  random = "both")
 #' terra::plot(t)
@@ -155,7 +155,7 @@ rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
   ## ed observed
   x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
-  ed.obs <- phylogrid::rast.ed(x.reord, branch.length = branch.length,
+  ed.obs <- phyloraster::rast.ed(x.reord, branch.length = branch.length,
                                n.descen = n.descen,
                                filename = filename, cores = cores)
 

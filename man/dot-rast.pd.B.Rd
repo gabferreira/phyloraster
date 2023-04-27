@@ -25,8 +25,8 @@ Calculate the sum of the branch length for species present in each cell of the r
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
 rast.pd(data$x, data$branch.length)
 }

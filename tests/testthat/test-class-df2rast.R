@@ -1,7 +1,7 @@
 test_that("check if the object class is correct", {
   # load data
-  dat <- phylogrid::load.data.rosauer()
+  dat <- phyloraster::load.data.rosauer()
 
   # tests
-  expect_s4_class(phylogrid::df2rast(dat$presab), "SpatRaster")
+  expect_s4_class(phyloraster::df2rast(dat$presab), "SpatRaster")
 })

@@ -11,8 +11,8 @@
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' .rast.pe.B(data$x, data$branch.length, cores = 1)
 #' }
@@ -20,7 +20,7 @@
 
   # if(!all.equal(names(x), names(branch.length))){
   #
-  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   #
   # } else {
 
@@ -54,8 +54,8 @@
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 #' plot(t)

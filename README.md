@@ -6,7 +6,7 @@
 [![.travis](https://github.com/gabferreira/phylogrid/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phylogrid/actions/workflows/.travis.yml)
 <!-- badges: end -->
 
-The goal of *phylogrid* package is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), phylogenetic endemism (PE. Rosauer et al. 2009), weighted endemism (WE)) for presence-absence rasters and return a raster object as an output.
+The goal of *phylogrid* package is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), evolutionary distinctiveness (Isaac et al. 2007; Laffan et al. 2016), phylogenetic endemism (PE. Rosauer et al. 2009, Laffan et al. 2016), weighted endemism (WE. Laffan et al. 2016)) for presence-absence rasters and return a raster object as an output. See more details on the package vignette.
 
 ## Installation
 
@@ -17,7 +17,7 @@ You can install the development version of *phylogrid* package from [GitHub](htt
 devtools::install_github("gabferreira/phylogrid")
 ```
 
-## Steps to calculte PD, PE and WE using ```phylogrid```
+## Steps to calculte PD, ED, PE and WE using ```phylogrid```
 
 ### First, load phylogenetic and spatial data
 
@@ -35,19 +35,21 @@ tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
 ### Now, let's prepare the dataset! The stack will be sorted according to the tree order and the branch lengths will be extracted for each species.
 
 ``` r
-dataprep <- phylogrid::phylo.pres(pres.stack = ras, tree = tree)
+dataprep <- phylogrid::phylo.pres(ras, tree)
 ```
 
-### After that, we will calculate the inverse of the range size and the inverse of the range size multiplied by the length of the branches. If you want to save these rasters directly to your computer, provide a path in the filename argument.
+### Now, we are already able to calculate PD, ED, PE and WE!!
 
 ``` r
-range <- phylogrid::inv.range(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL)
+pd <- phylogrid::rast.pd(data$x, data$branch.length)
+pe <- phylogrid::rast.pe(data$x, data$branch.length)
+we <- phylogrid::rast.we(ras)
+ed <- phylogrid::rast.ed(data$x, data$branch.length, data$n.descendants)
 ```
 
-### Now, we are already able to calculate PD, PE and WE!!
+### The result can be visualized using the R `plot` function from the `terra` package.
 
 ``` r
-pg <- phylogrid::geo.phylo(x = dataprep$x, area.inv = range$inv.R,
-                           area.tips = range$LR, branch.length = dataprep$branch.length, filename = NULL)
+terra::plot(pe, main = "Phylogenetic Endemism")
 ```
 

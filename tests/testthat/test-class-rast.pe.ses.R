@@ -1,8 +1,8 @@
 test_that("check if the object class is correct", {
 
   # load data
-  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(ras, tree)
 
   # tests

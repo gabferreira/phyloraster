@@ -1,6 +1,6 @@
 test_that("Are the returned values correct?", {
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
   # getting fewer cells to test all values
   r <- terra::rast()
@@ -8,7 +8,7 @@ test_that("Are the returned values correct?", {
   xcrop <- terra::crop(x, terra::ext(r))
 
   # metric SE richness
-  se.obs <- terra::values(phylogrid::rast.se(xcrop))
+  se.obs <- terra::values(phyloraster::rast.se(xcrop))
   expect_equivalent(se.obs, c(12, 12, 12, 13, 14, 14, 14, 14, 12, 12, 11, 12,
                          13, 14, 14, 14))
 })

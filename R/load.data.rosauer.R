@@ -8,9 +8,9 @@
 #' @source IUCN. 2022. The IUCN Red List of Threatened Species (spatial data). Version 2022-1. \href{https://www.iucnredlist.org}{IUCN}
 #' @export
 load.data.rosauer <- function(){
-  x <- phylogrid::dataR
-  r <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-  s <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phylogrid"))
+  x <- phyloraster::dataR
+  r <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  s <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phyloraster"))
   return(list(presab = x, raster = r, IUCN_shapefile = s, tree = tree))
 }

@@ -1,4 +1,4 @@
 library(testthat)
-library(phylogrid)
+library(phyloraster)
 
-test_check("phylogrid")
+test_check("phyloraster")

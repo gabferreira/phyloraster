@@ -1,22 +1,22 @@
 test_that("results of the analyses replicate those of other packages", {
 
   library(epm)
-  library(phylogrid)
+  library(phyloraster)
   # library(phyloregion)
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
-  # phylogrid
-  pg <- phylogrid::rast.we(x)
+  # phyloraster
+  pg <- phyloraster::rast.we(x)
 
   # # phyloregion
-  # fdir <- system.file("extdata/rasters", package="phylogrid")
+  # fdir <- system.file("extdata/rasters", package="phyloraster")
   # files <- file.path(fdir, dir(fdir))
   # com <- phyloregion::raster2comm(files)
   # pr <- phyloregion::weighted_endemism(com$comm_dat)
   # m <- merge(com$poly_shp, data.frame(grids=names(pr), WE=pr), by="grids")
   # m <- m[!is.na(m$WE),]
-  # x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+  # x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   # r <- terra::rasterize(terra::vect(m), x, field = "WE")
 
   # epm

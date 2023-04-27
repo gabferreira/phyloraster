@@ -40,10 +40,10 @@ The "tip" method shuffles the taxon names among all those in the phylogeny. The 
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-data <- phylogrid::phylo.pres(x, tree)
-t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+data <- phyloraster::phylo.pres(x, tree)
+t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 plot(t)
 }
 }

@@ -23,7 +23,7 @@ Calculate the species richness for each raster cell.
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 rse <- rast.se(x)
 terra::plot(rse)
 }

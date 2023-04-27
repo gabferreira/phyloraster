@@ -9,11 +9,11 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @return SpatRaster
-#' @export
+# #' @export
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' rast.pd(data$x, data$branch.length)
 #' }
@@ -25,7 +25,7 @@
 
   # if(!all.equal(names(x), names(branch.length))){
   #
-  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phylogrid::phylo.pres' function.")
+  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   #
   # } else {
 
@@ -69,10 +69,10 @@
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phylogrid"))
-#' data <- phylogrid::phylo.pres(x, tree)
-#' t <- phylogrid::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phyloraster::phylo.pres(x, tree)
+#' t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "species")
 #' plot(t)
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
@@ -144,7 +144,7 @@ rast.pd.ses <- function(x, branch.length, aleats,
   {
     x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
 
-    pd.obs <- phylogrid::rast.pd(x.reord, branch.length, cores = cores)
+    pd.obs <- phyloraster::rast.pd(x.reord, branch.length, cores = cores)
     pd.obs <- pd.obs$PD # selecting only PD
   }
 
