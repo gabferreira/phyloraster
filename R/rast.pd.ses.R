@@ -109,29 +109,19 @@ rast.pd.ses <- function(x, branch.length, aleats,
 
     pd.rand <- list() # to store the rasters in the loop
     rich <- rast.se(x)
-    # prob <- terra::app(x,
-    #                    function(x){
-    #                      ifelse(is.na(x), 0, 1)
-    #                    })
-    fr2prob <- function(x){
-      value <- NULL
-      fr <- subset(terra::freq(x), value==1)[,"count"]
-      all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
-      p <- fr/all
-      pin <- sapply(seq_along(p),
-                    function(i, p){
-                      sum(p[-i])
-                    }, p=p)
-      p*pin/(1-p)
-    }
-    fr_prob <- fr2prob(x)
+    prob <- terra::app(x,
+                       function(x){
+                         ifelse(is.na(x), 0, 1)
+                       })
+
+    fr_prob <- SESraster::fr2prob(x)
 
     for(i in 1:aleats){
       # temporary names to rasters
       temp[[i]] <- paste0(tempfile(), i, ".tif")
 
       ### shuffle
-      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
+      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = prob,
                                                 fr_prob = fr_prob)
       # calculate pd
       pd.rand[[i]] <- .rast.pd.B(pres.site.null, branch.length = branch.length,
