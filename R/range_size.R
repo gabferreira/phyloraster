@@ -18,7 +18,7 @@ range_size <- function(x, scale = FALSE, ...){
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
-  area <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]]) # to calculate cell size
+  area <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]], unit="km") # to calculate cell size
 
   # The function bellow extracts the range size for each species and stores it in a vector
   rs <- sapply(1:terra::nlyr(x),
