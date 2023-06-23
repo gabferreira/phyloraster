@@ -6,7 +6,7 @@
 [![.travis](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml)
 <!-- badges: end -->
 
-# phyloraster <a href="https://hemingnm.github.io/SESraster/"><img src="man/figures/logo.png" align="right" height="139" alt="phyloraster website" /></a>
+# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" align="right" height="139" alt="phyloraster website" /></a>
 
 The goal of *phyloraster* package is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), evolutionary distinctiveness (Isaac et al. 2007; Laffan et al. 2016), phylogenetic endemism (PE. Rosauer et al. 2009, Laffan et al. 2016), weighted endemism (WE. Laffan et al. 2016)) for presence-absence rasters and return a raster object as an output. See more details on the package vignette.
 
