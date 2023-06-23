@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Calculating community metrics for each raster cell
-Version: 1.1.0
+Version: 1.1
 StagedInstall: no 
 Authors@R: 
     person(given = "Gabriela",
@@ -32,6 +32,7 @@ Imports:
 Depends: 
     R (>= 2.10)
 Suggests: 
+    terra,
     knitr,
     rmarkdown,
     maps,
