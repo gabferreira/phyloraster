@@ -8,7 +8,7 @@
 
 # phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" align="right" height="139" alt="phyloraster website" /></a>
 
-The goal of *phyloraster* package is to calculate phylogenetic indices (such as phylogenetic diversity (PD. Faith 1992), evolutionary distinctiveness (Isaac et al. 2007; Laffan et al. 2016), phylogenetic endemism (PE. Rosauer et al. 2009, Laffan et al. 2016), weighted endemism (WE. Laffan et al. 2016)) for presence-absence rasters and return a raster object as an output. See more details on the package vignette.
+[`phyloraster`](https://github.com/gabferreira/phyloraster) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
 
 ## Installation
 
@@ -19,9 +19,9 @@ You can install the development version of *phyloraster* package from [GitHub](h
 devtools::install_github("gabferreira/phyloraster")
 ```
 
-## Steps to calculte PD, ED, PE and WE using ```phyloraster```
+## Steps to calculte phylogenetic diversity using ```phyloraster```
 
-### First, load phylogenetic and spatial data
+### First, load phylogenetic data and rasters of presence-absence for a set of species.
 
 ``` r 
 library(phyloraster)
@@ -34,24 +34,28 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraste
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 ```
 
-### Now, let's prepare the dataset! The stack will be sorted according to the tree order and the branch lengths will be extracted for each species.
+### Now, let's prepare the dataset. The raster stack will be sorted according to the tree order and the branch lengths will be extracted from the tree for each species.
 
 ``` r
 dataprep <- phyloraster::phylo.pres(ras, tree)
 ```
 
-### Now, we are already able to calculate PD, ED, PE and WE!!
+### Now, we are already able to calculate the phylogenetic diversity.
 
 ``` r
 pd <- phyloraster::rast.pd(data$x, data$branch.length)
-pe <- phyloraster::rast.pe(data$x, data$branch.length)
-we <- phyloraster::rast.we(ras)
-ed <- phyloraster::rast.ed(data$x, data$branch.length, data$n.descendants)
+pd
 ```
 
 ### The result can be visualized using the R `plot` function from the `terra` package.
 
 ``` r
 terra::plot(pe, main = "Phylogenetic Endemism")
+```
+
+A vignette with other examples can be found loading:
+
+``` r
+browseVignettes("phyloraster")
 ```
 
