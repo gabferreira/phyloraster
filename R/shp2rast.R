@@ -10,11 +10,11 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' library(terra)
+#' library(rnaturalearth)
 #' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
 #'                               package="phyloraster"))
-#' library(rnaturalearth)
-#' library(terra)
-#' countries <- terra::vect(ne_countries()) # mapa mundi
+#' countries <- terra::vect(ne_countries()) # world map
 #' coun.crop <- terra::crop(countries, ext(shp)) # cut by the total extension of the polygons
 #' coun.rast <- terra::rasterize(coun.crop,
 #'                       terra::rast(ext(shp), resolution = 0.5))
@@ -22,14 +22,14 @@
 #'
 #' rasterizing with a mask of a country for example
 #' teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
-#' plot(teste[[1:3]], col = c("grey", "green"))
+#' plot(teste, col = c("grey", "green"))
 #'
 # rasterizing based on extent and without using mask
 #' teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.5)
-#' plot(teste2[[1:3]], col = c("grey", "green"))
+#' plot(teste2, col = c("grey", "green"))
 #' }
 shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
-                     touches = TRUE, resolution, filename = NULL, ...){
+                     touches = TRUE, resolution, values = 1, filename = NULL, ...){
 
   if(!class(x) == "SpatVector"){
     x <- terra::vect(x)
@@ -48,8 +48,8 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
 
   for(i in 1:length(nm)){
     r_list[[i]] <- terra::rasterize(x[data.frame(x)[,sps.col] == nm[i],], y,
-                                    field = NULL,
-                                    value = 1,
+                                    # field = NULL,
+                                    values = values,
                                     background = background,
                                     touches = touches, filename = "", ...)
   }
