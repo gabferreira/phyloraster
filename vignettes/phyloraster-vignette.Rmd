@@ -36,9 +36,9 @@ The development version of `phyloraster` can be downloaded from [GitHub](https:/
 
 ```{r}
 require(devtools)
-devtools::load_all()
-#devtools::install_github("gabferreira/phyloraster")
-# library(phyloraster) 
+# devtools::load_all()
+devtools::install_github("gabferreira/phyloraster")
+library(phyloraster)
 ```
 
 `phyloraster` uses some R packages as dependencies such as `terra` (version >= 1.6) (Hijmans, 2022), `ape` (version >= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version >= 0.810) (Hackathon et al. 2020). Once installed, packages can be loaded into R using `library()`:
