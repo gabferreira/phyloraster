@@ -1,12 +1,15 @@
 ---
 title: "Introduction to the phyloraster package and its functionalities"
-author: "Gabriela Alves-Ferreira, Neander Heming"
+author: "Gabriela Alves-Ferreira, Flávio Mota and Neander Heming"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
    %\VignetteIndexEntry{Introduction to the phyloraster package and its functionalities}
-   %\VignetteEngine{knitr::rmarkdown}
    %\usepackage[utf8]\n 
+   %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, echo = FALSE, include=FALSE}
@@ -25,23 +28,34 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,comment = "
 ## Introduction {#intro}
 
 [`phyloraster`](https://github.com/gabferreira/phyloraster) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
-A lot of packages such as `phyloregion` (Daru et al., 2020), `picante` (Kembel et al., 2010) and `pez` (Pearse et al. 2015) can be used to calculate patterns of endemism and evolutionary diversity. However, most of these packages use matrices that can be computationally expensive if the user is working with global or local data with high resolution. `phylorgid` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, reducing the amount of RAM required for data processing. The functions are focused on the steps of pre-processing, processing and post-processing of macroecological and phylogenetic data.
+A lot of packages such as `phyloregion` (Daru et al., 2020), `picante` (Kembel et al., 2010) and `pez` (Pearse et al. 2015) can be used to calculate patterns of endemism and evolutionary diversity.
+However, most of these packages use matrices that can be computationally expensive if the user is working with global or local data with high resolution.
+`phylorgid` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, reducing the amount of RAM required for data processing.
+The functions are focused on the steps of pre-processing, processing and post-processing of macroecological and phylogenetic data.
 
-The pre-processing step offers basic functions for preparing the data before running the analyses. The processing step brings together functions to calculate Faith’s phylogenetic diversity, phylogenetic endemism, weighted endemism and evolutionary distinctiveness. This step also provides functions to calculate standardized effect size for each metric through different methods of spatial and phylogenetic randomization, aiming to control for richness effects. The user can applying these methods of randomization to test hypotheses about the community structure when richness patterns are correlated with endemism and evolutionary patterns (Kembel et al. 2010). The post processing stage includes functions to calculate the delta of metrics between different times (e.g. present and future).
-We have shown that the package has a slightly longer computation time than comparable packages, but takes up a considerably smaller portion of RAM memory, which will allow users to work with high-resolution datasets from local to global scales. This enhances the application of the package by enabling users to work with large datasets on computers with less RAM available. In this vignette, we demonstrate the use of the functions of the `phyloraster` package in detail.
+The pre-processing step offers basic functions for preparing the data before running the analyses.
+The processing step brings together functions to calculate Faith's phylogenetic diversity, phylogenetic endemism, weighted endemism and evolutionary distinctiveness.
+This step also provides functions to calculate standardized effect size for each metric through different methods of spatial and phylogenetic randomization, aiming to control for richness effects.
+The user can applying these methods of randomization to test hypotheses about the community structure when richness patterns are correlated with endemism and evolutionary patterns (Kembel et al. 2010).
+The post processing stage includes functions to calculate the delta of metrics between different times (e.g. present and future).
+We have shown that the package has a slightly longer computation time than comparable packages, but takes up a considerably smaller portion of RAM memory, which will allow users to work with high-resolution datasets from local to global scales.
+This enhances the application of the package by enabling users to work with large datasets on computers with less RAM available.
+In this vignette, we demonstrate the use of the functions of the `phyloraster` package in detail.
 
 ## Installation {#install}
 
-The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster). If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues). To install the package, run the following code:
+The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster).
+If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
+To install the package, run the following code:
 
 ```{r}
 require(devtools)
-# devtools::load_all()
-devtools::install_github("gabferreira/phyloraster")
-library(phyloraster)
+devtools::load_all()
+ # devtools::install_github("gabferreira/phyloraster")
 ```
 
-`phyloraster` uses some R packages as dependencies such as `terra` (version >= 1.6) (Hijmans, 2022), `ape` (version >= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version >= 0.810) (Hackathon et al. 2020). Once installed, packages can be loaded into R using `library()`:
+`phyloraster` uses some R packages as dependencies such as `terra` (version \>= 1.6) (Hijmans, 2022), `ape` (version \>= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version \>= 0.810) (Hackathon et al. 2020).
+Once installed, packages can be loaded into R using `library()`:
 
 ```{r, warning = FALSE, message = FALSE}
 library(phyloraster)
@@ -52,11 +66,15 @@ library(phylobase)
 
 ## Data processing {#data}
 
-In the step of pre processing, we offer support to manipulate matrices, shapefiles, rasters, and phylogenetic trees. In the processing step, we provide functions to calculate Faith’s phylogenetic diversity (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009), evolutionary distinctiveness (Isaac et al., 2007) and weighted endemism (Williams et al., 1994).
+In the step of pre processing, we offer support to manipulate matrices, shapefiles, rasters, and phylogenetic trees.
+In the processing step, we provide functions to calculate Faith's phylogenetic diversity (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009), evolutionary distinctiveness (Isaac et al., 2007) and weighted endemism (Williams et al., 1994).
 
 -   **Dataset**
 
-The package contains one dataset that allows visualizing the structure expected to matrices, rasters, shapefiles and phylogenetic trees and can be accessed using the function `load.data.rosauer()`. This dataset contains a `data.frame` with presence records for 33 Australian tree frogs with coordinates for each site (Rosauer 2017) and a phylogenetic tree for these species (Rosauer 2017). This raw dataset can be accessed [here](https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data). The function also provide a binary raster of presence absence and a shapefile with the range of 27 species following IUCN spatial data.
+The package contains one dataset that allows visualizing the structure expected to matrices, rasters, shapefiles and phylogenetic trees and can be accessed using the function `load.data.rosauer()`.
+This dataset contains a `data.frame` with presence records for 33 Australian tree frogs with coordinates for each site (Rosauer 2017) and a phylogenetic tree for these species (Rosauer 2017).
+This raw dataset can be accessed [here](https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree%20Frog%20Data).
+The function also provide a binary raster of presence absence and a shapefile with the range of 27 species following IUCN spatial data.
 
 ```{r}
 data <- load.data.rosauer()
@@ -81,20 +99,22 @@ r <- df2rast(x = data$presab, CRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +to
 class(r)
 ```
 
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center'}
 plot(r)
 ```
 
 -   **Function** `shp2rast`
 
 The `shp2rast` function transform a shapefile to a raster stack with the same extent.
-This function allows to work, for example, with the shapes of species distribution provided by the [International Union for the Conservation of Nature's Spatial Database](https://www.iucnredlist.org/resources/spatial-data-download). We provide a set of shapefiles for 27 species of Australian tree frogs. You can visualize this data through the following code:
+This function allows to work, for example, with the shapes of species distribution provided by the [International Union for the Conservation of Nature's Spatial Database](https://www.iucnredlist.org/resources/spatial-data-download).
+We provide a set of shapefiles for 27 species of Australian tree frogs.
+You can visualize this data through the following code:
 
 ```{r}
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package = "phyloraster"))
 ```
 
-```{r, fig.height = 5, fig.width = 5, fig.align = 'center',}
+```{r, fig.height = 5, fig.width = 5, fig.align = 'center'}
 colors <- rainbow(length(unique(shp$BINOMIAL)),
                   alpha = 0.5)
 position <- match(shp$BINOMIAL,
@@ -113,13 +133,14 @@ r2
 
 -   **Function** `phylo.pres`
 
-
-To calculate evolutionary measurements it is extremely important that the raster with species distributions and the tree have the species names in the same order. 
+To calculate evolutionary measurements it is extremely important that the raster with species distributions and the tree have the species names in the same order.
 We can verify this premise using a simple logical test like this.
+
 ```{r}
 data <- load.data.rosauer()
 names(data$raster) == data$tree$tip.label
 ```
+
 The function `phylo.pres` reorder the raster stack according to phylogenetic tree order, extract a subtree containing only species present in the raster stack and get the branch length for each species.
 
 ```{r}
@@ -136,11 +157,14 @@ names(dataprep$x) == tree$tip.label
 
 ## Analysis {#analysis}
 
-Great!! Now, we are already able to calculate the measures of endemism and evolutionary diversity.
+Great!!
+Now, we are already able to calculate the measures of endemism and evolutionary diversity.
 
 -   **Endemism measurements**
 
-The `phyloraster` package implements functions for calculating spatial patterns of endemism based on the weighted endemism method (WE; Williams et al. 1994, Crisp et al. 2001) through the function `rast.we`. The function returns a raster with the values of weighted endemism by each pixel. Endemism values range from 0 to 1.
+The `phyloraster` package implements functions for calculating spatial patterns of endemism based on the weighted endemism method (WE; Williams et al. 1994, Crisp et al. 2001) through the function `rast.we`.
+The function returns a raster with the values of weighted endemism by each pixel.
+Endemism values range from 0 to 1.
 
 ```{r, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
@@ -172,7 +196,8 @@ pdr[[1]]
 plot(pdr$PD, main = "Phylogenetic diversity")
 ```
 
-The second measure is phylogenetic endemism (PE, Rosauer et al. 2009), which calculates the degree to which PD are restricted to a specific region (Rosauer et al. 2009). The function `rast.pe` returns a raster layer containing PE the region of interest.
+The second measure is phylogenetic endemism (PE, Rosauer et al. 2009), which calculates the degree to which PD are restricted to a specific region (Rosauer et al. 2009).
+The function `rast.pe` returns a raster layer containing PE the region of interest.
 
 ```{r, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
@@ -191,13 +216,16 @@ plot(per$PE, main = "Phylogenetic Endemism")
 
 ## Null models {#null}
 
-Null models are a widely used method to control for richness effects in diversity measures (Gotelli and Ulrich, 2012). The standardized effect size (SES) measure, also known as z-score or z-value, is used to calculate null models from randomization tests (Gotelli and McCabe 2002). `phyloraster` implements three methods to calculate SES using spatial and phylogenetic randomization: rast.pe.ses, rast.pd.ses, and rast.we.ses.
+Null models are a widely used method to control for richness effects in diversity measures (Gotelli and Ulrich, 2012).
+The standardized effect size (SES) measure, also known as z-score or z-value, is used to calculate null models from randomization tests (Gotelli and McCabe 2002).
+`phyloraster` implements three methods to calculate SES using spatial and phylogenetic randomization: rast.pe.ses, rast.pd.ses, and rast.we.ses.
 
 -   **Spatial and phylogenetic randomization**
 
 The randomization procedure for the calculation of SES is done internally in the functions rast.we.ses(), rast.ed.ses(), rast.pd.ses(), and rast.pe.ses() through the package SESraster (Heming et al., 2023).
-The function bootspat_str() from the package SESraster keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
-In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny. 
+The function bootspat_str() from the package SESraster keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels).
+The randomization will not assign values to cells with nodata.
+In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny.
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
@@ -210,16 +238,19 @@ t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 ```
 
 Plotting the results
+
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(t)
 ```
 
 ## Post processing {#processing}
 
-
 -   **Function** `delta.grid`
 
-The package also brings the function `delta.grid` that allows you to calculate the difference between spatialized diversity metrics between two different times. This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario. For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia. In the map below we can visualize the spatial pattern of species richness.
+The package also brings the function `delta.grid` that allows you to calculate the difference between spatialized diversity metrics between two different times.
+This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario.
+For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia.
+In the map below we can visualize the spatial pattern of species richness.
 
 ```{r}
 # load the data
@@ -239,39 +270,90 @@ riq.fut <- rast.se(x[[c(1:15)]]) # imagine we lost some species in the future
 plot(riq.fut)
 ```
 
-The delta.grid function allows you to visualize the variation in these richness patterns spatially. See an example below.
+The delta.grid function allows you to visualize the variation in these richness patterns spatially.
+See an example below.
 
 ```{r}
 dg <- delta.grid(riq.pres, riq.fut)
 plot(dg)
 ```
 
-On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species. The delta.grid function can be used for any of the other metrics that are available in the phyloraster package.
+On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species.
+The delta.grid function can be used for any of the other metrics that are available in the phyloraster package.
 
 ## References {#references}
 
-Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H.
+and Monro, A.
+(2001).
+Endemism in theAustralian flora.
+Journal of Biogeography, 28, 183--198.
 
-Daru, B. H., Karunarathne, P., and Schliep, K. (2020). phyloregion: R package for biogeographical regionalization and macroecology. Methods in Ecology and Evolution, 11(11), 1483–1491. https://doi.org/10.1111/2041-210X.13478
+Daru, B. H., Karunarathne, P., and Schliep, K.
+(2020).
+phyloregion: R package for biogeographical regionalization and macroecology.
+Methods in Ecology and Evolution, 11(11), 1483--1491.
+<https://doi.org/10.1111/2041-210X.13478>
 
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992).
+Conservation evaluation and phylogenetic diversity.
+Biological conservation, 61(1), 1-10.
 
-Gotelli, N. J., and McCabe, D. J. (2002). Species co-occurrence: A meta-analysis of  J. M. Diamond’s  assembly rules model. Ecology, 83(8), 2091–2096. https://doi.org/10.1890/0012-9658(2002)083[2091:SCOAMA]2.0.CO;2
+Gotelli, N. J., and McCabe, D. J.
+(2002).
+Species co-occurrence: A meta-analysis of J.
+M. Diamond's assembly rules model.
+Ecology, 83(8), 2091--2096.
+[https://doi.org/10.1890/0012-9658(2002)083[2091:SCOAMA]2.0.CO;2](https://doi.org/10.1890/0012-9658(2002)083%5B2091:SCOAMA%5D2.0.CO;2){.uri}
 
-Gotelli, N. J., and Ulrich, W. (2012). Statistical challenges in null model analysis. Oikos, 121(2), 171–180. https://doi.org/10.1111/j.1600-0706.2011.20301.x
+Gotelli, N. J., and Ulrich, W.
+(2012).
+Statistical challenges in null model analysis.
+Oikos, 121(2), 171--180.
+<https://doi.org/10.1111/j.1600-0706.2011.20301.x>
 
-Hackathon, R. (2020). phylobase: Base Package for Phylogenetic Structures and Comparative Data (0.8. 10). https://CRAN.R-project.org/package=phylobase
+Hackathon, R.
+(2020).
+phylobase: Base Package for Phylogenetic Structures and Comparative Data (0.8. 10).
+<https://CRAN.R-project.org/package=phylobase>
 
-Hjimans, R. J. (2022). Terra, Spatial Data Analysis (1.6.7). https://CRAN.R-project.org/package=terra
+Hjimans, R. J.
+(2022).
+Terra, Spatial Data Analysis (1.6.7).
+<https://CRAN.R-project.org/package=terra>
 
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C.
+and Baillie, J. E.
+(2007).
+Mammals on the EDGE: conservation priorities based on threat and phylogeny.
+PLoS ONE 2, e296.
 
-Kembel, S. W., Cowan, P. D., Helmus, M. R., Cornwell, W. K., Morlon, H., Ackerly, D. D., Blomberg, S. P., and Webb, C. O. (2010). Picante: R tools for integrating phylogenies and ecology. Bioinformatics, 26(11), 1463–1464. https://doi.org/10.1093/bioinformatics/btq166
+Kembel, S. W., Cowan, P. D., Helmus, M. R., Cornwell, W. K., Morlon, H., Ackerly, D. D., Blomberg, S. P., and Webb, C. O.
+(2010).
+Picante: R tools for integrating phylogenies and ecology.
+Bioinformatics, 26(11), 1463--1464.
+<https://doi.org/10.1093/bioinformatics/btq166>
 
-Paradis, E., and Schliep, K. (2019). ape 5.0: An environment for modern phylogenetics and evolutionary analyses in R. Bioinformatics, 35, 526–528.
+Paradis, E., and Schliep, K.
+(2019).
+ape 5.0: An environment for modern phylogenetics and evolutionary analyses in R.
+Bioinformatics, 35, 526--528.
 
-Pearse, W. D., Cadotte, M. W., Cavender-Bares, J., Ives, A. R., Tucker, C. M., Walker, S. C., & Helmus, M. R. (2015). pez: Phylogenetics for the environmental sciences. Bioinformatics, 31(17), 2888–2890. https://doi.org/10.1093/bioinformatics/btv277
+Pearse, W. D., Cadotte, M. W., Cavender-Bares, J., Ives, A. R., Tucker, C. M., Walker, S. C., & Helmus, M. R.
+(2015).
+pez: Phylogenetics for the environmental sciences.
+Bioinformatics, 31(17), 2888--2890.
+<https://doi.org/10.1093/bioinformatics/btv277>
 
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
+and Cook, L. G.
+(2009).
+Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history.
+Molecular ecology, 18(19), 4061-4072.
 
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.
+and VaneWright, R.I.
+(1994).
+Biodiversity, taxonomic relatedness, and endemism in conservation.
+In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438.
+Oxford University Press, Oxford.
