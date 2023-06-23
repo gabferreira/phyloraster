@@ -2,9 +2,8 @@
 # phyloraster
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.com/gabferreira/phyloraster.svg?branch=master)](https://travis-ci.com/gabferreira/phyloraster)
-[![.travis](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml)
-<!-- badges: end -->
+  [![.travis](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml)
+  <!-- badges: end -->
 
 # phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" align="right" height="139" alt="phyloraster website" /></a>
 
