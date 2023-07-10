@@ -1,9 +1,9 @@
 #' Calculate range size for a set of species using a raster as imput
 #'
-#' @description This function calculate range size  in meters (by default) for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area.
+#' @description This function calculate range size in square meters (by default) for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. This raster must be named.
-#' @param ... additional arguments to be passed passed down from a calling function.
 #' @inheritParams terra::cellSize
+#' @param ... additional arguments to be passed passed down from a calling function.
 #' @author Gabriela Alves Ferreira and Neander Marcel Heming
 #' @return vector
 #' @export
