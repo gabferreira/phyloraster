@@ -7,7 +7,7 @@ Authors@R:
            family = "Alves-Ferreira",
            role = c("aut", "cre"),
            email = "gabriela-alves77@hotmail.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0001-5661-3381"))
     person("Flávio", "Mota", , "flaviomoc@gmail.com", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0308-7151"))
@@ -27,12 +27,10 @@ Imports:
     qpdf, 
     phyloregion,
     epm,
-    glottoTrees,
     SESraster
 Depends: 
     R (>= 2.10)
 Suggests: 
-    terra,
     knitr,
     rmarkdown,
     maps,
@@ -40,3 +38,4 @@ Suggests:
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 2
+URL: https://gabferreira.github.io/phyloraster/
