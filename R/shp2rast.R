@@ -3,9 +3,9 @@
 #' The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
 #'
 #' @inheritParams terra::rasterize
+#' @inheritParams terra::rast
 #' @param ymask SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example
-#' @param sps.col character. It should a variable name in x
-#' @param resolution numeric. A numeric vector of length 1 or 2 to set the resolution
+#' @param sps.col character. It should be a variable name in x
 #' @return SpatRaster
 #' @export
 #' @examples
