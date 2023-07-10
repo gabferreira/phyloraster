@@ -368,18 +368,23 @@ rast.we <- function(x, cores = 1, filename = NULL, ...){
   return(rend)
 }
 
-#' Calculate community metrics for each raster cell
+#' Calculate phylogenetic community metrics for raster data
 #'
-#' Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism using rasters as input and output.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
-#' @param tree phylo. A dated tree.
-#' @param metric character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed for fun.
-#' @return SpatRaster
-#' @export
-#' @details Community metrics available:
+#' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
+#' phylogenetic endemism and weighted endemism using rasters as input and output.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. The layers (species) must be sorted according to the
+#' tree order. See the phylo.pres function.
+#' @param area.branch description
+#' @param inv.R description
+#' @param branch.length description
+#' @param n.descen description
+#' @inheritParams terra::app
+#' @param ... additional arguments passed for terra::app
+#'
+#' @return SpatRaster with one layer for each metric
+#'
+#' @details Community metrics calculated:
 #' \itemize{
 ##'    \item{Phylogenetic diversity (Faith 1992)}
 ##'    \item{Richness}
@@ -393,105 +398,61 @@ rast.we <- function(x, cores = 1, filename = NULL, ...){
 #' @references Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#'
 #' @examples
-#' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' geo.phylo(x, tree, metric = 'phylo.diversity')
-#' geo.phylo(x, tree, metric = 'phylo.endemism')
-#' geo.phylo(x, metric = 'weigh.endemism')
-#'}
+#' data <- phylo.pres(x, tree)
+#' branch.length = data$branch.length
+#' n.descen = data$n.descendants
+#' area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
 #'
-geo.phylo <- function(x, tree, metric = c('richness', 'phylo.diversity',
-                                          'evol.distinct', 'phylo.endemism',
-                                          'weigh.endemism'), cores = 1,
-                      filename = NULL, ...){
+#' t <- geo.phylo(x, area.branch$LR, area.branch$inv.R, data$branch.length, data$n.descendants)
+#' terra::plot(t)
+#'
+#' @export
+geo.phylo <- function(x, area.branch, inv.R,
+                      branch.length, n.descen,
+                      cores = 1, filename = "", ...){
 
-  ### calculating PD, SE, WE, PE, and ED
-
-  if(metric == 'phylo.diversity'){
-
-    if(!terra::is.lonlat(x)){
-      stop("Geographic coordinates are needed for the calculations.")
-    }
-
-    ### preparing data
-    # reordering the raster according to tree
-    # getting branch length
-    pp <- phylo.pres(x, tree)
-
-    # phylogenetic diversity
-    resu <- phyloraster::rast.pd(pp$x, pp$branch.length, cores = cores)
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
-    }
-
-  } else if (metric == 'evol.distinct'){
-
-    if(!terra::is.lonlat(x)){
-      stop("Geographic coordinates are needed for the calculations.")
-    }
-
-    ### preparing data
-    # reordering the raster according to tree
-    # getting branch length
-    # getting ancestor number
-    pp <- phylo.pres(x, tree)
-
-    # evolutionary distinctiveness
-    resu <- phyloraster::rast.ed(pp$x, pp$branch.length, pp$n.descen, cores = cores)
-
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
-    }
-
-  } else if (metric == 'richness'){
-
-    if(!terra::is.lonlat(x)){
-      stop("Geographic coordinates are needed for the calculations.")
-    }
-
-    # richness
-    resu <- terra::app(x, sum, na.rm = TRUE, cores = cores)
-
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
-    }
-
-  } else if (metric == 'weigh.endemism'){
-
-    if(!terra::is.lonlat(x)){
-      stop("Geographic coordinates are needed for the calculations.")
-    }
-
-    # weighted endemism
-    resu <- phyloraster::rast.we(x, cores = cores)
-
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      rend <- terra::writeRaster(resu, filename = filename)
-    }
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
   }
-  else if (metric == 'phylo.endemism'){
 
-    if(!terra::is.lonlat(x)){
-      stop("Geographic coordinates are needed for the calculations.")
-    }
+  nspp <- terra::nlyr(x)
+  spp_seq <- seq_len(nspp)
+  spp_seqLR <- spp_seq + nspp
+  spp_seqINV <- spp_seq + 2*nspp
+  resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
+  x3 <- c(x, area.branch, inv.R)
 
-    ### preparing data
-    # reordering the raster according to tree
-    # getting branch length
-    pp <- phyloraster::phylo.pres(x, tree)
+  terra::app(x3,
+             function(x, branch.length, n.descen, spp_seq, spp_seqLR,
+                      spp_seqINV, resu){
+               if(all(is.na(x))){
+                 return(resu)
+               }
+               ### separating raster layers of each cell
+               xa <- x[spp_seq]
+               xLR <- x[spp_seqLR]
+               xINV <- x[spp_seqINV]
 
-    # phylogenetic endemism
-    resu <- phyloraster::rast.pe(pp$x, pp$branch.length, cores = cores)
+               ### computing metrics
+               se <- sum(xa, na.rm = T)
+               pd <- .vec.pd(xa, branch.length)[[1]] # [[1]] return only the first raster
+               ed <- .evol.distin(xa, branch.length, n.descen)[[1]] # [[1]] return only the first raster
+               pe <- sum(xLR, na.rm = T)
+               we <- sum(xINV, na.rm = T)
 
-    if (!is.null(filename)){ # to save the rasters when the path is provide
-      resu <- terra::writeRaster(resu, filename)
-    }
-
-  } else {
-    stop("Choose a valid metric! The community metrics currently available are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism', 'weigh.endemism'.")
-  }
-  return(resu)
+               resu[] <- c(se, pd, ed, pe, we)
+               return(resu)
+             },
+             branch.length = branch.length,
+             n.descen = n.descen,
+             spp_seq = spp_seq,
+             spp_seqLR = spp_seqLR,
+             spp_seqINV = spp_seqINV,
+             resu = resu,
+             cores = cores, filename = filename, ...)
 }
 
