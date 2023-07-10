@@ -1,7 +1,7 @@
 #' Prepare rasters and phylogenetic tree to run community metrics
 #'
-#' @description Reorder stack according to tree order and get branch length for each species. The names must be the same in the phylogenetic tree and in the raster for the same species. For example, if you have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans" in the tree, the function will not work. The same goes for uppercase and lowercase letters.
-#' @param x SpatRaster. A stack containing binary presence-absence rasters for each species.
+#' @description Reorder a stack of rasters of species distribution according to tree order and get branch length for each species to calculate diversity metrics using phyloraster::geo.phylo(). The names must be the same in the phylogenetic tree and in the raster for the same species. For example, if you have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans" in the tree, the function will not work. The same goes for uppercase and lowercase letters.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param tree phylo. A dated tree.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return Returns a list containing a SpatRaster reordered according to the order that the species appear in the phylogenetic tree, a subtree containing only the species that are in the stack of rasters and finally two named numerical vectors containing the branch length and the number of descendants of each species.
@@ -25,6 +25,9 @@ phylo.pres <- function(x, tree, ...) {
   tree.phy4 <- phylobase::phylo4(tree) # transform phylo in phylo4 class
   labels <- as.character(phylobase::tipLabels(tree.phy4)) # extracting species names in the tree
   on.tree <- intersect(spat.names, labels) # species of the raster that are in the tree
+  if(identical(on.tree, character(0))){
+    stop("The stack rasters and the phylogeny do not have species in common, or the species names do not match between the rasters and the tree.")
+  }
   subtree <- ape::keep.tip(tree, on.tree) # to make a subset of the tree and keep only the species that are in the raster
   stack.reord <- x[[subtree[["tip.label"]]]] # to reorder the stack according to the tree
 
