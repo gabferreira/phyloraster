@@ -234,7 +234,7 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloras
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
 data <- phyloraster::phylo.pres(ras, tree)
 
-t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat_str")
 ```
 
 Plotting the results
