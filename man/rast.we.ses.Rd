@@ -4,7 +4,14 @@
 \alias{rast.we.ses}
 \title{Calculate weighted endemism standardized for species richness}
 \usage{
-rast.we.ses(x, aleats, random = c("spat"), cores = 1, filename = NULL, ...)
+rast.we.ses(
+  x,
+  aleats,
+  random = c("spat_str", "species_n_str", "site_n_str", "both_n_str"),
+  cores = 1,
+  filename = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
@@ -26,12 +33,12 @@ SpatRaster
 Calculates the standardized effect size for weighted endemism. See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
+The randomization with spatial structure (spat_str) keeps the richness constant and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The methods "site_n_str", "species_n_str", and "both_n_str" do not keep richness constant. The method "site_n_str" is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. The method "species_n_str" is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The method "both_n_str" combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. The randomization will not assign values to cells with nodata.
 }
 \examples{
 \dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "spat_str")
 plot(t)
 }
 }

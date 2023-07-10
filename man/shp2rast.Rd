@@ -22,7 +22,7 @@ shp2rast(
 
 \item{y}{SpatRaster}
 
-\item{sps.col}{character. It should a variable name in x}
+\item{sps.col}{character. It should be a variable name in x}
 
 \item{ymask}{SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example}
 
@@ -30,7 +30,7 @@ shp2rast(
 
 \item{touches}{logical. If \code{TRUE}, all cells touched by lines or polygons are affected, not just those on the line render path, or whose center point is within the polygon. If \code{touches=TRUE}, \code{add} cannot be \code{TRUE}}
 
-\item{resolution}{numeric. A numeric vector of length 1 or 2 to set the resolution}
+\item{resolution}{numeric vector of length 1 or 2 to set the spatial resolution (see \code{\link[terra]{res}}). If this argument is used, arguments \code{ncols} and \code{nrows} are ignored }
 
 \item{values}{typically a numeric vector of length \code{1} or \code{nrow(x)}. If the length is below \code{nrow(x)} the values will be recycled to \code{nrow(x)}. Only used when \code{x} is a matrix. Can also be a matrix or data.frame}
 

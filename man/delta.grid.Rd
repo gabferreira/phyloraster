@@ -15,13 +15,16 @@ delta.grid(r1, r2, filename = NULL, cores = 1, ...)
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
-\item{...}{additional arguments to be passed passed for fun.}
+\item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculates the delta of spatialized diversity metrics (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism, evolutionary distinctiveness) between different time periods
+Calculates the delta of spatialized diversity metrics (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism, evolutionary distinctiveness) between different time periods.
+}
+\details{
+The two input rasters (r1 and r2) must have the same extent.
 }
 \examples{
 \dontrun{
