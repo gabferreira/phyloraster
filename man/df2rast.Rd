@@ -4,10 +4,12 @@
 \alias{df2rast}
 \title{Transform a data.frame to raster}
 \usage{
-df2rast(x, ...)
+df2rast(x, CRS = "+proj=longlat +datum=WGS84", ...)
 }
 \arguments{
 \item{x}{data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide longitude and latitude, respectively.}
+
+\item{CRS}{character. Description of the Coordinate Reference System (map projection) in PROJ.4, WKT or authority:code notation. See crs. If this argument is missing, and the x coordinates are within -360 .. 360 and the y coordinates are within -90 .. 90, longitude/latitude is assigned}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -15,11 +17,11 @@ df2rast(x, ...)
 SpatRaster
 }
 \description{
-The function transform a data.frame or a matrix of presence-absence in a raster of distribution.
+The function transforms a data.frame or a matrix of presence-absence in a raster of distribution.
 }
 \examples{
 \dontrun{
 dat <- phyloraster::load.data.rosauer()
-df2rast(dat$presab)
+df2rast(dat$presab, crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 }
 }
