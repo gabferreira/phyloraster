@@ -17,7 +17,7 @@ range_size(x, unit = "m", ...)
 vector
 }
 \description{
-This function calculate range size for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area. If scale is TRUE, the raster is scaled from 0 to 1.
+This function calculate range size in square meters (by default) for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area.
 }
 \examples{
 \dontrun{

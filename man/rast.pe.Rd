@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pe}
 \alias{rast.pe}
-\title{Calculate phylogenetic endemism for each raster cell}
+\title{Calculate phylogenetic endemism for raster data}
 \usage{
 rast.pe(x, branch.length, cores = 1, filename = NULL, ...)
 }
@@ -21,7 +21,7 @@ rast.pe(x, branch.length, cores = 1, filename = NULL, ...)
 SpatRaster
 }
 \description{
-Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
+Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in raster data.
 }
 \examples{
 \dontrun{

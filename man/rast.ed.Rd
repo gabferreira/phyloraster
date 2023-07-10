@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.ed}
 \alias{rast.ed}
-\title{Calculate Evolutionary distinctiveness for each raster cell}
+\title{Calculate Evolutionary distinctiveness for raster data}
 \usage{
 rast.ed(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 }

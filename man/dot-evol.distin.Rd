@@ -11,9 +11,11 @@
 \arguments{
 \item{x}{numeric. A Named numeric vector of presence-absence}
 
-\item{branch.length}{numeric. A Named numeric vector of branch length for each specie}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species}
 
-\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch}
 }
 \value{
 numeric
@@ -23,15 +25,16 @@ numeric
 \description{
 This function calculates evolutionary distinctiveness for a set of species using the fair-proportion index (Isaac et al., 2007).
 
-This function calculates evolutionary distinctiveness for a set of species using the fair-proportion index (Isaac et al., 2007).
+This function calculates evolutionary distinctiveness for a set
+of species using the fair-proportion index (Isaac et al., 2007).
 }
 \references{
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
+Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
+threat and phylogeny. PLoS ONE 2, e296.
 }
 \author{
-Gabriela Alves-Ferreira and Neander Marcel Heming
-
 Gabriela Alves-Ferreira and Neander Marcel Heming
 }

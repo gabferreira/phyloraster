@@ -7,13 +7,18 @@
 .rast.ed.B(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) must be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch length of each specie.}
+\item{branch.length}{numeric. A Named numeric vector containing the branch
+length of each specie.}
 
-\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
+with that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
@@ -23,10 +28,13 @@
 SpatRaster
 }
 \description{
-This function calculates evolutionary distinctiveness according to the fair-proportion index.
+This function calculates evolutionary distinctiveness according
+to the fair-proportion index.
 }
 \references{
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
+and phylogeny. PLoS ONE 2, e296.
 }
 \author{
 Gabriela Alves-Ferreira and Neander Marcel Heming

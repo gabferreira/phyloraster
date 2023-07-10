@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.pd}
 \alias{rast.pd}
-\title{Calculate phylogenetic diversity for each raster cell}
+\title{Calculate phylogenetic diversity for raster data}
 \usage{
 rast.pd(x, branch.length, filename = NULL, cores = 1, ...)
 }

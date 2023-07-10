@@ -1,12 +1,17 @@
 #' Calculate Evolutionary Distinctiveness for a vector
 #'
-#' @description This function calculates evolutionary distinctiveness for a set of species using the fair-proportion index (Isaac et al., 2007).
+#' @description This function calculates evolutionary distinctiveness for a set
+#' of species using the fair-proportion index (Isaac et al., 2007).
 #' @usage .evol.distin(x, branch.length, n.descen)
 #' @param x numeric. A Named numeric vector of presence-absence
-#' @param branch.length numeric. A Named numeric vector of branch length for each specie
-#' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
+#' @param branch.length numeric. A Named numeric vector of branch length for
+#' each species
+#' @param n.descen numeric. A Named numeric vector of number of descendants for
+#' each branch
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
+#' Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
+#' threat and phylogeny. PLoS ONE 2, e296.
 #' @return numeric
 # #' @export
 .evol.distin <- function(x, branch.length, n.descen){
@@ -30,18 +35,26 @@
 
 #' Calculate Evolutionary distinctiveness for each raster cell
 #'
-#' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
-#' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @description This function calculates evolutionary distinctiveness according
+#' to the fair-proportion index.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. The layers (species) must be sorted according to the
+#' tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numeric vector containing the branch
+#' length of each specie.
+#' @param n.descen numeric. A Named numeric vector of number of descendants for
+#' each branch
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
+#' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+#'  J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
+#'  and phylogeny. PLoS ONE 2, e296.
 #' @return SpatRaster
 # #' @export
-#' @examples
+# #' @examples
 .rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
 
   # if(!all.equal(names(x), names(branch.length))){
@@ -76,15 +89,25 @@
 
 #' Evolutionary distinctiveness standardized for specie richness
 #'
-#' @description Calculates the standardized effect size for evolutionary distinctiveness. See Details for more information.
+#' @description Calculates the standardized effect size for evolutionary
+#' distinctiveness. See Details for more information.
 #' @inheritParams rast.pd.ses
 #' @inheritParams rast.ed
 #' @return SpatRaster
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #' @export
-#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
-#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#' @details The spatial randomization (spat) keeps the richness exact and samples
+#'  species presences proportionally to their observed frequency (i.e. number
+#'  of occupied pixels). The randomization will not assign values to cells with
+#'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
+#'  included in phylogeny.
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+#' J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
+#' and phylogeny. PLoS ONE 2, e296.
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
+#' metrics of species and phylogenetic turnover can better resolve biogeographic
+#' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #' @examples
 #' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))

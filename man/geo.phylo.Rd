@@ -2,39 +2,47 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo}
 \alias{geo.phylo}
-\title{Calculate community metrics for each raster cell}
+\title{Calculate phylogenetic community metrics for raster data}
 \usage{
 geo.phylo(
   x,
-  tree,
-  metric = c("richness", "phylo.diversity", "evol.distinct", "phylo.endemism",
-    "weigh.endemism"),
+  area.branch,
+  inv.R,
+  branch.length,
+  n.descen,
   cores = 1,
-  filename = NULL,
+  filename = "",
   ...
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) must be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{tree}{phylo. A dated tree.}
+\item{area.branch}{description}
 
-\item{metric}{character. Name of metric to use, available metrics are: 'richness', 'phylo.diversity', 'evol.distinct', 'phylo.endemism' and 'weigh.endemism'. See Details for more information.}
+\item{inv.R}{description}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{branch.length}{description}
 
-\item{filename}{character. Output filename.}
+\item{n.descen}{description}
 
-\item{...}{additional arguments to be passed passed for fun.}
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
-SpatRaster
+SpatRaster with one layer for each metric
 }
 \description{
-Calculate richness, phylogenetic diversity, evolutionary distinctiveness, phylogenetic endemism and weighted endemism using rasters as input and output.
+Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
+phylogenetic endemism and weighted endemism using rasters as input and output.
 }
 \details{
-Community metrics available:
+Community metrics calculated:
 \itemize{
 \item{Phylogenetic diversity (Faith 1992)}
 \item{Richness}
@@ -44,13 +52,15 @@ Community metrics available:
 }
 }
 \examples{
-\dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-geo.phylo(x, tree, metric = 'phylo.diversity')
-geo.phylo(x, tree, metric = 'phylo.endemism')
-geo.phylo(x, metric = 'weigh.endemism')
-}
+data <- phylo.pres(x, tree)
+branch.length = data$branch.length
+n.descen = data$n.descendants
+area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+
+t <- geo.phylo(x, area.branch$LR, area.branch$inv.R, data$branch.length, data$n.descendants)
+terra::plot(t)
 
 }
 \references{

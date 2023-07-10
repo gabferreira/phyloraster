@@ -8,7 +8,7 @@ rast.pd.ses(
   x,
   branch.length,
   aleats,
-  random = c("tip", "spat_str", "species_n_str", "site_n_str", "both_n_str"),
+  random = c("tip", "spat"),
   cores = 1,
   filename = NULL,
   ...
@@ -21,7 +21,7 @@ rast.pd.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "spat_str", "site_n_str", "species_n_str" or "both_n_str". See details.}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
@@ -36,14 +36,14 @@ SpatRaster. The function returns the observed phylogenetic diversity, the mean o
 Calculates the standardized effect size for phylogenetic diversity. See Details for more information.
 }
 \details{
-The randomization with spatial structure (spat_str) keeps the richness constant and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The methods "site_n_str", "species_n_str", and "both_n_str" do not keep richness constant. The method "site_n_str" is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. The method "species_n_str" is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The method "both_n_str" combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. The phylogenetic randomization ("tip") shuffles taxa names across all taxa included in phylogeny. The randomization will not assign values to cells with nodata.
+The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
 }
 \examples{
 \dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phyloraster::phylo.pres(x, tree)
-t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat_str")
+t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
 plot(t)
 }
 }

@@ -9,7 +9,7 @@ rast.ed.ses(
   branch.length,
   n.descen,
   aleats,
-  random = c("tip", "spat_str", "species_n_str", "site_n_str", "both_n_str"),
+  random = c("tip", "spat"),
   cores = 1,
   filename = NULL,
   ...
@@ -24,7 +24,7 @@ rast.ed.ses(
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "spat_str", "site_n_str", "species_n_str" or "both_n_str". See details.}
+\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
@@ -36,24 +36,34 @@ rast.ed.ses(
 SpatRaster
 }
 \description{
-Calculates the standardized effect size for evolutionary distinctiveness. See Details for more information.
+Calculates the standardized effect size for evolutionary
+distinctiveness. See Details for more information.
 }
 \details{
-The randomization with spatial structure (spat_str) keeps the richness constant and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The methods "site_n_str", "species_n_str", and "both_n_str" do not keep richness constant. The method "site_n_str" is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. The method "species_n_str" is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The method "both_n_str" combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. The phylogenetic randomization ("tip") shuffles taxa names across all taxa included in phylogeny. The randomization will not assign values to cells with nodata.
+The spatial randomization (spat) keeps the richness exact and samples
+species presences proportionally to their observed frequency (i.e. number
+of occupied pixels). The randomization will not assign values to cells with
+nodata. The phylogenetic randomization shuffles taxa names across all taxa
+included in phylogeny.
 }
 \examples{
 \dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phyloraster::phylo.pres(x, tree)
-t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat_str")
+t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat")
 terra::plot(t)
 }
 }
 \references{
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
+and phylogeny. PLoS ONE 2, e296.
 
-Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
+metrics of species and phylogenetic turnover can better resolve biogeographic
+transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
 \author{
 Gabriela Alves-Ferreira and Neander Heming

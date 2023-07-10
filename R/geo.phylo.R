@@ -4,7 +4,7 @@
 #'
 #' @return logical
 # #' @export
-#' @examples
+# #' @examples
 .fit.memory <- function(x){
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
@@ -72,9 +72,9 @@
 
 }
 
-#' Calculate species richness for each raster cell
+#' Calculate species richness for raster data
 #'
-#' @description Calculate the species richness for each raster cell.
+#' @description Calculate the species richness for raster data.
 #' @usage rast.se(x, filename = NULL, cores = 1, ...)
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param filename character. Output filename.
@@ -116,7 +116,7 @@ rast.se <- function(x, filename = NULL, cores = 1, ...){
 
 }
 
-#' Calculate phylogenetic diversity for each raster cell
+#' Calculate phylogenetic diversity for raster data
 #'
 #' @description Calculate the sum of the branch length for species present in each cell of the raster.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
@@ -171,7 +171,7 @@ rast.pd <- function(x, branch.length, filename = NULL, cores = 1, ...){
 }
 
 
-#' Calculate Evolutionary distinctiveness for each raster cell
+#' Calculate Evolutionary distinctiveness for raster data
 #'
 #' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
@@ -228,9 +228,9 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
 
 }
 
-#' Calculate phylogenetic endemism for each raster cell
+#' Calculate phylogenetic endemism for raster data
 #'
-#' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in each raster cell.
+#' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in raster data.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
 #' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
@@ -303,9 +303,9 @@ rast.pe <- function(x, branch.length, cores = 1, filename = NULL, ...){
 
 }
 
-#' Calculate weighted endemism for each raster cell
+#' Calculate weighted endemism for raster data
 #'
-#' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
+#' @description Calculate the sum of the inverse of the range size for species present in raster data.
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
 #' @param filename character. Output filename.

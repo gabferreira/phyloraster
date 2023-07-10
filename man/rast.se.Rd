@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.se}
 \alias{rast.se}
-\title{Calculate species richness for each raster cell}
+\title{Calculate species richness for raster data}
 \usage{
 rast.se(x, filename = NULL, cores = 1, ...)
 }
@@ -19,7 +19,7 @@ rast.se(x, filename = NULL, cores = 1, ...)
 SpatRaster
 }
 \description{
-Calculate the species richness for each raster cell.
+Calculate the species richness for raster data.
 }
 \examples{
 \dontrun{

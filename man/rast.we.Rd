@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.phylo.R
 \name{rast.we}
 \alias{rast.we}
-\title{Calculate weighted endemism for each raster cell}
+\title{Calculate weighted endemism for raster data}
 \usage{
 rast.we(x, cores = 1, filename = NULL, ...)
 }
@@ -19,7 +19,7 @@ rast.we(x, cores = 1, filename = NULL, ...)
 SpatRaster
 }
 \description{
-Calculate the sum of the inverse of the range size for species present in each raster cell.
+Calculate the sum of the inverse of the range size for species present in raster data.
 }
 \examples{
 \dontrun{
