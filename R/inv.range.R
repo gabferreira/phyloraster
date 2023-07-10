@@ -10,7 +10,7 @@
 #' @return SpatRaster and numeric
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #' @export
-#' @example
+#' @examples
 #' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' inv.range(x)
@@ -31,7 +31,7 @@ inv.range <- function(x, LR = F, branch.length, filename = NULL, cores = 1, ...)
   # }
 
   # calculating area
-  rs <- range_size(x)
+  rs <- phyloraster::range_size(x)
 
   # calculating inverse of area and inv area x branch length
 
