@@ -12,7 +12,7 @@
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' range_size(x)
 #' }
-range_size <- function(x, unit = "m", ...){
+range_size <- function(x, unit = "m", scale=FALSE, ...){
 
   # colocar ifelse do mi
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number

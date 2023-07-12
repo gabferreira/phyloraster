@@ -84,7 +84,7 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
                             resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
                             cores = 1, filename = "", ...){
 
-  terra::app(x3,
+  terra::app(x,
              function(x, branch.length, n.descen,
                       spp_seq, spp_seqLR, spp_seqINV,
                       resu){
