@@ -34,7 +34,7 @@ inv.range <- function(x, branch.length = NULL, cores = 1, ...){
                       function(x, rs){
                         x[1]/(ifelse(is.na(x[-1]), NA, 1)*rs)
                       }, rs=rs,
-                      filename = ifelse(mi, "", temp[[1]]), overwrite = T)
+                      filename = ifelse(mi, "", temp[[1]]), overwrite = T, cores = cores)
 
   if(!is.null(branch.length)){
 
