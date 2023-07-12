@@ -112,9 +112,9 @@ rast.we <- function(x, cores = 1, filename = "", ...){
 #' }
 rast.we.ses <- function(x, aleats,
                         random = c("spat"),
-                        cores = 1, filename = NULL, ...){
+                        cores = 1, filename = "", ...){
 
-  aleats <- aleats # number of randomizations
+  # aleats <- aleats # number of randomizations
   temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc

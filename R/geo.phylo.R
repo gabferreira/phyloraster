@@ -179,3 +179,57 @@ geo.phylo <- function(x, LR, inv.R,
                   resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
                   cores = 1, filename = "", ...)
 }
+
+
+#' Calculate weighted endemism standardized for species richness
+#'
+#' @description Calculates the standardized effect size for weighted endemism. See Details for more information.
+#' @param x  A SpatRaster containing presence-absence data (0 or 1) for a set of species.
+#' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
+#' @param random character. A character indicating what type of randomization. Could be by "site", "species" or "both" (site and species).
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed down from a calling function.
+#' @return SpatRaster
+#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
+#' @export
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#' @examples
+#' \dontrun{
+#' library(terra)
+#' library(phyloraster)
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phylo.pres(x, tree)
+#' area.branch <- inv.range(data$x, data$branch.length)
+#' tses <- geo.phylo.ses(x=data$x,
+#'                       #' FUN_args = list(LR=area.branch$LR, inv.R=area.branch$inv.R,
+#'                                       branch.length=data$branch.length, n.descen=data$n.descendants),
+#'                       algorithm = "bootspat_str",
+#'                       alg_args = list(rprob = NULL,
+#'                                       rich = NULL,
+#'                                       fr_prob = NULL),
+#'                       aleats = 5)
+#' terra::plot(tses)
+#' }
+geo.phylo.ses <- function(x,
+                          FUN_args = list(LR, inv.R,
+                                          branch.length, n.descen),
+                          algorithm = "bootspat_str",
+                          alg_args = list(rprob = NULL,
+                                          rich = NULL,
+                                          fr_prob = NULL),
+                          aleats = 10,
+                          cores = 1, filename = "", ...){
+  require(SESraster)
+
+  ses <- SESraster(x, FUN = "geo.phylo", FUN_args = FUN_args,
+                   algorithm = algorithm, alg_args = alg_args,
+                   aleats = aleats, cores = cores, filename = filename, ...)
+
+
+  # names(ses) <- "SES"
+
+  return(ses)
+}
