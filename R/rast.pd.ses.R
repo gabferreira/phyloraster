@@ -1,3 +1,29 @@
+#' Calculate phylogenetic diversity (Faith 1992) for a vector
+#'
+#' @description This function calculates the sum of the branch length for a set of species for one sample.
+#' @param x numeric. A named numerical vector of presence-absence for one sample.
+#' @param branch.length numeric. A named numerical vector containing the branch length for each species.
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @return numeric
+# #' @export
+.vec.pd <- function(x, branch.length, pd = c(PD=NA)){
+
+  x[is.na(x)] <- 0 # 0 for all value = NA
+
+  if(sum(x)== 0) { # return NA if x = 0
+    return(pd)
+  }
+
+  if(sum(x) != 0) { # if the sum of x is non-zero then do this:
+    # x == 1, only species present in the vector
+    pd[] <- sum(branch.length[x == 1]) # pd Faith 1992
+  }
+
+  return(pd)
+}
+
+
 #' Calculate phylogenetic diversity for each raster cell
 #'
 #' @description Calculate the sum of the branch length for species present in each cell of the raster.
@@ -17,40 +43,56 @@
 #' data <- phylo.pres(x, tree)
 #' rast.pd(data$x, data$branch.length)
 #' }
-.rast.pd.B <- function(x, branch.length, filename = NULL, cores = 1, ...){
+.rast.pd.B <- function(x, branch.length, cores = 1, filename = "", ...){
+
+  # phylogenetic diversity
+  rpd <- terra::app(x,
+                    .vec.pd,
+                    branch.length = branch.length,
+                    cores = cores, filename = filename, ...)
+
+  terra::set.names(rpd, "PD")
+
+  return(rpd)
+}
+
+
+#' Calculate phylogenetic diversity for raster data
+#'
+#' @description Calculate the sum of the branch length for species present in each cell of the raster.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numerical vector containing the branch length for a set of species.
+#' @param filename character. Output filename.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @return SpatRaster
+#' @examples
+#' library(terra)
+#' library(phyloraster)
+#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phylo.pres(x, tree)
+#' pd <- rast.pd(data$x, data$branch.length)
+#' plot(pd)
+#' @export
+rast.pd <- function(x, branch.length, cores = 1, filename = "", ...){
 
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
-  # if(!all.equal(names(x), names(branch.length))){
-  #
-  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
-  #
-  # } else {
-
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
-
-    temp <- vector("list", length = 1) # to create a temporary vector with the raster number
-    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-
-    # phylogenetic diversity
-    rpd <- terra::app(x, fun = .vec.pd,
-                      branch.length = branch.length, cores = cores,
-                      filename = ifelse(mi, "", temp[[1]]))
-    rpd <- rpd[[1]] # select only the first raster
-    names(rpd) <- c("PD")
-  # }
-
-  if(!is.null(filename)){ # to save the rasters when the output filename is provide
-    rpd <- terra::writeRaster(rpd, filename)
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   }
 
+  rpd <- .rast.pd.B(x, branch.length, cores, filename, ...)
+
   return(rpd)
+
 }
+
 
 #' Phylogenetic diversity standardized for species richness
 #'
@@ -77,9 +119,16 @@
 #' }
 rast.pd.ses <- function(x, branch.length, aleats,
                         random = c("tip", "spat"),
-                        cores = 1, filename = NULL, ...){
+                        cores = 1, filename = "", ...){
 
-  aleats <- aleats # number of null models
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
+  }
+
   temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc

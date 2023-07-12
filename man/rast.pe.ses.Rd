@@ -10,7 +10,7 @@ rast.pe.ses(
   aleats,
   random = c("tip", "spat"),
   cores = 1,
-  filename = NULL,
+  filename = "",
   ...
 )
 }

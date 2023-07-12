@@ -4,16 +4,16 @@
 \alias{.rast.pd.B}
 \title{Calculate phylogenetic diversity for each raster cell}
 \usage{
-.rast.pd.B(x, branch.length, filename = NULL, cores = 1, ...)
+.rast.pd.B(x, branch.length, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numerical vector containing the branch length for a set of species.}
 
-\item{filename}{character. Output filename.}
-
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+
+\item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }

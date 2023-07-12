@@ -14,22 +14,23 @@
 #' threat and phylogeny. PLoS ONE 2, e296.
 #' @return numeric
 # #' @export
-.evol.distin <- function(x, branch.length, n.descen){
+.vec.ed <- function(x, branch.length, n.descen, ed=c(ED=NA)){
 
   x[is.na(x)] <- 0 # 0 for all value = NA
 
   if(sum(x) == 0) { # return NA if x = 0
-    return(c(NA,NA))
-  }
 
-  if(sum(x) != 0){ # if the sum of x is non-zero then do this:
+    return(ed)
+
+  } else { # if the sum of x is non-zero then do this:
+
     pres <- x == 1 # only species present in the vector
     # species <- names(x)
-    ed <- sum(branch.length[pres]/n.descen[pres]) # evolutionary distinctiveness
-    ed1 <- ed # terra::app function does not work when this intern function returns only one raster
+    ed[] <- sum(branch.length[pres]/n.descen[pres]) # evolutionary distinctiveness
+
   }
 
-  return(c(ed = ed, ed1 = ed1))
+  return(ed)
 
 }
 
@@ -55,37 +56,64 @@
 #' @return SpatRaster
 # #' @export
 # #' @examples
-.rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = NULL, ...){
+.rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 
-  # if(!all.equal(names(x), names(branch.length))){
-  #
-  #   stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
-  #
-  # } else {
+  # evolutionary distinctiveness
+  red <- terra::app(x, fun = .vec.ed,
+                    branch.length, n.descen, cores = cores,
+                    filename = filename, ...)
 
-    # 1 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-    sink(nullfile())    # suppress output
-    mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-    sink()
-
-    temp <- vector("list", length = 1) # to create a temporary vector with the raster number
-    temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-
-    # evolutionary distinctiveness
-    red <- terra::app(x, fun = .evol.distin,
-                      branch.length, n.descen, cores = cores,
-                      filename = ifelse(mi, "", temp[[1]]))
-    red <- red[[1]] # only the first raster
-    names(red) <- "ED" # layer name
-  # }
-
-  if(!is.null(filename)){ # to save the rasters when the output filename is provide
-    red <- terra::writeRaster(red, filename)
-  }
+  terra::set.names(red, "ED") # layer name
 
   return(red)
 
 }
+
+
+#' Calculate Evolutionary distinctiveness for raster data
+#'
+#' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
+#' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed for fun.
+#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#' @return SpatRaster
+#' @examples
+#' library(terra)
+#' library(phyloraster)
+#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' # phylogenetic tree
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' data <- phylo.pres(x, tree)
+#' ed <- rast.ed(data$x, data$branch.length, data$n.descen)
+#' plot(ed)
+#'
+#' @export
+rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
+  if(!all.equal(names(x), names(branch.length))){
+    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
+  }
+
+  if(!all.equal(names(x), names(n.descen))){
+    stop("Species names are not in the same order on 'x' and 'n.descen' arguments! See 'phyloraster::phylo.pres' function.")
+  }
+
+  # evolutionary distinctiveness
+  red <- .rast.ed.B(x, branch.length, n.descen, cores, filename, ...)
+
+  return(red)
+
+}
+
 
 #' Evolutionary distinctiveness standardized for specie richness
 #'

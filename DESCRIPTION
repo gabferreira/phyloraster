@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Calculating community metrics for each raster cell
-Version: 1.1
+Version: 1.9
 Authors@R: 
     person(given = "Gabriela",
            family = "Alves-Ferreira",
@@ -39,4 +39,3 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 StagedInstall: no
-URL: https://gabferreira.github.io/phyloraster/

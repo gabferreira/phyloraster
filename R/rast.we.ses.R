@@ -17,33 +17,74 @@
 #' .rast.we.B(x, rs)
 #' }
 #'
-.rast.we.B <- function(x, filename = NULL, cores = 1, ...){
-
-  temp <- vector("list", length = 2) # to create a temporary vector with the raster number
-  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-
-  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  mi <- .fit.memory(x)
-
-  # inverse of range size
-  # inverse of range size
-  inv.R <- inv.range(x, filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
+.rast.we.B <- function(x, spp_seq, spp_seqINV, cores = 1, filename = "", ...){
 
   # weighted endemism
-  { # calculating we
-    rend <- terra::app(inv.R$inv.R,
-                       function(x){
-                         if(all(is.na(x))){
-                           return(NA)}
-                         sum(x, na.rm = T)
-                       }, cores = cores)
-  }
-  names(rend) <- "WE" # layer name
+  rend <- terra::app(x,
+                     .vec.wpe,
+                     spp_seq, spp_seqINV,
+                     cores = cores, filename = filename, ...)
 
-  if (!is.null(filename)){ # to save the rasters when the path is provide
-    rend <- terra::writeRaster(rend, filename, ...)
+  terra::set.names(rend, "WE") # layer name
+
+  return(rend)
+}
+
+
+#' Calculate weighted endemism for raster data
+#'
+#' @description Calculate the sum of the inverse of the range size for species present in raster data.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @param filename character. Output filename.
+#' @param ... additional arguments to be passed passed down from a calling function.
+#' @author Neander Marcel Heming and Gabriela Alves Ferreira
+#' @return SpatRaster
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#' @examples
+#' library(terra)
+#' library(phyloraster)
+#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' we <- rast.we(x)
+#' plot(we)
+#'
+#' @export
+rast.we <- function(x, cores = 1, filename = "", ...){
+
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
   }
-  unlink(temp[[1]]) # delete the archive
+
+  # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
+  sink(nullfile())    # suppress output
+  mi <- terra::mem_info(x, 2)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  sink()
+
+  # if(!mi){
+  temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
+  # }
+
+  # inverse of range size
+  inv.R <- inv.range(x, filename = ifelse(mi, "", temp[[1]]))$inv.R # calculate the inverse of range size multiplied by branch length of each species
+
+  nspp <- terra::nlyr(x)
+  spp_seq <- seq_len(nspp)
+  spp_seqINV <- spp_seq + nspp
+
+  # weighted endemism
+  rend <- .rast.we.B(c(x, inv.R), spp_seq, spp_seqINV, cores, filename, ...)
+  # rend <- .rast.we.B(c(x, inv.R), spp_seq, spp_seqINV, cores)
+
+  # if(rescale == TRUE){
+  #   rend <- terra::app(rend, function(x, m){ # rescale the values
+  #     (x/m)
+  #   }, m = terra::minmax(rend)[2,], cores = cores, filename = ifelse(mi, "", temp[[3]])) # 2 is the max
+  # }
+
+  unlink(temp[[1]]) # delete the files
 
   return(rend)
 }

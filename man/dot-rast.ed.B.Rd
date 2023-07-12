@@ -4,7 +4,7 @@
 \alias{.rast.ed.B}
 \title{Calculate Evolutionary distinctiveness for each raster cell}
 \usage{
-.rast.ed.B(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
+.rast.ed.B(x, branch.length, n.descen, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)

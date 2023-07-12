@@ -4,18 +4,18 @@
 \alias{.rast.pe.B}
 \title{Calculate phylogenetic endemism for a raster}
 \usage{
-.rast.pe.B(x, branch.length, cores = 1, filename = NULL, ...)
+.rast.pe.B(x, spp_seq, spp_seqLR, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
-
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each specie.}
 
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
+
+\item{branch.length}{numeric. A named numerical vector containing the branch length of each specie.}
 }
 \value{
 SpatRaster
@@ -28,6 +28,7 @@ Calculate phylogenetic endemism using rasters as input and output.
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
+### TODO correct example
 .rast.pe.B(data$x, data$branch.length, cores = 1)
 }
 }
