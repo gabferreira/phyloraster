@@ -4,7 +4,7 @@
 \alias{rast.we.ses}
 \title{Calculate weighted endemism standardized for species richness}
 \usage{
-rast.we.ses(x, aleats, random = c("spat"), cores = 1, filename = NULL, ...)
+rast.we.ses(x, aleats, random = c("spat"), cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{A SpatRaster containing presence-absence data (0 or 1) for a set of species.}

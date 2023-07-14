@@ -7,24 +7,34 @@
 phylo.pres(x, tree, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species.}
 
 \item{tree}{phylo. A dated tree.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
-Returns a list containing a SpatRaster reordered according to the order that the species appear in the phylogenetic tree, a subtree containing only the species that are in the stack of rasters and finally two named numerical vectors containing the branch length and the number of descendants of each species.
+Returns a list containing a SpatRaster reordered according to the order
+that the species appear in the phylogenetic tree, a subtree containing only
+the species that are in the stack of rasters and finally two named numerical
+vectors containing the branch length and the number of descendants of each species.
 }
 \description{
-Reorder a stack of rasters of species distribution according to tree order and get branch length for each species to calculate diversity metrics using phyloraster::geo.phylo(). The names must be the same in the phylogenetic tree and in the raster for the same species. For example, if you have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans" in the tree, the function will not work. The same goes for uppercase and lowercase letters.
+Reorder a stack of rasters of species distribution according to
+tree order and get branch length for each species to calculate diversity
+metrics using phyloraster::geo.phylo(). The names must be the same in the
+phylogenetic tree and in the raster for the same species. For example, if you
+have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans"
+in the tree, the function will not work. The same goes for uppercase and
+lowercase letters.
 }
 \examples{
-\dontrun{
+
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 phylo.pres(x, tree)
-}
+
 }
 \author{
 Neander Marcel Heming and Gabriela Alves Ferreira

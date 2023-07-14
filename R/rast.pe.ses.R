@@ -7,7 +7,7 @@
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @return numeric
 # #' @export
-.vec.wpe <- function(x, spp_seq, spp_seq2, wpe = c(PE=NA)){
+.vec.wpe <- function(x, spp_seq, spp_seq2, wpe = as.double(NA)){
 
   if(all(is.na(x[spp_seq]))){
     return(wpe)

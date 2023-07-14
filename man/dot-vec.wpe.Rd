@@ -4,7 +4,7 @@
 \alias{.vec.wpe}
 \title{Calculate phylogenetic endemism for a vector}
 \usage{
-.vec.wpe(x, spp_seq, spp_seq2, wpe = c(PE = NA))
+.vec.wpe(x, spp_seq, spp_seq2, wpe = as.double(NA))
 }
 \arguments{
 \item{x}{numeric. A named numerical vector of presence-absence for one sample.}

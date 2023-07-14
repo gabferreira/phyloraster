@@ -4,7 +4,7 @@
 \alias{range_size}
 \title{Calculate range size for a set of species using a raster as imput}
 \usage{
-range_size(x, unit = "m", ...)
+range_size(x, unit = "m", scale = FALSE, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. This raster must be named.}

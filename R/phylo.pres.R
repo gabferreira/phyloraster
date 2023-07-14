@@ -1,19 +1,28 @@
 #' Prepare rasters and phylogenetic tree to run community metrics
 #'
-#' @description Reorder a stack of rasters of species distribution according to tree order and get branch length for each species to calculate diversity metrics using phyloraster::geo.phylo(). The names must be the same in the phylogenetic tree and in the raster for the same species. For example, if you have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans" in the tree, the function will not work. The same goes for uppercase and lowercase letters.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
+#' @description Reorder a stack of rasters of species distribution according to
+#' tree order and get branch length for each species to calculate diversity
+#' metrics using phyloraster::geo.phylo(). The names must be the same in the
+#' phylogenetic tree and in the raster for the same species. For example, if you
+#' have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans"
+#' in the tree, the function will not work. The same goes for uppercase and
+#' lowercase letters.
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species.
 #' @param tree phylo. A dated tree.
 #' @param ... additional arguments to be passed passed down from a calling function.
-#' @return Returns a list containing a SpatRaster reordered according to the order that the species appear in the phylogenetic tree, a subtree containing only the species that are in the stack of rasters and finally two named numerical vectors containing the branch length and the number of descendants of each species.
+#' @return Returns a list containing a SpatRaster reordered according to the order
+#'  that the species appear in the phylogenetic tree, a subtree containing only
+#'  the species that are in the stack of rasters and finally two named numerical
+#'  vectors containing the branch length and the number of descendants of each species.
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
-#' @export
 #' @examples
-#' \dontrun{
+#' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' phylo.pres(x, tree)
-#' }
-
+#'
+#' @export
 phylo.pres <- function(x, tree, ...) {
 
   # if(ape::is.rooted(tree) == FALSE){
@@ -21,34 +30,48 @@ phylo.pres <- function(x, tree, ...) {
   #           call. = FALSE)
   # }
 
-  spat.names <- as.character(names(x)) # to extract species names in the raster
-  tree.phy4 <- phylobase::phylo4(tree) # transform phylo in phylo4 class
-  labels <- as.character(phylobase::tipLabels(tree.phy4)) # extracting species names in the tree
-  on.tree <- intersect(spat.names, labels) # species of the raster that are in the tree
-  if(identical(on.tree, character(0))){
-    stop("The stack rasters and the phylogeny do not have species in common, or the species names do not match between the rasters and the tree.")
+  if(!inherits(x, "SpatRaster")){ # class "Raster" in "SpatRaster"
+    # x <- terra::rast(x)
+    # warning("Object 'x' has been converted to an object of class 'SpatRaster'")
+    stop("Object 'x' must be of class 'SpatRaster'. See ?terra::rast")
   }
-  subtree <- ape::keep.tip(tree, on.tree) # to make a subset of the tree and keep only the species that are in the raster
-  stack.reord <- x[[subtree[["tip.label"]]]] # to reorder the stack according to the tree
-
-  if(!class(stack.reord) == "SpatRaster"){ # class "Raster" in "SpatRaster"
-    x <- terra::rast(stack.reord)
-  } else {
-    x <- stack.reord
+  if(!inherits(tree, "phylo")) {
+    stop("The phylogeny 'tree' must be of class 'phylo'")
   }
 
-  subtree <- phylobase::phylo4(subtree) # phylo in phylo4
+  spat.names <- names(x) # to extract species names in the raster
+  # tree.phy4 <-  # transform phylo in phylo4 class
+  tip.names <- as.character(phylobase::tipLabels(phylobase::phylo4(tree))) # extracting species names in the tree
+
+  ## species name check
+  int.tip.spat <- intersect(spat.names, tip.names) # species in common for the raster and the tree
+  tip.in.spat <- tip.names %in% spat.names # species of the tree that are in the raster
+  spat.in.tip <- spat.names %in% tip.names # species of the raster that are in the tree
+
+  if(identical(int.tip.spat, character(0))){
+    stop("The SpatRaster 'x' and the phylogeny 'tree' have no species in common, or the species names do not match between them")
+  }
+  if (sum(!tip.in.spat)>0){
+    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:", tip.names[!tip.in.spat]))
+    tree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
+  }
+  if (sum(!spat.in.tip)>0){
+    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:", spat.names[!spat.in.tip]))
+  }
+
+  tree <- phylobase::phylo4(tree) # phylo in phylo4
+
+  int.tip.spat[] <- phylobase::tipLabels(tree) # ensure tips names are in proper order
+
+  # reorder the stack according to the tree tips
+  x <- x[[int.tip.spat]]
 
   # Get branch length
-  branch.length <- as.numeric(phylobase::edgeLength(subtree,
-                                                    1:phylobase::nTips(subtree))) # extract branch lengths
-  names(branch.length) <- subtree@label  # add names
+  branch.length <- setNames(as.numeric(phylobase::edgeLength(tree, int.tip.spat)), int.tip.spat)
 
   # Get descendant node numbers
-  n.descen <- as.numeric(phylobase::ancestor(subtree,
-                                             1:phylobase::nTips(subtree)))
-  names(n.descen) <- subtree@label # add names
+  n.descen <- setNames(as.numeric(phylobase::ancestor(tree, int.tip.spat)), int.tip.spat)
 
-  pp <- list(x = x, branch.length = branch.length, n.descendants = n.descen, subtree = subtree)
+  pp <- list(x = x, branch.length = branch.length, n.descendants = n.descen, tree = tree)
   return(pp)
 }

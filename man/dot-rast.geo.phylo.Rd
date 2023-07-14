@@ -22,26 +22,30 @@
 for a set of species. The layers (species) must be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{branch.length}{description}
+\item{branch.length}{numeric. A named numerical vector containing the branch
+length for each species.}
 
-\item{n.descen}{description}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch}
+
+\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
+
+\item{spp_seqLR}{numeric vector indicating LR data (inverse range size * branch lengh) in 'x'}
+
+\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 
 \item{...}{additional arguments passed for terra::app}
-
-\item{area.branch}{description}
-
-\item{inv.R}{description}
 }
 \value{
 SpatRaster with one layer for each metric
 }
 \description{
 Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-phylogenetic endemism and weighted endemism using rasters as input and output.
+phylogenetic endemism and weighted endemism using rasters as input
 }
 \details{
 Community metrics calculated:

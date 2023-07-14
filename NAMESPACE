@@ -3,6 +3,7 @@
 export(delta.grid)
 export(df2rast)
 export(geo.phylo)
+export(geo.phylo.ses)
 export(inv.range)
 export(load.data.rosauer)
 export(phylo.pres)

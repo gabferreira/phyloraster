@@ -48,17 +48,55 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 }
 
 
+#' Calculate phylogenetic community metrics for each raster cell
+#'
+#' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
+#' phylogenetic endemism and weighted endemism using vectors as input.
+#'
+#' @param x numeric vector of presence/absence (1/0) data
+#' @param branch.length numeric. A named numerical vector containing the branch
+#' length for each species.
+#' @param n.descen numeric. A Named numeric vector of number of descendants for
+#' each branch
+#' @param spp_seq numeric vector indicating presence/absence data in 'x'
+#' @param spp_seqLR numeric vector indicating LR data (inverse range size * branch lengh) in 'x'
+#' @param spp_seqINV numeric vector indicating INV data (inverse range size) in 'x
+#'
+#' @return numeric
+#'
+#' @author Neander Marcel Heming
+#'
+.vec.geo.phylo <- function(x, branch.length, n.descen,
+                           spp_seq, spp_seqLR, spp_seqINV,
+                           resu){
+  if(all(is.na(x))){
+    return(resu)
+  }
+  ### separating raster layers of each cell
+  # xa <- x[spp_seq]
+  # xLR <- x[spp_seqLR]
+  # xINV <- x[spp_seqINV]
+
+  ### computing metrics
+  se <- sum(x[spp_seq], na.rm = T)
+  pd <- .vec.pd(x[spp_seq], branch.length)[[1]] # [[1]] return only the first raster
+  ed <- .vec.ed(x[spp_seq], branch.length, n.descen)[[1]] # [[1]] return only the first raster
+  pe <- .vec.wpe(x, spp_seq, spp_seqLR)
+  we <- .vec.wpe(x, spp_seq, spp_seqINV)
+
+  resu[] <- c(se, pd, ed, pe, we)
+  return(resu)
+}
+
 #' Calculate phylogenetic community metrics for raster data
 #'
 #' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-#' phylogenetic endemism and weighted endemism using rasters as input and output.
+#' phylogenetic endemism and weighted endemism using rasters as input
+#'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species. The layers (species) must be sorted according to the
 #' tree order. See the phylo.pres function.
-#' @param area.branch description
-#' @param inv.R description
-#' @param branch.length description
-#' @param n.descen description
+#' @inheritParams .vec.geo.phylo
 #' @inheritParams terra::app
 #' @param ... additional arguments passed for terra::app
 #'
@@ -85,27 +123,7 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
                             cores = 1, filename = "", ...){
 
   terra::app(x,
-             function(x, branch.length, n.descen,
-                      spp_seq, spp_seqLR, spp_seqINV,
-                      resu){
-               if(all(is.na(x))){
-                 return(resu)
-               }
-               ### separating raster layers of each cell
-               # xa <- x[spp_seq]
-               # xLR <- x[spp_seqLR]
-               # xINV <- x[spp_seqINV]
-
-               ### computing metrics
-               se <- sum(x[spp_seq], na.rm = T)
-               pd <- .vec.pd(x[spp_seq], branch.length)[[1]] # [[1]] return only the first raster
-               ed <- .evol.distin(x[spp_seq], branch.length, n.descen)[[1]] # [[1]] return only the first raster
-               pe <- .vec.wpe(x, spp_seq, spp_seqLR)
-               we <- .vec.wpe(x, spp_seq, spp_seqINV)
-
-               resu[] <- c(se, pd, ed, pe, we)
-               return(resu)
-             },
+             .vec.geo.phylo,
              branch.length = branch.length,
              n.descen = n.descen,
              spp_seq = spp_seq,
@@ -119,14 +137,17 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' Calculate phylogenetic community metrics for raster data
 #'
 #' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-#' phylogenetic endemism and weighted endemism using rasters as input and output.
+#' phylogenetic endemism and weighted endemism using rasters as input.
+#'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
+#' for a set of species. The layers (species) will be sorted according to the
 #' tree order. See the phylo.pres function.
-#' @param area.branch description
-#' @param inv.R description
-#' @param branch.length description
-#' @param n.descen description
+#'
+#' @inheritParams phylo.pres
+# #' @param area.branch description
+# #' @param inv.R description
+# #' @param branch.length description
+# #' @param n.descen description
 #' @inheritParams terra::app
 #' @param ... additional arguments passed for terra::app
 #'
@@ -152,81 +173,124 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
-#' area.branch <- inv.range(data$x, data$branch.length)
-#' t <- geo.phylo(x=data$x, LR=area.branch$LR, inv.R=area.branch$inv.R,
-#'                branch.length=data$branch.length, n.descen=data$n.descendants)
+# #' data <- phylo.pres(x, tree)
+# #' area.branch <- inv.range(data$x, data$branch.length)
+#' t <- geo.phylo(x, tree)
 #' terra::plot(t)
 #'
 #' @export
-geo.phylo <- function(x, LR, inv.R,
-                      branch.length, n.descen,
+geo.phylo <- function(x, tree,
                       cores = 1, filename = "", ...){
 
+
+
+  # object.checks(x, tree){
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
+  # if(!inherits(tree, c("phylo4", "phylo4d"))){
+  #   tree <- phylobase::phylo4(tree)
+  # }
+  # if(!identical(names(x), as.character(phylobase::tipLabels(tree)))){
+  #
+  # }
+  # }
 
-  nspp <- terra::nlyr(x)
+  data <- phylo.pres(x, tree)
+  area.branch <- inv.range(data$x, data$branch.length)
+
+  nspp <- terra::nlyr(data$x)
   spp_seq <- seq_len(nspp)
   spp_seqLR <- spp_seq + nspp
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
-  x3 <- c(x, LR, inv.R)
+  x3 <- c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R)
 
-  .rast.geo.phylo(x3, branch.length, n.descen,
+  .rast.geo.phylo(x3,
+                  branch.length = data$branch.length,
+                  n.descen = data$n.descendants,
                   spp_seq, spp_seqLR, spp_seqINV,
                   resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
                   cores = 1, filename = "", ...)
 }
 
 
-#' Calculate weighted endemism standardized for species richness
+#' Calculate phylogenetic community metrics and their standardized effect sizes for raster data
 #'
-#' @description Calculates the standardized effect size for weighted endemism. See Details for more information.
-#' @param x  A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
-#' @param random character. A character indicating what type of randomization. Could be by "site", "species" or "both" (site and species).
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
+#' @description Calculates the standardized effect size for phylogenetic community metrics. See Details for more information.
+#'
+#' @inheritParams geo.phylo
+#' @inheritParams SESraster::SESraster
+#'
 #' @return SpatRaster
+#'
 #' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
-#' @export
+#'
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#'
 #' @examples
-#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
-#' area.branch <- inv.range(data$x, data$branch.length)
-#' tses <- geo.phylo.ses(x=data$x,
-#'                       #' FUN_args = list(LR=area.branch$LR, inv.R=area.branch$inv.R,
-#'                                       branch.length=data$branch.length, n.descen=data$n.descendants),
-#'                       algorithm = "bootspat_str",
-#'                       alg_args = list(rprob = NULL,
-#'                                       rich = NULL,
-#'                                       fr_prob = NULL),
+#' # tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' # data <- phylo.pres(x, tree)
+#' # area.branch <- inv.range(data$x, data$branch.length)
+#' tses <- geo.phylo.ses(x = x,
+#'                        tree = tree,
+#'                       # FUN_args = list(LR=area.branch$LR, inv.R=area.branch$inv.R,
+#'                       #                branch.length=data$branch.length, n.descen=data$n.descendants),
+#'                       spat_alg = "bootspat_str",
+#'                       spat_alg_args = list(rprob = NULL,
+#'                                            rich = NULL,
+#'                                            fr_prob = NULL),
 #'                       aleats = 5)
 #' terra::plot(tses)
-#' }
-geo.phylo.ses <- function(x,
-                          FUN_args = list(LR, inv.R,
-                                          branch.length, n.descen),
-                          algorithm = "bootspat_str",
-                          alg_args = list(rprob = NULL,
-                                          rich = NULL,
-                                          fr_prob = NULL),
+#'
+#' @export
+geo.phylo.ses <- function(x, tree,
+                          spat_alg = "bootspat_str",
+                          spat_alg_args = list(rprob = NULL,
+                                               rich = NULL,
+                                               fr_prob = NULL),
                           aleats = 10,
                           cores = 1, filename = "", ...){
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
   require(SESraster)
 
-  ses <- SESraster(x, FUN = "geo.phylo", FUN_args = FUN_args,
-                   algorithm = algorithm, alg_args = alg_args,
+  data <- phylo.pres(x, tree)
+  area.branch <- inv.range(data$x, data$branch.length)
+
+  nspp <- terra::nlyr(data$x)
+  spp_seq <- seq_len(nspp)
+  spp_seqLR <- spp_seq + nspp
+  spp_seqINV <- spp_seq + 2*nspp
+  resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
+  x3 <- c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R)
+
+  FUN_args = list(branch.length = data$branch.length,
+                  n.descen = data$n.descendants,
+                  spp_seq = spp_seq,
+                  spp_seqLR = spp_seqLR,
+                  spp_seqINV = spp_seqINV,
+                  resu = resu,
+                  cores = cores)
+
+  # .rast.geo.phylo(x3, , ,
+  #                 spp_seq, spp_seqLR, spp_seqINV,
+  #                 resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
+  #                 cores = 1, filename = "", ...)
+
+  ses <- SESraster(x3, FUN = ".rast.geo.phylo", FUN_args = FUN_args,
+                   spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                    aleats = aleats, cores = cores, filename = filename, ...)
+
+  # ses <- SESraster(x, FUN = "geo.phylo", FUN_args = FUN_args,
+  #                  algorithm = algorithm, alg_args = alg_args,
+  #                  aleats = aleats, cores = cores, filename = filename, ...)
 
 
   # names(ses) <- "SES"

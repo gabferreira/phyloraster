@@ -4,33 +4,27 @@
 \alias{geo.phylo}
 \title{Calculate phylogenetic community metrics for raster data}
 \usage{
-geo.phylo(x, LR, inv.R, branch.length, n.descen, cores = 1, filename = "", ...)
+geo.phylo(x, tree, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-for a set of species. The layers (species) must be sorted according to the
+for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{inv.R}{description}
-
-\item{branch.length}{description}
-
-\item{n.descen}{description}
+\item{tree}{phylo. A dated tree.}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 
 \item{...}{additional arguments passed for terra::app}
-
-\item{area.branch}{description}
 }
 \value{
 SpatRaster with one layer for each metric
 }
 \description{
 Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-phylogenetic endemism and weighted endemism using rasters as input and output.
+phylogenetic endemism and weighted endemism using rasters as input.
 }
 \details{
 Community metrics calculated:
@@ -43,10 +37,11 @@ Community metrics calculated:
 }
 }
 \examples{
+library(terra)
+library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR=T)
 area.branch <- inv.range(data$x, data$branch.length)
 t <- geo.phylo(x=data$x, LR=area.branch$LR, inv.R=area.branch$inv.R,
                branch.length=data$branch.length, n.descen=data$n.descendants)

@@ -30,7 +30,7 @@ inv.range <- function(x, branch.length = NULL, cores = 1, ...){
 
   # calculating inverse of area and inv area x branch length
 
-  inv.R <- terra::app(c(terra::cellSize(terra::rast(x)), x),
+  inv.R <- terra::app(c(terra::cellSize(x), x),
                       function(x, rs){
                         x[1]/(ifelse(is.na(x[-1]), NA, 1)*rs)
                       }, rs=rs,
