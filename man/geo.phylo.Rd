@@ -41,10 +41,7 @@ library(terra)
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
-area.branch <- inv.range(data$x, data$branch.length)
-t <- geo.phylo(x=data$x, LR=area.branch$LR, inv.R=area.branch$inv.R,
-               branch.length=data$branch.length, n.descen=data$n.descendants)
+t <- geo.phylo(x, tree)
 terra::plot(t)
 
 }

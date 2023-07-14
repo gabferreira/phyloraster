@@ -108,7 +108,9 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
   }
 
   # evolutionary distinctiveness
-  red <- .rast.ed.B(x, branch.length, n.descen, cores, filename, ...)
+  red <- .rast.ed.B(x,
+                    branch.length, n.descen,
+                    cores, filename, ...)
 
   return(red)
 
@@ -119,16 +121,24 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 #'
 #' @description Calculates the standardized effect size for evolutionary
 #' distinctiveness. See Details for more information.
+#'
 #' @inheritParams rast.pd.ses
 #' @inheritParams rast.ed
+#'
 #' @return SpatRaster
-#' @author Gabriela Alves-Ferreira and Neander Heming
-#' @export
+#'
+#' @author Gabriela Alves-Ferreira and Neander M. Heming
+#'
 #' @details The spatial randomization (spat) keeps the richness exact and samples
 #'  species presences proportionally to their observed frequency (i.e. number
 #'  of occupied pixels). The randomization will not assign values to cells with
 #'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
 #'  included in phylogeny.
+#'
+#' @seealso \code{\link{geo.phylo.ses}},
+#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+#'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
 #' J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
 #' and phylogeny. PLoS ONE 2, e296.
@@ -136,103 +146,73 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 #' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
 #' metrics of species and phylogenetic turnover can better resolve biogeographic
 #' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#'
 #' @examples
-#' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phyloraster::phylo.pres(x, tree)
-#' t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat")
+#' t <- rast.ed.ses(x, tree, aleats = 5, random = "spat")
 #' terra::plot(t)
-#' }
-rast.ed.ses <- function(x, branch.length, n.descen, aleats, random =
-                          c("tip", "spat"),
-                        cores = 1, filename = NULL, ...){
-  aleats <- aleats
-  temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
+#'
+#' @export
+rast.ed.ses <- function(x, tree,
+                        spat_alg = "bootspat_str",
+                        spat_alg_args = list(rprob = NULL,
+                                             rich = NULL,
+                                             fr_prob = NULL),
+                        random = c("tip", "spat")[2],
+                        aleats = 10,
+                        cores = 1, filename = "", ...){
 
-  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  mi <- .fit.memory(x)
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
-  temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
+  require(SESraster)
+
+  data <- phylo.pres(x, tree)
+  # area.branch <- inv.range(data$x, data$branch.length)
+
+  ## function arguments
+  #    .rast.ed.B(x, branch.length = bl.random, n.descen,
+  #                              filename = temp[[i]], cores = cores)
+  FUN_args = list(branch.length = data$branch.length,
+                  n.descen = data$n.descendants,
+                  # spp_seq = spp_seq,
+                  # spp_seqLR = spp_seqLR,
+                  # spp_seqINV = spp_seqINV,
+                  # resu = resu,
+                  cores = cores)
+
 
   ## Null model (bootstrap structure)
   if(random == "tip"){
 
-    ed.rand <- list() # to store the rasters in the loop
-    bl.random <- branch.length # to store the branch length in the loop
-
-    for(i in 1:aleats){
-
-      bl.random[] <- sample(branch.length) # randomize branch lengths
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # temporary names to rasters
-
-      ed.rand[[i]] <- .rast.ed.B(x, branch.length = bl.random, n.descen,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    ed.rand <- terra::rast(ed.rand) # to transform a list in raster
+    ed.ses <- SESraster(x,
+                        FUN = ".rast.ed.B", FUN_args = FUN_args,
+                        Fa_sample = "branch.length",
+                        Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                        spat_alg = NULL, spat_alg_args = list(),
+                        # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                        aleats = aleats,
+                        cores = cores, filename = filename, ...)
 
   } else if(random == "spat"){
 
-    ed.rand <- list() # to store the rasters in the loop
-    rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
-    fr_prob <- SESraster::fr2prob(x)
-
-    for(i in 1:aleats){
-
-      # temporary names to rasters
-      temp[[i]] <- paste0(tempfile(), i, ".tif")
-
-      ### shuffle
-      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich,
-                                                fr_prob = fr_prob, prob = prob)
-
-      # calculate ed
-      ed.rand[[i]] <- .rast.ed.B(pres.site.null, branch.length = branch.length,
-                                 n.descen = n.descen,
-                               filename = temp[[i]], cores = cores)
-    }
-
-    ed.rand <- terra::rast(ed.rand) # to transform a list in raster
+    ed.ses <- SESraster(x,
+                        FUN = ".rast.ed.B", FUN_args = FUN_args,
+                        # Fa_sample = "branch.length",
+                        # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                        # spat_alg = NULL, spat_alg_args = list(),
+                        spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                        aleats = aleats,
+                        cores = cores, filename = filename, ...)
 
   }  else {
+
     stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
+
   }
 
-  ## ed observed
-  x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
+  return(ed.ses)
 
-  ed.obs <- phyloraster::rast.ed(x.reord, branch.length = branch.length,
-                               n.descen = n.descen,
-                               filename = filename, cores = cores)
-
-  ## ED rand mean and ED rand SD
-  ed.rand.mean <- terra::mean(ed.rand, na.rm = TRUE, filename = filename) # mean pd
-  ed.rand.sd <- terra::stdev(ed.rand, na.rm = TRUE, filename = filename) # sd pd
-
-  unlink(temp) # delete the file that will not be used
-  unlink(temp.raster) # delete the file that will not be used
-
-  ## Calculating the standard effect size (SES)
-  {
-    ses <- function(x){
-      (x[1] - x[2])/x[3]
-    }
-    ed.ses <- terra::app(c(ed.obs, ed.rand.mean, ed.rand.sd),
-                         fun = ses, cores = cores)
-  }
-
-  names(ed.ses) <- "SES"
-  out <- c(ed.rand.mean, ed.rand.sd, ed.obs, ed.ses)
-  names(out) <- c("Mean", "SD", "ED Observed", "SES")
-
-  if (!is.null(filename)){ # to save the rasters when the path is provide
-    out <- terra::writeRaster(out, filename)
-  }
-
-  return(out)
 }

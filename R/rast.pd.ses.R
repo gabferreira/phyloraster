@@ -87,7 +87,9 @@ rast.pd <- function(x, branch.length, cores = 1, filename = "", ...){
     stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
   }
 
-  rpd <- .rast.pd.B(x, branch.length, cores, filename, ...)
+  rpd <- .rast.pd.B(x,
+                    branch.length,
+                    cores, filename, ...)
 
   return(rpd)
 

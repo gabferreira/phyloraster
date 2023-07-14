@@ -58,9 +58,7 @@ rast.we <- function(x, cores = 1, filename = "", ...){
   }
 
   # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  sink(nullfile())    # suppress output
-  mi <- terra::mem_info(x, 2)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-  sink()
+  mi <- .fit.memory(x, 2)
 
   # if(!mi){
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
@@ -75,8 +73,9 @@ rast.we <- function(x, cores = 1, filename = "", ...){
   spp_seqINV <- spp_seq + nspp
 
   # weighted endemism
-  rend <- .rast.we.B(c(x, inv.R), spp_seq, spp_seqINV, cores, filename, ...)
-  # rend <- .rast.we.B(c(x, inv.R), spp_seq, spp_seqINV, cores)
+  rend <- .rast.we.B(c(x, inv.R),
+                     spp_seq, spp_seqINV,
+                     cores, filename, ...)
 
   # if(rescale == TRUE){
   #   rend <- terra::app(rend, function(x, m){ # rescale the values

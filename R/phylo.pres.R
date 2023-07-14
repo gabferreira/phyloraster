@@ -25,11 +25,6 @@
 #' @export
 phylo.pres <- function(x, tree, ...) {
 
-  # if(ape::is.rooted(tree) == FALSE){
-  #   warning("A rooted phylogeny is required for meaningful output of this function",
-  #           call. = FALSE)
-  # }
-
   if(!inherits(x, "SpatRaster")){ # class "Raster" in "SpatRaster"
     # x <- terra::rast(x)
     # warning("Object 'x' has been converted to an object of class 'SpatRaster'")
@@ -39,11 +34,10 @@ phylo.pres <- function(x, tree, ...) {
     stop("The phylogeny 'tree' must be of class 'phylo'")
   }
 
+  ## species name check
   spat.names <- names(x) # to extract species names in the raster
-  # tree.phy4 <-  # transform phylo in phylo4 class
   tip.names <- as.character(phylobase::tipLabels(phylobase::phylo4(tree))) # extracting species names in the tree
 
-  ## species name check
   int.tip.spat <- intersect(spat.names, tip.names) # species in common for the raster and the tree
   tip.in.spat <- tip.names %in% spat.names # species of the tree that are in the raster
   spat.in.tip <- spat.names %in% tip.names # species of the raster that are in the tree
@@ -63,15 +57,15 @@ phylo.pres <- function(x, tree, ...) {
 
   int.tip.spat[] <- phylobase::tipLabels(tree) # ensure tips names are in proper order
 
-  # reorder the stack according to the tree tips
-  x <- x[[int.tip.spat]]
-
   # Get branch length
   branch.length <- setNames(as.numeric(phylobase::edgeLength(tree, int.tip.spat)), int.tip.spat)
 
   # Get descendant node numbers
   n.descen <- setNames(as.numeric(phylobase::ancestor(tree, int.tip.spat)), int.tip.spat)
 
-  pp <- list(x = x, branch.length = branch.length, n.descendants = n.descen, tree = tree)
-  return(pp)
+  return(list(x = x[[int.tip.spat]], # reorder the stack according to the tree tips
+              tree = tree,
+              branch.length = branch.length,
+              n.descendants = n.descen))
+
 }

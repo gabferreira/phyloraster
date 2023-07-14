@@ -105,7 +105,9 @@ rast.pe <- function(x, branch.length, cores = 1, filename = "", ...){
   spp_seqLR <- spp_seq + nspp
 
   # phylogenetic endemism
-  rpe <- .rast.pe.B(c(x, LR), spp_seq, spp_seqLR, cores, filename, ...)
+  rpe <- .rast.pe.B(c(x, LR),
+                    spp_seq, spp_seqLR,
+                    cores, filename, ...)
 
   unlink(temp[[1]])
 

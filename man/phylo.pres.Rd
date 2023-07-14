@@ -30,7 +30,7 @@ in the tree, the function will not work. The same goes for uppercase and
 lowercase letters.
 }
 \examples{
-
+library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 phylo.pres(x, tree)

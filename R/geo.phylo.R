@@ -182,19 +182,10 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 geo.phylo <- function(x, tree,
                       cores = 1, filename = "", ...){
 
-
-
-  # object.checks(x, tree){
+  # object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
-  # if(!inherits(tree, c("phylo4", "phylo4d"))){
-  #   tree <- phylobase::phylo4(tree)
-  # }
-  # if(!identical(names(x), as.character(phylobase::tipLabels(tree)))){
-  #
-  # }
-  # }
 
   data <- phylo.pres(x, tree)
   area.branch <- inv.range(data$x, data$branch.length)
@@ -204,14 +195,13 @@ geo.phylo <- function(x, tree,
   spp_seqLR <- spp_seq + nspp
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
-  x3 <- c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R)
 
-  .rast.geo.phylo(x3,
+  .rast.geo.phylo(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
                   branch.length = data$branch.length,
                   n.descen = data$n.descendants,
                   spp_seq, spp_seqLR, spp_seqINV,
                   resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
-                  cores = 1, filename = "", ...)
+                  cores = cores, filename = filename, ...)
 }
 
 
@@ -269,7 +259,6 @@ geo.phylo.ses <- function(x, tree,
   spp_seqLR <- spp_seq + nspp
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
-  x3 <- c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R)
 
   FUN_args = list(branch.length = data$branch.length,
                   n.descen = data$n.descendants,
@@ -279,21 +268,12 @@ geo.phylo.ses <- function(x, tree,
                   resu = resu,
                   cores = cores)
 
-  # .rast.geo.phylo(x3, , ,
-  #                 spp_seq, spp_seqLR, spp_seqINV,
-  #                 resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
-  #                 cores = 1, filename = "", ...)
-
-  ses <- SESraster(x3, FUN = ".rast.geo.phylo", FUN_args = FUN_args,
+  ses <- SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+                   FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                    spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-                   aleats = aleats, cores = cores, filename = filename, ...)
-
-  # ses <- SESraster(x, FUN = "geo.phylo", FUN_args = FUN_args,
-  #                  algorithm = algorithm, alg_args = alg_args,
-  #                  aleats = aleats, cores = cores, filename = filename, ...)
-
-
-  # names(ses) <- "SES"
+                   aleats = aleats,
+                   cores = cores, filename = filename, ...)
 
   return(ses)
+
 }
