@@ -209,6 +209,9 @@ geo.phylo <- function(x, tree,
 #'
 #' @description Calculates the standardized effect size for phylogenetic community metrics. See Details for more information.
 #'
+#' @param random character. A character indicating the type of randomization.
+#' The currently available randomization methods are "tip", "site", "species" or
+#' "both" (site and species).
 #' @inheritParams geo.phylo
 #' @inheritParams SESraster::SESraster
 #'
@@ -243,6 +246,7 @@ geo.phylo.ses <- function(x, tree,
                           spat_alg_args = list(rprob = NULL,
                                                rich = NULL,
                                                fr_prob = NULL),
+                          random = c("tip", "spat")[2],
                           aleats = 10,
                           cores = 1, filename = "", ...){
   if(!terra::is.lonlat(x)){
@@ -268,12 +272,32 @@ geo.phylo.ses <- function(x, tree,
                   resu = resu,
                   cores = cores)
 
-  ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
-                   FUN = ".rast.geo.phylo", FUN_args = FUN_args,
-                   spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-                   aleats = aleats,
-                   cores = cores, filename = filename, ...)
+  if(random == "tip"){
 
+    ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+                                FUN = ".rast.geo.phylo", FUN_args = FUN_args,
+                                Fa_sample = "branch.length",
+                                Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                spat_alg = NULL, spat_alg_args = list(),
+                                # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                aleats = aleats,
+                                cores = cores, filename = filename, ...)
+
+  } else if(random == "spat"){
+
+    ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+                                FUN = ".rast.geo.phylo", FUN_args = FUN_args,
+                                # Fa_sample = "branch.length",
+                                # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                # spat_alg = NULL, spat_alg_args = list(),
+                                spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                aleats = aleats,
+                                cores = cores, filename = filename, ...)
+  }  else {
+
+    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
+
+  }
   return(ses)
 
 }
