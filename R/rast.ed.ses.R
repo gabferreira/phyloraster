@@ -187,25 +187,25 @@ rast.ed.ses <- function(x, tree,
   ## Null model (bootstrap structure)
   if(random == "tip"){
 
-    ed.ses <- SESraster(x,
-                        FUN = ".rast.ed.B", FUN_args = FUN_args,
-                        Fa_sample = "branch.length",
-                        Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
-                        spat_alg = NULL, spat_alg_args = list(),
-                        # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-                        aleats = aleats,
-                        cores = cores, filename = filename, ...)
+    ed.ses <- SESraster::SESraster(x,
+                                   FUN = ".rast.ed.B", FUN_args = FUN_args,
+                                   Fa_sample = "branch.length",
+                                   Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                   spat_alg = NULL, spat_alg_args = list(),
+                                   # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                   aleats = aleats,
+                                   cores = cores, filename = filename, ...)
 
   } else if(random == "spat"){
 
-    ed.ses <- SESraster(x,
-                        FUN = ".rast.ed.B", FUN_args = FUN_args,
-                        # Fa_sample = "branch.length",
-                        # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
-                        # spat_alg = NULL, spat_alg_args = list(),
-                        spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-                        aleats = aleats,
-                        cores = cores, filename = filename, ...)
+    ed.ses <- SESraster::SESraster(x,
+                                   FUN = ".rast.ed.B", FUN_args = FUN_args,
+                                   # Fa_sample = "branch.length",
+                                   # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                   # spat_alg = NULL, spat_alg_args = list(),
+                                   spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                   aleats = aleats,
+                                   cores = cores, filename = filename, ...)
 
   }  else {
 

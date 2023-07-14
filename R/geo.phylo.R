@@ -268,7 +268,7 @@ geo.phylo.ses <- function(x, tree,
                   resu = resu,
                   cores = cores)
 
-  ses <- SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+  ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
                    FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                    spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                    aleats = aleats,
