@@ -7,6 +7,8 @@
 rast.ed.ses(
   x,
   tree,
+  branch.length,
+  n.descen,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
   random = c("tip", "spat")[2],
@@ -18,6 +20,10 @@ rast.ed.ses(
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+
+\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
 
 \item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
 
@@ -61,7 +67,10 @@ metrics of species and phylogenetic turnover can better resolve biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
 \seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
 \code{\link{geo.phylo.ses}},
+\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
 \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
 \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 }
