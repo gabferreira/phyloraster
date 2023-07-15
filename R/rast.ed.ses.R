@@ -93,19 +93,46 @@
 #' plot(ed)
 #'
 #' @export
-rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
+rast.ed <- function(x, tree,
+                    branch.length, n.descen,
+                    cores = 1, filename = "", ...){
 
+  ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
-  if(!all.equal(names(x), names(branch.length))){
-    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
+
+    if(any(miss4) & miss.tree){
+
+      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
+
+    } else if(any(#isFALSE(identical(names(x), names(LR))),
+      #isFALSE(identical(names(x), names(inv.R))),
+      isFALSE(identical(names(x), names(branch.length))),
+      isFALSE(identical(names(x), names(n.descen))))) {
+
+      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
+         See 'phyloraster::phylo.pres' function.")
+    }
+
   }
 
-  if(!all.equal(names(x), names(n.descen))){
-    stop("Species names are not in the same order on 'x' and 'n.descen' arguments! See 'phyloraster::phylo.pres' function.")
-  }
 
   # evolutionary distinctiveness
   red <- .rast.ed.B(x,
@@ -135,7 +162,10 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 #'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
 #'  included in phylogeny.
 #'
-#' @seealso \code{\link{geo.phylo.ses}},
+#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
+#' \code{\link{geo.phylo.ses}},
+#' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+#' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
 #' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
 #' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 #'
@@ -155,6 +185,7 @@ rast.ed <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 #'
 #' @export
 rast.ed.ses <- function(x, tree,
+                        branch.length, n.descen,
                         spat_alg = "bootspat_str",
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
@@ -163,20 +194,52 @@ rast.ed.ses <- function(x, tree,
                         aleats = 10,
                         cores = 1, filename = "", ...){
 
+  ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
+
+    if(any(miss4) & miss.tree){
+
+      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
+
+    } else if(any(#isFALSE(identical(names(x), names(LR))),
+                  #isFALSE(identical(names(x), names(inv.R))),
+                  isFALSE(identical(names(x), names(branch.length))),
+                  isFALSE(identical(names(x), names(n.descen))))) {
+
+      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
+         See 'phyloraster::phylo.pres' function.")
+    }
+
+  }
+
   require(SESraster)
 
-  data <- phylo.pres(x, tree)
+  # data <- phylo.pres(x, tree)
   # area.branch <- inv.range(data$x, data$branch.length)
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
-  FUN_args = list(branch.length = data$branch.length,
-                  n.descen = data$n.descendants,
+  FUN_args = list(branch.length = branch.length,
+                  n.descen = n.descen,
                   # spp_seq = spp_seq,
                   # spp_seqLR = spp_seqLR,
                   # spp_seqINV = spp_seqINV,

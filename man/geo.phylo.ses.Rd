@@ -7,6 +7,10 @@
 geo.phylo.ses(
   x,
   tree,
+  LR,
+  inv.R,
+  branch.length,
+  n.descen,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
   random = c("tip", "spat")[2],
@@ -22,6 +26,17 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{LR}{SpatRaster. Inverse of range size multiplied by branch length of
+each species. See \code{\link{inv.range}}}
+
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
+
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch. See \code{\link{phylo.pres}}}
 
 \item{spat_alg}{A function with the algorithm implementing the desired
 randomization method. It must work with SpatRaster objects. See examples.
@@ -49,10 +64,13 @@ the calculation should be repeated.}
 SpatRaster
 }
 \description{
-Calculates the standardized effect size for phylogenetic community metrics. See Details for more information.
+Calculates the standardized effect size for phylogenetic
+community metrics. See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
+The spatial randomization (spat) keeps the richness exact and samples
+species presences proportionally to their observed frequency (i.e. number of
+occupied pixels). The randomization will not assign values to cells with nodata.
 }
 \examples{
 library(terra)
@@ -77,4 +95,11 @@ terra::plot(tses)
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
 Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+}
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}}, \code{\link{geo.phylo}},
+\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 }

@@ -4,7 +4,17 @@
 \alias{geo.phylo}
 \title{Calculate phylogenetic community metrics for raster data}
 \usage{
-geo.phylo(x, tree, cores = 1, filename = "", ...)
+geo.phylo(
+  x,
+  tree,
+  LR,
+  inv.R,
+  branch.length,
+  n.descen,
+  cores = 1,
+  filename = "",
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,6 +22,17 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{LR}{SpatRaster. Inverse of range size multiplied by branch length of
+each species. See \code{\link{inv.range}}}
+
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
+
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch. See \code{\link{phylo.pres}}}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
@@ -57,4 +78,10 @@ Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralia
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+}
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{rast.ed}}, \code{\link{rast.pd}},
+\code{\link{rast.we}}, \code{\link{rast.pe}}, \code{\link{rast.sr}},
+\code{\link{geo.phylo.ses}},
 }

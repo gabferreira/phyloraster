@@ -4,7 +4,7 @@
 \alias{rast.ed}
 \title{Calculate Evolutionary distinctiveness for raster data}
 \usage{
-rast.ed(x, branch.length, n.descen, cores = 1, filename = "", ...)
+rast.ed(x, tree, branch.length, n.descen, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}

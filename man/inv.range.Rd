@@ -26,10 +26,9 @@ SpatRaster and numeric
 Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
 }
 \examples{
-\dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 inv.range(x)
-}
+
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

@@ -9,12 +9,11 @@
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster and numeric
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#' @export
 #' @examples
-#' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' inv.range(x)
-#' }
+#'
+#' @export
 inv.range <- function(x, branch.length = NULL, cores = 1, ...){
 
   # 2 rasters will be generated in this function, let's see if there is enough memory in the user's pc

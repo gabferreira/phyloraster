@@ -144,10 +144,13 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' tree order. See the phylo.pres function.
 #'
 #' @inheritParams phylo.pres
-# #' @param area.branch description
-# #' @param inv.R description
-# #' @param branch.length description
-# #' @param n.descen description
+#' @param LR SpatRaster. Inverse of range size multiplied by branch length of
+#' each species. See \code{\link{inv.range}}
+#' @param inv.R SpatRaster. Inverse of range size. See \code{\link{inv.range}}
+#' @param branch.length numeric. A Named numeric vector of branch length for
+#' each species. See \code{\link{phylo.pres}}
+#' @param n.descen numeric. A Named numeric vector of number of descendants for
+#' each branch. See \code{\link{phylo.pres}}
 #' @inheritParams terra::app
 #' @param ... additional arguments passed for terra::app
 #'
@@ -161,6 +164,12 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 ##'    \item{Phylogenetic endemism (Rosauer et al. 2009)}
 ##'    \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
 ##'}
+#'
+#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
+#' \code{\link{rast.ed}}, \code{\link{rast.pd}},
+#' \code{\link{rast.we}}, \code{\link{rast.pe}}, \code{\link{rast.sr}},
+#' \code{\link{geo.phylo.ses}},
+#'
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
@@ -180,25 +189,56 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #'
 #' @export
 geo.phylo <- function(x, tree,
+                      LR, inv.R, branch.length, n.descen,
                       cores = 1, filename = "", ...){
 
-  # object checks
+  ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
-  data <- phylo.pres(x, tree)
-  area.branch <- inv.range(data$x, data$branch.length)
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
 
-  nspp <- terra::nlyr(data$x)
+    if(any(miss4) & miss.tree){
+
+      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      LR <- area.branch$LR
+      inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
+
+    } else if(any(isFALSE(identical(names(x), names(LR))),
+                  isFALSE(identical(names(x), names(inv.R))),
+                  isFALSE(identical(names(x), names(branch.length))),
+                  isFALSE(identical(names(x), names(n.descen))))) {
+
+      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
+         See 'phyloraster::phylo.pres' function.")
+    }
+
+  }
+
+  ## vectorization setup
+  nspp <- terra::nlyr(x)
   spp_seq <- seq_len(nspp)
   spp_seqLR <- spp_seq + nspp
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
-  .rast.geo.phylo(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
-                  branch.length = data$branch.length,
-                  n.descen = data$n.descendants,
+  ## run function
+  .rast.geo.phylo(c(x, LR = LR, inv.R = inv.R),
+                  branch.length = branch.length,
+                  n.descen = n.descen,
                   spp_seq, spp_seqLR, spp_seqINV,
                   resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
                   cores = cores, filename = filename, ...)
@@ -207,7 +247,8 @@ geo.phylo <- function(x, tree,
 
 #' Calculate phylogenetic community metrics and their standardized effect sizes for raster data
 #'
-#' @description Calculates the standardized effect size for phylogenetic community metrics. See Details for more information.
+#' @description Calculates the standardized effect size for phylogenetic
+#' community metrics. See Details for more information.
 #'
 #' @param random character. A character indicating the type of randomization.
 #' The currently available randomization methods are "tip", "site", "species" or
@@ -217,7 +258,15 @@ geo.phylo <- function(x, tree,
 #'
 #' @return SpatRaster
 #'
-#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
+#' @details The spatial randomization (spat) keeps the richness exact and samples
+#' species presences proportionally to their observed frequency (i.e. number of
+#'  occupied pixels). The randomization will not assign values to cells with nodata.
+#'
+#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}}, \code{\link{geo.phylo}},
+#' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+#' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 #'
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
@@ -242,6 +291,7 @@ geo.phylo <- function(x, tree,
 #'
 #' @export
 geo.phylo.ses <- function(x, tree,
+                          LR, inv.R, branch.length, n.descen,
                           spat_alg = "bootspat_str",
                           spat_alg_args = list(rprob = NULL,
                                                rich = NULL,
@@ -249,23 +299,54 @@ geo.phylo.ses <- function(x, tree,
                           random = c("tip", "spat")[2],
                           aleats = 10,
                           cores = 1, filename = "", ...){
+
+  ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
+
+    if(any(miss4) & miss.tree){
+
+      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      LR <- area.branch$LR
+      inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
+
+    } else if(any(isFALSE(identical(names(x), names(LR))),
+                  isFALSE(identical(names(x), names(inv.R))),
+                  isFALSE(identical(names(x), names(branch.length))),
+                  isFALSE(identical(names(x), names(n.descen))))) {
+
+      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
+         See 'phyloraster::phylo.pres' function.")
+    }
+
+  }
+
   require(SESraster)
 
-  data <- phylo.pres(x, tree)
-  area.branch <- inv.range(data$x, data$branch.length)
-
-  nspp <- terra::nlyr(data$x)
+  ## vectorization setup
+  nspp <- terra::nlyr(x)
   spp_seq <- seq_len(nspp)
   spp_seqLR <- spp_seq + nspp
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
-  FUN_args = list(branch.length = data$branch.length,
-                  n.descen = data$n.descendants,
+  FUN_args = list(branch.length = branch.length,
+                  n.descen = n.descendants,
                   spp_seq = spp_seq,
                   spp_seqLR = spp_seqLR,
                   spp_seqINV = spp_seqINV,
@@ -274,7 +355,7 @@ geo.phylo.ses <- function(x, tree,
 
   if(random == "tip"){
 
-    ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+    ses <- SESraster::SESraster(c(x, LR = LR, inv.R = inv.R),
                                 FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                                 Fa_sample = "branch.length",
                                 Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
@@ -285,7 +366,7 @@ geo.phylo.ses <- function(x, tree,
 
   } else if(random == "spat"){
 
-    ses <- SESraster::SESraster(c(data$x, LR = area.branch$LR, inv.R = area.branch$inv.R),
+    ses <- SESraster::SESraster(c(x, LR = LR, inv.R = inv.R),
                                 FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                                 # Fa_sample = "branch.length",
                                 # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
