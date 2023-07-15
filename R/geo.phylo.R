@@ -110,6 +110,9 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 ##'    \item{Phylogenetic endemism (Rosauer et al. 2009)}
 ##'    \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
 ##'}
+#'
+#' @author Neander Marcel Heming
+#'
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
@@ -169,6 +172,8 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' \code{\link{rast.ed}}, \code{\link{rast.pd}},
 #' \code{\link{rast.we}}, \code{\link{rast.pe}}, \code{\link{rast.sr}},
 #' \code{\link{geo.phylo.ses}},
+#'
+#' @author Neander Marcel Heming
 #'
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
 #' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
@@ -268,6 +273,8 @@ geo.phylo <- function(x, tree,
 #' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
 #' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 #'
+#' @author Neander Marcel Heming
+#'
 #' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 #'
@@ -345,6 +352,7 @@ geo.phylo.ses <- function(x, tree,
   spp_seqINV <- spp_seq + 2*nspp
   resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
+  ## function arguments
   FUN_args = list(branch.length = branch.length,
                   n.descen = n.descendants,
                   spp_seq = spp_seq,

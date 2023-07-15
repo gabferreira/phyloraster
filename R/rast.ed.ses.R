@@ -2,16 +2,21 @@
 #'
 #' @description This function calculates evolutionary distinctiveness for a set
 #' of species using the fair-proportion index (Isaac et al., 2007).
+#'
 #' @usage .evol.distin(x, branch.length, n.descen)
+#'
 #' @param x numeric. A Named numeric vector of presence-absence
 #' @param branch.length numeric. A Named numeric vector of branch length for
 #' each species
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
 #' each branch
+#'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
 #' Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
 #' threat and phylogeny. PLoS ONE 2, e296.
+#'
 #' @return numeric
 # #' @export
 .vec.ed <- function(x, branch.length, n.descen, ed=c(ED=NA)){
@@ -38,6 +43,7 @@
 #'
 #' @description This function calculates evolutionary distinctiveness according
 #' to the fair-proportion index.
+#'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species. The layers (species) must be sorted according to the
 #' tree order. See the phylo.pres function.
@@ -49,11 +55,15 @@
 #' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
+#'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
 #'  J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
 #'  and phylogeny. PLoS ONE 2, e296.
+#'
 #' @return SpatRaster
+#'
 # #' @export
 # #' @examples
 .rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
@@ -72,16 +82,29 @@
 
 #' Calculate Evolutionary distinctiveness for raster data
 #'
-#' @description This function calculates evolutionary distinctiveness according to the fair-proportion index.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie.
-#' @param n.descen numeric. A Named numeric vector of number of descendants for each branch
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @description This function calculates evolutionary distinctiveness according
+#' to the fair-proportion index.
+#'
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. The layers (species) must be sorted according to the
+#' tree order. See the phylo.pres function.
+#' @param branch.length numeric. A Named numeric vector containing the branch
+#' length of each specie.
+#' @param n.descen numeric. A Named numeric vector of number of descendants for
+#' each branch
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
+#' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
+#'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+#'
+#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+#' J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
+#' and phylogeny. PLoS ONE 2, e296.
+#'
 #' @return SpatRaster
+#'
 #' @examples
 #' library(terra)
 #' library(phyloraster)
@@ -154,7 +177,7 @@ rast.ed <- function(x, tree,
 #'
 #' @return SpatRaster
 #'
-#' @author Gabriela Alves-Ferreira and Neander M. Heming
+#' @author Neander M. Heming and Gabriela Alves-Ferreira
 #'
 #' @details The spatial randomization (spat) keeps the richness exact and samples
 #'  species presences proportionally to their observed frequency (i.e. number
@@ -231,9 +254,6 @@ rast.ed.ses <- function(x, tree,
   }
 
   require(SESraster)
-
-  # data <- phylo.pres(x, tree)
-  # area.branch <- inv.range(data$x, data$branch.length)
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
