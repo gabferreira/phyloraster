@@ -58,10 +58,10 @@ phylo.pres <- function(x, tree, ...) {
   int.tip.spat[] <- phylobase::tipLabels(tree) # ensure tips names are in proper order
 
   # Get branch length
-  branch.length <- setNames(as.numeric(phylobase::edgeLength(tree, int.tip.spat)), int.tip.spat)
+  branch.length <- stats::setNames(as.numeric(phylobase::edgeLength(tree, int.tip.spat)), int.tip.spat)
 
   # Get descendant node numbers
-  n.descen <- setNames(as.numeric(phylobase::ancestor(tree, int.tip.spat)), int.tip.spat)
+  n.descen <- stats::setNames(as.numeric(phylobase::ancestor(tree, int.tip.spat)), int.tip.spat)
 
   return(list(x = x[[int.tip.spat]], # reorder the stack according to the tree tips
               tree = tree,
