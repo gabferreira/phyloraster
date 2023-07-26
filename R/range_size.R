@@ -1,18 +1,25 @@
-#' Calculate range size for a set of species using a raster as imput
+#' Calculate range size for a set of species using a raster as input
 #'
-#' @description This function calculate range size in square meters (by default) for all cells that are not NA. The size of the cells is constant in degrees but not in square meters, which was considered in the method applied to calculate the area.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. This raster must be named.
+#' @description This function calculate range size in square meters (by default)
+#' for all cells that are not NA. The size of the cells is constant in degrees
+#' but not in square meters, which was considered in the method applied to
+#' calculate the area.
+#'
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. This raster must be named.
 #' @inheritParams terra::cellSize
 #' @param ... additional arguments to be passed passed down from a calling function.
+#'
 #' @author Gabriela Alves Ferreira and Neander Marcel Heming
+#'
 #' @return vector
-#' @export
+#'
 #' @examples
-#' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' range_size(x)
-#' }
-range_size <- function(x, unit = "m", scale=FALSE, ...){
+#'
+#' @export
+range_size <- function(x, unit = "m", ...){
 
   # colocar ifelse do mi
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
@@ -29,11 +36,6 @@ range_size <- function(x, unit = "m", scale=FALSE, ...){
                }, a = area, Z = x)
 
   names(rs) <- names(x) # to add names
-
-  if(scale == TRUE){
-    area.to <- terra::expanse(terra::ifel(any(!is.na(x)), 1, NA)) #  to calculate area total
-    rs[] <- rs/area.to # to reescale
-  }
 
     unlink(temp) # delete the archive that will not be used anymore
     return(rs)
