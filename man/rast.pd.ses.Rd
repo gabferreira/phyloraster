@@ -6,49 +6,95 @@
 \usage{
 rast.pd.ses(
   x,
+  tree,
   branch.length,
-  aleats,
-  random = c("tip", "spat"),
+  spat_alg = "bootspat_str",
+  spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
+  random = c("tip", "spat")[2],
+  aleats = 10,
   cores = 1,
   filename = "",
   ...
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+\item{tree}{phylo. A dated tree.}
 
-\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_ff}}.}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_ff}}}
 
-\item{filename}{character. Output filename.}
+\item{random}{character. A character indicating the type of randomization.
+The currently available randomization methods are "tip", "site", "species" or
+"both" (site and species).}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{aleats}{positive integer. A positive integer indicating how many times
+the calculation should be repeated.}
+
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
-SpatRaster. The function returns the observed phylogenetic diversity, the mean of the simulations calculated over n times, the standard deviation of the simulations, and the standardized effect size (SES) for the phylogenetic diversity.
+SpatRaster
+
+SpatRaster. The function returns the observed phylogenetic diversity,
+the mean of the simulations calculated over n times, the standard deviation of
+the simulations, and the standardized effect size (SES) for the phylogenetic
+diversity.
 }
 \description{
-Calculates the standardized effect size for phylogenetic diversity. See Details for more information.
+Calculates the standardized effect size for phylogenetic diversity.
+See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
+The spatial randomization (spat) keeps the richness exact and samples
+species presences proportionally to their observed frequency (i.e. number
+of occupied pixels). The randomization will not assign values to cells with
+nodata. The phylogenetic randomization shuffles taxa names across all taxa
+included in phylogeny.
+
+The spatial randomization (spat) keeps the richness exact and
+samples species presences proportionally to their observed frequency
+(i.e. number of occupied pixels). The randomization will not assign values
+to cells with nodata. The phylogenetic randomization shuffles taxa names
+across all taxa included in phylogeny.
 }
 \examples{
-\dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+library(terra)
+library(phyloraster)
+x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phyloraster::phylo.pres(x, tree)
-t <- phyloraster::rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+data <- phylo.pres(x, tree)
+t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 10, random = "spat")
 plot(t)
-}
+
 }
 \references{
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992). Conservation evaluation and phylogenetic
+diversity. Biological conservation, 61(1), 1-10.
+}
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{geo.phylo.ses}},
+\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 }
 \author{
 Gabriela Alves-Ferreira and Neander Heming

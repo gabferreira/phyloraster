@@ -9,7 +9,7 @@
   branch.length,
   n.descen,
   spp_seq,
-  spp_seqLR,
+  spp_seqrange.BL,
   spp_seqINV,
   resu
 )
@@ -25,9 +25,12 @@ each branch}
 
 \item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
 
-\item{spp_seqLR}{numeric vector indicating LR data (inverse range size * branch lengh) in 'x'}
+\item{spp_seqrange.BL}{numeric vector indicating range.BL data
+(inverse range size * branch lengh) in 'x'}
 
-\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x}
+\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x'}
+
+\item{resu}{SpatRaster result returned from the function}
 }
 \value{
 numeric

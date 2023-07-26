@@ -7,9 +7,15 @@
 .rast.we.B(x, spp_seq, spp_seqINV, cores = 1, filename = "", ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species.}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
+
+\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x'}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with
+that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
@@ -19,20 +25,17 @@
 SpatRaster
 }
 \description{
-Calculate the sum of the inverse of the range size for species present in each raster cell.
-}
-\examples{
-\dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-rs <- range_size(x)
-.rast.we.B(x, rs)
-}
-
+Calculate the sum of the inverse of the range size for species
+present in each raster cell.
 }
 \references{
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
+in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in
+the Australian flora. Journal of Biogeography, 28, 183–198.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

@@ -7,7 +7,7 @@
 geo.phylo(
   x,
   tree,
-  LR,
+  range.BL,
   inv.R,
   branch.length,
   n.descen,
@@ -23,7 +23,7 @@ tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{LR}{SpatRaster. Inverse of range size multiplied by branch length of
+\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
 each species. See \code{\link{inv.range}}}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
@@ -62,7 +62,11 @@ library(terra)
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-t <- geo.phylo(x, tree)
+data <- phylo.pres(x, tree)
+area.branch <- inv.range(data$x, data$branch.length)
+#t <- geo.phylo(x, tree)
+t <- geo.phylo(data$x, range.BL = area.branch$range.BL, inv.R = area.branch$inv.R,
+branch.length = data$branch.length, n.descen = data$n.descendants)
 terra::plot(t)
 
 }
@@ -84,4 +88,7 @@ Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozc
 \code{\link{rast.ed}}, \code{\link{rast.pd}},
 \code{\link{rast.we}}, \code{\link{rast.pe}}, \code{\link{rast.sr}},
 \code{\link{geo.phylo.ses}},
+}
+\author{
+Neander Marcel Heming
 }

@@ -9,7 +9,11 @@
 \arguments{
 \item{x}{numeric. A named numerical vector of presence-absence for one sample.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length for each species.}
+\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
+
+\item{spp_seq2}{numeric. numeric vector indicating presence/absence data in 'x'}
+
+\item{wpe}{numeric. numeric vector indicating INV data (inverse range size) in 'x'}
 }
 \value{
 numeric
@@ -18,7 +22,10 @@ numeric
 This function calculates phylogenetic endemism for a vector
 }
 \references{
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+& Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+geographical concentrations of evolutionary history. Molecular ecology,
+18(19), 4061-4072.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

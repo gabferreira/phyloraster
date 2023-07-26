@@ -4,18 +4,24 @@
 \alias{.rast.pe.B}
 \title{Calculate phylogenetic endemism for a raster}
 \usage{
-.rast.pe.B(x, spp_seq, spp_seqLR, cores = 1, filename = "", ...)
+.rast.pe.B(x, spp_seq, spp_seqrange.BL, cores = 1, filename = "", ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) must be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
+
+\item{spp_seqrange.BL}{numeric vector indicating range.BL data
+(inverse range size * branch lengh) in 'x'}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with
+that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
-
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each specie.}
 }
 \value{
 SpatRaster
@@ -23,15 +29,9 @@ SpatRaster
 \description{
 Calculate phylogenetic endemism using rasters as input and output.
 }
-\examples{
-\dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
-### TODO correct example
-.rast.pe.B(data$x, data$branch.length, cores = 1)
-}
-}
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+& Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+geographical concentrations of evolutionary history. Molecular ecology,
+18(19), 4061-4072.
 }

@@ -19,21 +19,39 @@ rast.ed.ses(
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+\item{tree}{phylo. A dated tree.}
 
-\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch. See \code{\link{phylo.pres}}}
 
-\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_ff}}.}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_ff}}}
 
-\item{filename}{character. Output filename.}
+\item{random}{character. A character indicating the type of randomization.
+The currently available randomization methods are "tip", "site", "species" or
+"both" (site and species).}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{aleats}{positive integer. A positive integer indicating how many times
+the calculation should be repeated.}
+
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster
@@ -75,5 +93,5 @@ transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 }
 \author{
-Gabriela Alves-Ferreira and Neander M. Heming
+Neander M. Heming and Gabriela Alves-Ferreira
 }

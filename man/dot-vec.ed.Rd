@@ -4,7 +4,7 @@
 \alias{.vec.ed}
 \title{Calculate Evolutionary Distinctiveness for a vector}
 \usage{
-.evol.distin(x, branch.length, n.descen)
+.vec.ed(x, branch.length, n.descen, ed=c(ED=NA))
 }
 \arguments{
 \item{x}{numeric. A Named numeric vector of presence-absence}
@@ -14,6 +14,8 @@ each species}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
+
+\item{ed}{numeric. numeric vector with the values of evolutionary distinctiveness}
 }
 \value{
 numeric

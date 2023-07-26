@@ -9,16 +9,21 @@
 \arguments{
 \item{x}{numeric. A named numerical vector of presence-absence for one sample.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length for each species.}
+\item{branch.length}{numeric. A named numerical vector containing the branch
+length for each species.}
+
+\item{pd}{numeric. A numeric vector with the values of phylogenetic diversity.}
 }
 \value{
 numeric
 }
 \description{
-This function calculates the sum of the branch length for a set of species for one sample.
+This function calculates the sum of the branch length for a set
+of species for one sample.
 }
 \references{
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992). Conservation evaluation and phylogenetic
+diversity. Biological conservation, 61(1), 1-10.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

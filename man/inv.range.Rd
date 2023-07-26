@@ -14,10 +14,6 @@ inv.range(x, branch.length = NULL, cores = 1, ...)
 \item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
-
-\item{LR}{logical. If LR = TRUE, the function will returns a raster with the clade range.}
-
-\item{filename}{character. Output filename.}
 }
 \value{
 SpatRaster and numeric
@@ -26,8 +22,14 @@ SpatRaster and numeric
 Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
 }
 \examples{
+# calculating the inverse of range size
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-inv.range(x)
+inv.range(x)$inv.R
+
+# calculating the rangeBL (range size multiplied by branch length)
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+data <- phylo.pres(x, tree)
+inv.range(data$x, data$branch.length)$range.BL
 
 }
 \author{

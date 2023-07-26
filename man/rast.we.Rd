@@ -4,12 +4,16 @@
 \alias{rast.we}
 \title{Calculate weighted endemism for raster data}
 \usage{
-rast.we(x, cores = 1, filename = "", ...)
+rast.we(x, inv.R, cores = 1, filename = "", ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species.}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
+\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with
+that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 
@@ -19,22 +23,30 @@ rast.we(x, cores = 1, filename = "", ...)
 SpatRaster
 }
 \description{
-Calculate the sum of the inverse of the range size for species present in raster data.
+Calculate the weighted endemism for species present in raster data.
 }
 \examples{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-we <- rast.we(x)
+inv.R <- inv.range(x)
+we <- rast.we(x, inv.R$inv.R)
 plot(we)
 
 }
 \references{
-Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
+metrics of species and phylogenetic turnover can better resolve biogeographic
+transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in
+conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism
+in the Australian flora. Journal of Biogeography, 28, 183–198.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves Ferreira

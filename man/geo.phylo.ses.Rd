@@ -7,7 +7,7 @@
 geo.phylo.ses(
   x,
   tree,
-  LR,
+  range.BL,
   inv.R,
   branch.length,
   n.descen,
@@ -27,7 +27,7 @@ tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{LR}{SpatRaster. Inverse of range size multiplied by branch length of
+\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
 each species. See \code{\link{inv.range}}}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
@@ -76,13 +76,15 @@ occupied pixels). The randomization will not assign values to cells with nodata.
 library(terra)
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-# tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 # data <- phylo.pres(x, tree)
 # area.branch <- inv.range(data$x, data$branch.length)
 tses <- geo.phylo.ses(x = x,
-                       tree = tree,
-                      # FUN_args = list(LR=area.branch$LR, inv.R=area.branch$inv.R,
-                      #                branch.length=data$branch.length, n.descen=data$n.descendants),
+                     tree = tree,
+                      # FUN_args = list(range.BL=area.branch$range.BL,
+                      # inv.R=area.branch$inv.R,
+                      # branch.length=data$branch.length,
+                      # n.descen = data$n.descendants),
                       spat_alg = "bootspat_str",
                       spat_alg_args = list(rprob = NULL,
                                            rich = NULL,
@@ -94,7 +96,7 @@ terra::plot(tses)
 \references{
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in the Australian flora. Journal of Biogeography, 28, 183–198.
 }
 \seealso{
 \code{\link{phylo.pres}}, \code{\link{inv.range}}, \code{\link{geo.phylo}},
@@ -102,4 +104,7 @@ Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian f
 \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
 \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
 \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+}
+\author{
+Neander Marcel Heming
 }

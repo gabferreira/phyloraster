@@ -6,49 +6,93 @@
 \usage{
 rast.pe.ses(
   x,
+  tree,
   branch.length,
-  aleats,
-  random = c("tip", "spat"),
+  range.BL,
+  spat_alg = "bootspat_str",
+  spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
+  random = c("tip", "spat")[2],
+  aleats = 10,
   cores = 1,
   filename = "",
   ...
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+\item{tree}{phylo. A dated tree.}
 
-\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
+\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
+each species. See \code{\link{inv.range}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_ff}}.}
 
-\item{filename}{character. Output filename.}
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_ff}}}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{random}{character. A character indicating the type of randomization.
+The currently available randomization methods are "tip", "site", "species" or
+"both" (site and species).}
+
+\item{aleats}{positive integer. A positive integer indicating how many times
+the calculation should be repeated.}
+
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculates the standardized effect size for phylogenetic endemism. See Details for more information.
+Calculates the standardized effect size for phylogenetic endemism.
+See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
+The spatial randomization (spat) keeps the richness exact and samples
+species presences proportionally to their observed frequency (i.e. number
+of occupied pixels). The randomization will not assign values to cells with
+nodata. The phylogenetic randomization shuffles taxa names across all taxa
+included in phylogeny.
 }
 \examples{
-\dontrun{
+library(terra)
+library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+range.BL <- inv.range(data$x, data$branch.length)
+t <- rast.pe.ses(x = data$x,  range.BL = range.BL$range.BL, aleats = 10,
+random = "spat")
+t <- rast.pe.ses(x, tree, aleats = 10, random = "spat")
 plot(t)
-}
+
 }
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+& Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+geographical concentrations of evolutionary history. Molecular ecology, 18(19),
+4061-4072.
+}
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{geo.phylo.ses}},
+\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
 }
 \author{
 Gabriela Alves-Ferreira and Neander Heming

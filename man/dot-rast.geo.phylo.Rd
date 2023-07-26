@@ -9,9 +9,9 @@
   branch.length,
   n.descen,
   spp_seq,
-  spp_seqLR,
+  spp_seqrange.BL,
   spp_seqINV,
-  resu = setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
+  resu = stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
   cores = 1,
   filename = "",
   ...
@@ -30,9 +30,12 @@ each branch}
 
 \item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
 
-\item{spp_seqLR}{numeric vector indicating LR data (inverse range size * branch lengh) in 'x'}
+\item{spp_seqrange.BL}{numeric vector indicating range.BL data
+(inverse range size * branch lengh) in 'x'}
 
-\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x}
+\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x'}
+
+\item{resu}{SpatRaster result returned from the function}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
@@ -69,4 +72,7 @@ Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralia
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+}
+\author{
+Neander Marcel Heming
 }
