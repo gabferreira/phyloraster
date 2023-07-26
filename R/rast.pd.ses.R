@@ -3,10 +3,7 @@
 #' @description This function calculates the sum of the branch length for a set
 #'  of species for one sample.
 #'
-#' @param x numeric. A named numerical vector of presence-absence for one sample.
-#' @param branch.length numeric. A named numerical vector containing the branch
-#' length for each species.
-#' @param pd numeric. A numeric vector with the values of phylogenetic diversity.
+#' @inheritParams .vec.geo.phylo
 #'
 #' @return numeric
 #'
@@ -18,15 +15,15 @@
 #'
 # #' @export
 # #' @examples
-.vec.pd <- function(x, branch.length, pd = c(PD=NA)){
+.vec.pd <- function(x, branch.length, resu = c(PD=NA)){
 
   if(all(is.na(x))){
-    return(pd)
+    return(resu)
   }
 
-  pd[] <- sum(x*branch.length, na.rm = TRUE) # pd Faith 1992
+  resu[] <- sum(x*branch.length, na.rm = TRUE) # pd Faith 1992
 
-  return(pd)
+  return(resu)
 }
 
 
@@ -35,15 +32,7 @@
 #' @description Calculate the sum of the branch length for species present in
 #' raster data.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the tree
-#' order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numerical vector containing the branch
-#' length for a set of species.
-#' @param filename character. Output filename.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with
-#' that many cores is created and used.
-#' @param ... additional arguments to be passed passed down from a calling function.
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -74,16 +63,7 @@
 #' @description Calculate the sum of the branch length for species present in
 #' each cell of the raster.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
-#' tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numerical vector containing the branch
-#'  length for a set of species.
-#' @param filename character. Output filename.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
-#' with that many cores is created and used.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @inheritParams geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -164,11 +144,7 @@ rast.pd <- function(x, tree,
 #' @description Calculates the standardized effect size for phylogenetic diversity.
 #'  See Details for more information.
 #'
-#' @param random character. A character indicating the type of randomization.
-#' The currently available randomization methods are "tip", "site", "species" or
-#' "both" (site and species).
-#' @inheritParams geo.phylo
-#' @inheritParams SESraster::SESraster
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -265,7 +241,7 @@ rast.pd.ses <- function(x, tree,
 
   }
 
-  require(SESraster)
+  requireNamespace("SESraster")
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,

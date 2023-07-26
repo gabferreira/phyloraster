@@ -6,12 +6,10 @@
 \usage{
 .rast.geo.phylo(
   x,
+  inv.R,
   branch.length,
   n.descen,
-  spp_seq,
-  spp_seqrange.BL,
-  spp_seqINV,
-  resu = stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
+  resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
   cores = 1,
   filename = "",
   ...
@@ -22,20 +20,15 @@
 for a set of species. The layers (species) must be sorted according to the
 tree order. See the phylo.pres function.}
 
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
 \item{branch.length}{numeric. A named numerical vector containing the branch
 length for each species.}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
 
-\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
-
-\item{spp_seqrange.BL}{numeric vector indicating range.BL data
-(inverse range size * branch lengh) in 'x'}
-
-\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x'}
-
-\item{resu}{SpatRaster result returned from the function}
+\item{resu}{vector structuring SpatRaster result}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 

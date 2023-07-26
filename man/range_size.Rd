@@ -4,11 +4,15 @@
 \alias{range_size}
 \title{Calculate range size for a set of species using a raster as input}
 \usage{
-range_size(x, unit = "m", ...)
+range_size(x, cellSz, unit = "m", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-for a set of species. This raster must be named.}
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
+
+\item{cellSz}{SpatRaster. A SpatRaster containing cellSize values.
+See \code{\link[terra]{cellSize}}}
 
 \item{unit}{character. One of "m", "km", or "ha"}
 
@@ -25,7 +29,7 @@ calculate the area.
 }
 \examples{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-range_size(x)
+range_size(x, cellSz <- terra::cellSize(x))
 
 }
 \author{

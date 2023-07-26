@@ -8,14 +8,11 @@
   x,
   branch.length,
   n.descen,
-  spp_seq,
-  spp_seqrange.BL,
-  spp_seqINV,
-  resu
+  resu = stats::setNames(as.double(rep(NA, 3)), c("SR", "PD", "ED"))
 )
 }
 \arguments{
-\item{x}{numeric vector of presence/absence (1/0) data}
+\item{x}{numeric. A named numerical vector of presence-absence for one sample.}
 
 \item{branch.length}{numeric. A named numerical vector containing the branch
 length for each species.}
@@ -23,21 +20,14 @@ length for each species.}
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
 
-\item{spp_seq}{numeric vector indicating presence/absence data in 'x'}
-
-\item{spp_seqrange.BL}{numeric vector indicating range.BL data
-(inverse range size * branch lengh) in 'x'}
-
-\item{spp_seqINV}{numeric vector indicating INV data (inverse range size) in 'x'}
-
-\item{resu}{SpatRaster result returned from the function}
+\item{resu}{vector structuring SpatRaster result}
 }
 \value{
 numeric
 }
 \description{
-Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-phylogenetic endemism and weighted endemism using vectors as input.
+Calculate species richness, phylogenetic diversity, and evolutionary
+distinctiveness using vectors as input.
 }
 \author{
 Neander Marcel Heming

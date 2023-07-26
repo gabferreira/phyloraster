@@ -4,10 +4,11 @@ test_that("check if the object class is correct", {
   ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
+  require("SESraster")
   # tests
-  expect_s4_class(rast.ed.ses(ras, tree, aleats = 5, random = "spat"),
+  expect_s4_class(rast.ed.ses(ras, tree, aleats = 3, random = "spat"),
                   "SpatRaster")
-  expect_s4_class(rast.ed.ses(ras, tree, aleats = 5, random = "tip"),
+  expect_s4_class(rast.ed.ses(ras, tree, aleats = 3, random = "tip"),
                   "SpatRaster")
 
 })
@@ -24,6 +25,7 @@ test_that("check if function corrects arguments with wrong names", {
   names(branch.length) <- sample(names(branch.length))
   names(n.descen) <- sample(names(n.descen))
 
+  require("SESraster")
   # tests
   expect_s4_class(rast.ed.ses(ras, tree, branch.length=branch.length, n.descen=n.descen, aleats = 2), "SpatRaster")
   expect_s4_class(rast.ed(ras, tree, branch.length=branch.length, n.descen=n.descen), "SpatRaster")
@@ -44,6 +46,8 @@ test_that("error is returned when the raster does not have a longitude/latitude
             n.descen <- data$n.descendants
             # area.branch <- phyloraster::inv.range(data$x)
 
+            require("SESraster")
+            # tests
             expect_error(rast.ed.ses(x = data$x,
                                        tree = data$tree,
                                        # FUN_args = list(range.BL=area.branch$range.BL,
@@ -61,6 +65,8 @@ test_that("error is returned when only argument x is provided", {
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
+  require("SESraster")
+  # tests
   expect_error(rast.ed.ses(
     # x = data$x,
     # tree = data$tree,
@@ -82,6 +88,8 @@ test_that("error is returned when the user choose a randomization method not ava
   # data <- phylo.pres(x, tree)
   # area.branch <- inv.range(data$x, data$branch.length)
 
+  require("SESraster")
+  # tests
   expect_error(rast.ed.ses(x = data$x,
                              tree = data$tree,
                              # FUN_args = list(range.BL=area.branch$range.BL,
@@ -102,6 +110,8 @@ test_that("function runs ok with the method 'tip'", {
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   # data <- phylo.pres(x, tree)
   # area.branch <- inv.range(data$x, data$branch.length)
+
+  require("SESraster")
 
   expect(rast.ed.ses(x = x,
                        tree = tree,

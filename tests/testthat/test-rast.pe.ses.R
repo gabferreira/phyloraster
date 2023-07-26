@@ -5,6 +5,7 @@ test_that("check if function corrects names in branch", {
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(ras, tree)
 
+  require("SESraster")
   # tests
   expect_s4_class(rast.pe.ses(ras, tree, aleats = 2, random = "spat"), "SpatRaster")
 
@@ -21,6 +22,7 @@ test_that("check if function corrects arguments with wrong names", {
   names(branch.length) <- sample(names(branch.length))
   names(inv.R) <- sample(names(inv.R))
 
+  require("SESraster")
   # tests
   expect_s4_class(rast.pe.ses(ras, tree, branch.length=branch.length, inv.R=inv.R, aleats = 2, random = "spat"), "SpatRaster")
   expect_s4_class(rast.pe(ras, tree, branch.length=branch.length, inv.R=inv.R), "SpatRaster")
@@ -41,6 +43,8 @@ test_that("error is returned when the raster does not have a longitude/latitude
             # n.descen <- data$n.descendants
             # area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
 
+            require("SESraster")
+            # tests
             expect_error(rast.pe.ses(x = data$x,
                                        tree = data$tree,
                                        # FUN_args = list(range.BL=area.branch$range.BL,
@@ -58,6 +62,8 @@ test_that("error is returned when only argument x is provided", {
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
+  require("SESraster")
+  # tests
   expect_error(rast.pe.ses(x = data$x,
                              # tree = data$tree,
                              # FUN_args = list(range.BL=area.branch$range.BL,
@@ -78,6 +84,8 @@ test_that("error is returned when the user choose a randomization method not ava
   # data <- phylo.pres(x, tree)
   # area.branch <- inv.range(data$x, data$branch.length)
 
+  require("SESraster")
+  # tests
   expect_error(rast.pe.ses(x = x,
                              tree = tree,
                              # FUN_args = list(range.BL=area.branch$range.BL,

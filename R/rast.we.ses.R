@@ -2,9 +2,6 @@
 #'
 #' @description This function calculates phylogenetic endemism for a vector
 #'
-#' @param x numeric. A named numerical vector of presence-absence for one sample.
-#' @param spp_seq2 numeric. numeric vector indicating presence/absence data in 'x'
-#' @param wpe numeric. numeric vector indicating INV data (inverse range size) in 'x'
 #' @inheritParams .vec.geo.phylo
 #'
 #' @return numeric
@@ -17,13 +14,13 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 # #' @export
-.vec.we <- function(x, we = as.double(NA)){
+.vec.we <- function(x, resu = as.double(NA)){
 
   if(all(is.na(x))){
-    return(we)
+    return(resu)
   }
 
-  we[] <- sum(x, na.rm = TRUE)
+  resu[] <- sum(x, na.rm = TRUE)
 
 }
 
@@ -32,13 +29,7 @@
 #' @description Calculate the sum of the inverse of the range size for species
 #' present in each raster cell.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with
-#'  that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @inheritParams .vec.geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -69,14 +60,7 @@
 #'
 #' @description Calculate the weighted endemism for species present in raster data.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with
-#'  that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#'
-#' @inheritParams geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -168,11 +152,7 @@ rast.we <- function(x, inv.R,
 #' @description Calculates the standardized effect size for weighted endemism.
 #' See Details for more information.
 #'
-#' @param random character. A character indicating the type of randomization.
-#' The currently available randomization methods are "tip", "site", "species" or
-#' "both" (site and species).
-#' @inheritParams geo.phylo
-#' @inheritParams SESraster::SESraster
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -259,7 +239,7 @@ rast.we.ses <- function(x,
 
   }
 
-  require(SESraster)
+  requireNamespace("SESraster")
 
   ## vectorization setup
   # nspp <- terra::nlyr(x)

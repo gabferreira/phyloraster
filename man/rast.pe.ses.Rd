@@ -8,7 +8,7 @@ rast.pe.ses(
   x,
   tree,
   branch.length,
-  range.BL,
+  inv.R,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
   random = c("tip", "spat")[2],
@@ -28,8 +28,7 @@ tree order. See the phylo.pres function.}
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
 
-\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
-each species. See \code{\link{inv.range}}}
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
 
 \item{spat_alg}{A function with the algorithm implementing the desired
 randomization method. It must work with SpatRaster objects. See examples.

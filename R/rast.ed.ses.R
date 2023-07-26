@@ -3,14 +3,9 @@
 #' @description This function calculates evolutionary distinctiveness for a set
 #' of species using the fair-proportion index (Isaac et al., 2007).
 #'
-#' @usage .vec.ed(x, branch.length, n.descen, ed=c(ED=NA))
+#' @usage .vec.ed(x, branch.length, n.descen, resu=c(ED=NA))
 #'
-#' @param x numeric. A Named numeric vector of presence-absence
-#' @param branch.length numeric. A Named numeric vector of branch length for
-#' each species
-#' @param n.descen numeric. A Named numeric vector of number of descendants for
-#' each branch
-#' @param ed numeric. numeric vector with the values of evolutionary distinctiveness
+#' @inheritParams .vec.geo.phylo
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -20,15 +15,15 @@
 #'
 #' @return numeric
 # #' @export
-.vec.ed <- function(x, branch.length, n.descen, ed=c(ED=NA)){
+.vec.ed <- function(x, branch.length, n.descen, resu=c(ED=NA)){
 
   if(all(is.na(x))){
-    return(ed)
+    return(resu)
   }
 
-  ed[] <- sum(x*(branch.length/n.descen), na.rm = TRUE) # evolutionary distinctiveness
+  resu[] <- sum(x*(branch.length/n.descen), na.rm = TRUE) # evolutionary distinctiveness
 
-  return(ed)
+  return(resu)
 
 }
 
@@ -78,18 +73,7 @@
 #' @description This function calculates evolutionary distinctiveness according
 #' to the fair-proportion index.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
-#' tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch
-#' length of each specie.
-#' @param n.descen numeric. A Named numeric vector of number of descendants for
-#' each branch
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
-#' with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed for fun.
-#' @inheritParams geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -172,11 +156,7 @@ rast.ed <- function(x, tree,
 #' @description Calculates the standardized effect size for evolutionary
 #' distinctiveness. See Details for more information.
 #'
-#' @param random character. A character indicating the type of randomization.
-#' The currently available randomization methods are "tip", "site", "species" or
-#' "both" (site and species).
-#' @inheritParams geo.phylo
-#' @inheritParams SESraster::SESraster
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -263,7 +243,7 @@ rast.ed.ses <- function(x, tree,
 
   }
 
-  require(SESraster)
+  requireNamespace("SESraster")
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,

@@ -59,20 +59,18 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' Calculate species richness, phylogenetic diversity, and evolutionary
 #' distinctiveness using vectors as input.
 #'
-#' @param x numeric vector of presence/absence (1/0) data
+#' @param x numeric. A named numerical vector of presence-absence for one sample.
 #' @param branch.length numeric. A named numerical vector containing the branch
 #' length for each species.
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
 #' each branch
-#' @param resu SpatRaster result returned from the function
+#' @param resu vector structuring SpatRaster result
 #' @return numeric
 #'
 #' @author Neander Marcel Heming
 #'
 .vec.geo.phylo <- function(x,
-                           # inv.R,
                            branch.length, n.descen,
-                           # spp_seq, spp_seqrange.BL, spp_seqINV,
                            resu = stats::setNames(as.double(rep(NA, 3)), c("SR", "PD", "ED"))){
   if(all(is.na(x))){
     return(resu)
@@ -93,13 +91,15 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #'
 #' Calculate phylogenetic endemism and weighted endemism using vectors as input.
 #'
+#' @param xinv.R SpatRaster. multiplication of x and inv.R from \code{\link{.rast.geo.phylo}}
+#' @inheritParams .vec.geo.phylo
+#'
 #' @return numeric
 #'
 #' @author Neander Marcel Heming
 #'
 .vec.geo.phylo2 <- function(xinv.R,
                            branch.length,
-                           # spp_seq, spp_seqrange.BL, spp_seqINV,
                            resu = stats::setNames(as.double(rep(NA, 2)), c("PE", "WE"))){
   # if(all(is.na(x))){
   #   return(resu)
@@ -125,8 +125,7 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' for a set of species. The layers (species) must be sorted according to the
 #' tree order. See the phylo.pres function.
 #' @inheritParams .vec.geo.phylo
-#' @inheritParams terra::app
-#' @param ... additional arguments passed for terra::app
+#' @inheritParams geo.phylo
 #'
 #' @return SpatRaster with one layer for each metric
 #'
@@ -194,8 +193,6 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' tree order. See the phylo.pres function.
 #'
 #' @inheritParams phylo.pres
-#' @param range.BL SpatRaster. Inverse of range size multiplied by branch length of
-#' each species. See \code{\link{inv.range}}
 #' @param inv.R SpatRaster. Inverse of range size. See \code{\link{inv.range}}
 #' @param branch.length numeric. A Named numeric vector of branch length for
 #' each species. See \code{\link{phylo.pres}}
@@ -331,6 +328,7 @@ geo.phylo <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
+#' require("SESraster")
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' # data <- phylo.pres(x, tree)
@@ -397,7 +395,7 @@ geo.phylo.ses <- function(x, tree,
 
   }
 
-  require(SESraster)
+  requireNamespace("SESraster")
 
   ## vectorization setup
   resu <- stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))

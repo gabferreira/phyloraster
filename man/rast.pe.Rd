@@ -4,24 +4,25 @@
 \alias{rast.pe}
 \title{Calculate phylogenetic endemism for raster data}
 \usage{
-rast.pe(x, tree, range.BL, cores = 1, filename = "", ...)
+rast.pe(x, tree, inv.R, branch.length, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-for a set of species. The layers (species) must be sorted according to the
+for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
-each species. See \code{\link{inv.range}}}
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
-with that many cores is created and used.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{filename}{character. Output filename.}
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster

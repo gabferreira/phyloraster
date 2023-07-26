@@ -31,7 +31,7 @@
 shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
                      touches = TRUE, resolution, values = 1, filename = NULL, ...){
 
-  if(!class(x) == "SpatVector"){
+  if(!inherits(x, "SpatVector")){
     x <- terra::vect(x)
   }
 

@@ -4,18 +4,18 @@
 \alias{.vec.ed}
 \title{Calculate Evolutionary Distinctiveness for a vector}
 \usage{
-.vec.ed(x, branch.length, n.descen, ed=c(ED=NA))
+.vec.ed(x, branch.length, n.descen, resu=c(ED=NA))
 }
 \arguments{
-\item{x}{numeric. A Named numeric vector of presence-absence}
+\item{x}{numeric. A named numerical vector of presence-absence for one sample.}
 
-\item{branch.length}{numeric. A Named numeric vector of branch length for
-each species}
+\item{branch.length}{numeric. A named numerical vector containing the branch
+length for each species.}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
 
-\item{ed}{numeric. numeric vector with the values of evolutionary distinctiveness}
+\item{resu}{vector structuring SpatRaster result}
 }
 \value{
 numeric

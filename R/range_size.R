@@ -5,8 +5,9 @@
 #' but not in square meters, which was considered in the method applied to
 #' calculate the area.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. This raster must be named.
+#' @inheritParams geo.phylo.ses
+#' @param cellSz SpatRaster. A SpatRaster containing cellSize values.
+#' See \code{\link[terra]{cellSize}}
 #' @inheritParams terra::cellSize
 #' @param ... additional arguments to be passed passed down from a calling function.
 #'
@@ -16,7 +17,7 @@
 #'
 #' @examples
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' range_size(x)
+#' range_size(x, cellSz <- terra::cellSize(x))
 #'
 #' @export
 range_size <- function(x, cellSz, unit = "m", ...){
@@ -25,7 +26,10 @@ range_size <- function(x, cellSz, unit = "m", ...){
   temp <- vector("list", length = 2) # to create a temporary vector with the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
-  # cellSz <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]], unit = unit) # to calculate cell size
+  miss4 <- arg.check(match.call(), c("cellSz"))
+  if(any(miss4)){
+    cellSz <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]], unit = unit) # to calculate cell size
+  }
 
   # The function bellow extracts the range size for each species and stores it in a vector
   rs <- sapply(1:terra::nlyr(x),

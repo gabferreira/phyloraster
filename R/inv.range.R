@@ -1,35 +1,27 @@
-#' Calculate the inverse of range size for vector
-#'
-.vec.rsSZ <- function(x, cellSZ){
-
-  cellSZ/x
-
-}
-
 #' Calculate the inverse of range size
 #'
-#' @description Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
-#' @param x SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.
-#' @param branch.length numeric. A vector containing the branch length of each specie.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @description Get range size in square kilometers for all cells that are not
+#' NA, the inverse of range size and the inverse of range size multiplied by
+#' branch length for multiple species using a raster of presence-absence.
+#'
+#' @inheritParams geo.phylo.ses
+#' @inheritParams terra::app
+#'
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster and numeric
+#'
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#'
 #' @examples
 #' # calculating the inverse of range size
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' inv.range(x)
 #'
-#' # calculating the rangeBL (range size multiplied by branch length)
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
-#' inv.range(data$x, data$branch.length)$range.BL
-#'
 #' @export
 inv.range <- function(x, cores = 1, filename = "", overwrite = FALSE, ...){
 
   # Test if there is enough memory in the user's pc
-  mi <- .fit.memory(x, 4) # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  mi <- .fit.memory(x, 4) ## proc in memory = TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
 
   # temporary files
   temp.ir <- paste0(tempfile(), "ir.tif")  # to store the second raster
@@ -50,7 +42,9 @@ inv.range <- function(x, cores = 1, filename = "", overwrite = FALSE, ...){
 
   # calculating inverse of area
   inv.R <- terra::sapp(rs,
-                       .vec.rsSZ,
+                       function(x, cellSz){
+                         cellSz/x
+                       },
                        cellSz,
                        filename = filename, overwrite = overwrite)
 

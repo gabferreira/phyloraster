@@ -2,9 +2,6 @@
 #'
 #' @description This function calculates phylogenetic endemism for a vector
 #'
-#' @param x numeric. A named numerical vector of presence-absence for one sample.
-#' @param spp_seq2 numeric. numeric vector indicating presence/absence data in 'x'
-#' @param wpe numeric. numeric vector indicating INV data (inverse range size) in 'x'
 #' @inheritParams .vec.geo.phylo
 #'
 #' @return numeric
@@ -17,13 +14,13 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 # #' @export
-.vec.pe <- function(x, branch.length, wpe = as.double(NA)){
+.vec.pe <- function(x, branch.length, resu = as.double(NA)){
 
   if(all(is.na(x))){
-    return(wpe)
+    return(resu)
   }
 
-  wpe[] <- sum(x*branch.length, na.rm = TRUE)
+  resu[] <- sum(x*branch.length, na.rm = TRUE)
 
 }
 
@@ -31,14 +28,7 @@
 #'
 #' Calculate phylogenetic endemism using rasters as input and output.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
-#' tree order. See the phylo.pres function.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with
-#'  that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @inheritParams .vec.geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 
@@ -74,14 +64,7 @@
 #' @description Calculate the sum of the inverse of the range size multiplied
 #' by the branch length for the species present in raster data.
 #'
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
-#' tree order. See the phylo.pres function.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
-#' with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @inheritParams geo.phylo
+#' @inheritParams geo.phylo.ses
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -116,12 +99,12 @@ rast.pe <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("rs", "branch.length", "cellSz", "range.BL", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("rs", "branch.length", "cellSz", "inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or 'range.BL' need to be supplied")
+      stop("Either argument 'tree' or 'inv.R' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -171,11 +154,7 @@ rast.pe <- function(x, tree,
 #' @description Calculates the standardized effect size for phylogenetic endemism.
 #' See Details for more information.
 #'
-#' @param random character. A character indicating the type of randomization.
-#' The currently available randomization methods are "tip", "site", "species" or
-#' "both" (site and species).
-#' @inheritParams geo.phylo
-#' @inheritParams SESraster::SESraster
+#' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
@@ -236,7 +215,7 @@ rast.pe.ses <- function(x, tree,
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'range.BL', and 'branch.length' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', and 'branch.length' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -286,7 +265,7 @@ rast.pe.ses <- function(x, tree,
 
   if(random == "tip"){
 
-    ses <- SESraster::SESraster(c(x, range.BL = range.BL),
+    ses <- SESraster::SESraster(x,
                                 FUN = ".rast.pe.B", FUN_args = FUN_args,
                                 Fa_sample = "branch.length",
                                 Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),

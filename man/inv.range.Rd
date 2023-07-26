@@ -4,14 +4,18 @@
 \alias{inv.range}
 \title{Calculate the inverse of range size}
 \usage{
-inv.range(x, branch.length = NULL, cores = 1, ...)
+inv.range(x, cores = 1, filename = "", overwrite = FALSE, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A vector containing the branch length of each specie.}
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{filename}{character. Output filename}
+
+\item{overwrite}{logical. If \code{TRUE}, \code{filename} is overwritten}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -19,17 +23,14 @@ inv.range(x, branch.length = NULL, cores = 1, ...)
 SpatRaster and numeric
 }
 \description{
-Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
+Get range size in square kilometers for all cells that are not
+NA, the inverse of range size and the inverse of range size multiplied by
+branch length for multiple species using a raster of presence-absence.
 }
 \examples{
 # calculating the inverse of range size
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-inv.range(x)$inv.R
-
-# calculating the rangeBL (range size multiplied by branch length)
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
-inv.range(data$x, data$branch.length)$range.BL
+inv.range(x)
 
 }
 \author{

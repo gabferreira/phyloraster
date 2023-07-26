@@ -62,6 +62,7 @@ library(phyloraster)
 library(terra)
 library(ape)
 library(phylobase)
+
 ```
 
 ## Data processing {#data}
@@ -227,6 +228,7 @@ In turn, for phylogenetic randomization, we provide the function tip.rand that s
 Now that we have presented the randomization methods, we can start to build the null models.
 
 ```{r}
+library(SESraster)
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
 data <- phylo.pres(ras, tree)

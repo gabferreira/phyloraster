@@ -8,20 +8,19 @@ rast.pd(x, tree, branch.length, cores = 1, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-for a set of species. The layers (species) must be sorted according to the
+for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{branch.length}{numeric. A Named numerical vector containing the branch
-length for a set of species.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
-with that many cores is created and used.}
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
-\item{filename}{character. Output filename.}
+\item{filename}{character. Output filename}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster

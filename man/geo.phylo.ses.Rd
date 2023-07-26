@@ -7,7 +7,6 @@
 geo.phylo.ses(
   x,
   tree,
-  range.BL,
   inv.R,
   branch.length,
   n.descen,
@@ -26,9 +25,6 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
-
-\item{range.BL}{SpatRaster. Inverse of range size multiplied by branch length of
-each species. See \code{\link{inv.range}}}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
 
@@ -75,6 +71,7 @@ occupied pixels). The randomization will not assign values to cells with nodata.
 \examples{
 library(terra)
 library(phyloraster)
+require("SESraster")
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 # data <- phylo.pres(x, tree)

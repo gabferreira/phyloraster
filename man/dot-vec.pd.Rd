@@ -4,7 +4,7 @@
 \alias{.vec.pd}
 \title{Calculate phylogenetic diversity (Faith 1992) for a vector}
 \usage{
-.vec.pd(x, branch.length, pd = c(PD = NA))
+.vec.pd(x, branch.length, resu = c(PD = NA))
 }
 \arguments{
 \item{x}{numeric. A named numerical vector of presence-absence for one sample.}
@@ -12,7 +12,7 @@
 \item{branch.length}{numeric. A named numerical vector containing the branch
 length for each species.}
 
-\item{pd}{numeric. A numeric vector with the values of phylogenetic diversity.}
+\item{resu}{vector structuring SpatRaster result}
 }
 \value{
 numeric

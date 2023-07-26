@@ -9,7 +9,6 @@ rast.we.ses(
   inv.R,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
-  random = c("spat"),
   aleats = 10,
   cores = 1,
   filename = "",
@@ -31,10 +30,6 @@ Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
 \item{spat_alg_args}{List of arguments passed to the randomization method
 chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
 \code{\link[SESraster]{bootspat_ff}}}
-
-\item{random}{character. A character indicating the type of randomization.
-The currently available randomization methods are "tip", "site", "species" or
-"both" (site and species).}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
