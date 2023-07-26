@@ -32,5 +32,5 @@ arg.check <- function(call,
   totest <- arguments %in% defined
   absent <- !(arguments %in% passed) & totest
 
-  setNames(sapply(absent, function(x)(ifelse(x, T, F))), arguments) #[totest]
+  stats::setNames(sapply(absent, function(x)(ifelse(x, T, F))), arguments) #[totest]
 }
