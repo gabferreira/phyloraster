@@ -46,11 +46,13 @@ phylo.pres <- function(x, tree, ...) {
     stop("The SpatRaster 'x' and the phylogeny 'tree' have no species in common, or the species names do not match between them")
   }
   if (sum(!tip.in.spat)>0){
-    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:", tip.names[!tip.in.spat]))
+    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
+                  paste0(tip.names[!tip.in.spat], collapse = ", ")))
     tree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
   }
   if (sum(!spat.in.tip)>0){
-    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:", spat.names[!spat.in.tip]))
+    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
+                  paste0(spat.names[!spat.in.tip], collapse = ", ")))
   }
 
   tree <- phylobase::phylo4(tree) # phylo in phylo4
