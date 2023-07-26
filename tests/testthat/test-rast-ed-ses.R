@@ -12,6 +12,24 @@ test_that("check if the object class is correct", {
 
 })
 
+test_that("check if function corrects arguments with wrong names", {
+
+  # load data
+  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  data <- phylo.pres(ras, tree)
+  # inv.R <- inv.range(data$x)
+  branch.length <- data$branch.length
+  n.descen <- data$n.descendants
+  names(branch.length) <- sample(names(branch.length))
+  names(n.descen) <- sample(names(n.descen))
+
+  # tests
+  expect_s4_class(rast.ed.ses(ras, tree, branch.length=branch.length, n.descen=n.descen, aleats = 2), "SpatRaster")
+  expect_s4_class(rast.ed(ras, tree, branch.length=branch.length, n.descen=n.descen), "SpatRaster")
+
+})
+
 test_that("error is returned when the raster does not have a longitude/latitude
           coordinate reference system (CRS)", {
 
@@ -24,7 +42,7 @@ test_that("error is returned when the raster does not have a longitude/latitude
             data <- phyloraster::phylo.pres(w, tree)
             branch.length <- data$branch.length
             n.descen <- data$n.descendants
-            area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+            # area.branch <- phyloraster::inv.range(data$x)
 
             expect_error(rast.ed.ses(x = data$x,
                                        tree = data$tree,

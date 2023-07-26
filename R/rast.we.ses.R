@@ -1,3 +1,32 @@
+#' Calculate weighted endemism for a vector
+#'
+#' @description This function calculates phylogenetic endemism for a vector
+#'
+#' @param x numeric. A named numerical vector of presence-absence for one sample.
+#' @param spp_seq2 numeric. numeric vector indicating presence/absence data in 'x'
+#' @param wpe numeric. numeric vector indicating INV data (inverse range size) in 'x'
+#' @inheritParams .vec.geo.phylo
+#'
+#' @return numeric
+#'
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+#' & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#' geographical concentrations of evolutionary history. Molecular ecology,
+#' 18(19), 4061-4072.
+#'
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#'
+# #' @export
+.vec.we <- function(x, we = as.double(NA)){
+
+  if(all(is.na(x))){
+    return(we)
+  }
+
+  we[] <- sum(x, na.rm = TRUE)
+
+}
+
 #' Calculate weighted endemism for each raster cell
 #'
 #' @description Calculate the sum of the inverse of the range size for species
@@ -24,19 +53,17 @@
 #'
 # #' @export
 # #' @examples
-.rast.we.B <- function(x, spp_seq, spp_seqINV, cores = 1, filename = "", ...){
+.rast.we.B <- function(x, inv.R,  cores = 1, filename = "", ...){
 
   # weighted endemism
-  rend <- terra::app(x,
-                     .vec.wpe,
-                     spp_seq, spp_seqINV,
-                     cores = cores, filename = filename, ...)
+  rend <- terra::app(x*inv.R,
+                     .vec.we,
+                     filename = filename, ...)
 
   terra::set.names(rend, "WE") # layer name
 
   return(rend)
 }
-
 
 #' Calculate weighted endemism for raster data
 #'
@@ -71,8 +98,9 @@
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' inv.R <- inv.range(x)
-#' we <- rast.we(x, inv.R$inv.R)
+#' rs <- range_size(x)
+#' cellSz <- terra::cellSize(x)
+#' we <- rast.we(x, rs, cellSz)
 #' plot(we)
 #'
 #' @export
@@ -98,11 +126,11 @@ rast.we <- function(x, inv.R,
 
       # data <- phylo.pres(x, tree)
       # area.branch <- inv.range(data$x, data$branch.length)
-      # inv.R <- inv.range(x)
+      inv.R <- inv.range(x)
 
       # x <- data$x
       # LR <- area.branch$LR
-      inv.R <- inv.range(x)$inv.R
+      # inv.R <- inv.range(x)$inv.R
       # branch.length <- data$branch.length
       # n.descen <- data$n.descendants
 
@@ -114,29 +142,22 @@ rast.we <- function(x, inv.R,
 
       # data <- phylo.pres(x, tree)
       # area.branch <- inv.range(data$x, data$branch.length)
-      # inv.R <- inv.range(x)
+      inv.R <- inv.range(x)
 
       # x <- data$x
       # LR <- area.branch$LR
-      inv.R <- inv.range(x)$inv.R
+      # inv.R <- inv.range(x)$inv.R
+      # rs <- range_size(x)
       # branch.length <- data$branch.length
       # n.descen <- data$n.descendants
     }
 
   }
 
-  ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
-  # spp_seqLR <- spp_seq + nspp
-  spp_seqINV <- spp_seq + nspp
-  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
-
-  # .rast.we.B(x, spp_seq, spp_seqINV, cores = 1, filename = "", ...){
 
   ## weighted endemism
-  .rast.we.B(c(x, inv.R),
-             spp_seq, spp_seqINV,
+  .rast.we.B(x, inv.R,
+             # spp_seq, spp_seqSZ,
              cores = cores, filename = filename, ...)
 }
 
@@ -191,7 +212,7 @@ rast.we.ses <- function(x,
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
                                              fr_prob = NULL),
-                        random = c("spat"),
+                        # random = c("spat"),
                         aleats = 10,
                         cores = 1, filename = "", ...){
 
@@ -217,7 +238,7 @@ rast.we.ses <- function(x,
 
       # x <- data$x
       # LR <- area.branch$LR
-      inv.R <- inv.range(x)$inv.R
+      inv.R <- inv.range(x)
       # branch.length <- data$branch.length
       # n.descen <- data$n.descendants
 
@@ -231,7 +252,7 @@ rast.we.ses <- function(x,
 
       # x <- data$x
       # LR <- area.branch$LR
-      inv.R <- inv.range(x)$inv.R
+      inv.R <- inv.range(x)
       # branch.length <- data$branch.length
       # n.descen <- data$n.descendants
     }
@@ -241,50 +262,34 @@ rast.we.ses <- function(x,
   require(SESraster)
 
   ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
+  # nspp <- terra::nlyr(x)
+  # spp_seq <- seq_len(nspp)
   # spp_seqLR <- spp_seq + nspp
   # spp_seqINV <- spp_seq + 2*nspp
-  spp_seqINV <- spp_seq + nspp
+  # spp_seqINV <- spp_seq + nspp
   # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
   ## function arguments
   FUN_args = list(
+    inv.R = inv.R,
     # branch.length = branch.length,
     # n.descen = n.descen,
-    spp_seq = spp_seq,
-    # spp_seqLR = spp_seqLR,
-    spp_seqINV = spp_seqINV,
+    # spp_seq = spp_seq,
+    # # spp_seqLR = spp_seqLR,
+    # spp_seqINV = spp_seqINV,
     # resu = resu,
     cores = cores)
 
-  # if(random == "tip"){
-  #
-  #   we.ses <- SESraster::SESraster(c(x, inv.R = inv.R),
-  #                                  FUN = ".rast.we.B", FUN_args = FUN_args,
-  #                                  Fa_sample = "branch.length",
-  #                                  Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),
-  #                                  spat_alg = NULL, spat_alg_args = list(),
-  #                                  # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-  #                                  aleats = aleats,
-  #                                  cores = cores, filename = filename, ...)
-  #
-  # } else
-  if(random == "spat"){
 
-    we.ses <- SESraster::SESraster(c(x, inv.R = inv.R),
-                                   FUN = ".rast.we.B", FUN_args = FUN_args,
-                                   # Fa_sample = "branch.length",
-                                   # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
-                                   # spat_alg = NULL, spat_alg_args = list(),
-                                   spat_alg = spat_alg, spat_alg_args = spat_alg_args,
-                                   aleats = aleats,
-                                   cores = cores, filename = filename, ...)
-  }  else {
+  we.ses <- SESraster::SESraster(x,
+                                 FUN = ".rast.we.B", FUN_args = FUN_args,
+                                 # Fa_sample = "branch.length",
+                                 # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                 # spat_alg = NULL, spat_alg_args = list(),
+                                 spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                 aleats = aleats,
+                                 cores = cores, filename = filename, ...)
 
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
-
-  }
   return(we.ses)
 
 }

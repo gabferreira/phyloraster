@@ -17,15 +17,14 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 # #' @export
-.vec.wpe <- function(x, spp_seq, spp_seq2, wpe = as.double(NA)){
+.vec.pe <- function(x, branch.length, wpe = as.double(NA)){
 
-  if(all(is.na(x[spp_seq]))){
+  if(all(is.na(x))){
     return(wpe)
   }
 
-  wpe[] <- sum(x[spp_seq]*x[spp_seq2], na.rm = T)
+  wpe[] <- sum(x*branch.length, na.rm = TRUE)
 
-  return(wpe)
 }
 
 #' Calculate phylogenetic endemism for a raster
@@ -49,13 +48,13 @@
 #'  18(19), 4061-4072.
 # #' @examples
 # #' @export
-.rast.pe.B <- function(x, spp_seq, spp_seqrange.BL, cores = 1, filename = "", ...){
+.rast.pe.B <- function(x, inv.R, branch.length, cores = 1, filename = "", ...){
 
   # phylogenetic endemism
-  rpe <-terra::app(x,
-                   .vec.wpe,
-                   spp_seq, spp_seqrange.BL,
-                   cores = cores, filename = filename, ...)
+  rpe <- terra::app(x*inv.R,
+                    .vec.pe,
+                    branch.length = branch.length,
+                     filename = filename, ...)
 
   terra::set.names(rpe, "PE") # layer name
 
@@ -107,7 +106,7 @@
 #'
 #' @export
 rast.pe <- function(x, tree,
-                    range.BL,
+                    inv.R, branch.length,
                     cores = 1, filename = "", ...){
 
   ## object checks
@@ -117,7 +116,7 @@ rast.pe <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("rs", "branch.length", "cellSz", "range.BL", "inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
@@ -127,44 +126,42 @@ rast.pe <- function(x, tree,
     } else if(any(miss4)){
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
+      # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
+      # range.BL <- area.branch$range.BL
       # inv.R <- area.branch$inv.R
-      # branch.length <- data$branch.length
+      inv.R <- inv.range(x)
+      branch.length <- data$branch.length
       # n.descen <- data$n.descendants
+      # rs <- range_size(x)
+      # cellSz <- terra::cellSize(x)
 
-    } else if(any(isFALSE(identical(names(x), names(range.BL)))
-                  # isFALSE(identical(names(x), names(inv.R))),
-                  # isFALSE(identical(names(x), names(n.descen))),
-                  # isFALSE(identical(names(x), names(branch.length))))
+    } else if(any(isFALSE(identical(names(x), names(inv.R))),
+                  isFALSE(identical(names(x), names(branch.length)))
+                  # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
+      # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
+      # range.BL <- area.branch$range.BL
       # inv.R <- area.branch$inv.R
-      # branch.length <- data$branch.length
+      inv.R <- inv.range(x)
+      branch.length <- data$branch.length
       # n.descen <- data$n.descendants
+      # rs <- range_size(x)
+      # cellSz <- terra::cellSize(x)
     }
 
   }
 
-  ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
-  spp_seqrange.BL <- spp_seq + nspp
-  # spp_seqINV <- spp_seq + 2*nspp
-  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
+  # plot(.rast.pe.B(xeSZ*x, branch.length))
 
   ## run function
-  # (x, spp_seq, spp_seqrange.BL, cores = 1, filename = "", ...){
-
-  .rast.pe.B(c(x, range.BL = range.BL),
-             spp_seq, spp_seqrange.BL,
+  .rast.pe.B(x, inv.R, branch.length,
+             # spp_seq, spp_seqrange.BL,
              cores = cores, filename = filename, ...)
 }
 
@@ -217,7 +214,8 @@ rast.pe <- function(x, tree,
 #'
 #' @export
 rast.pe.ses <- function(x, tree,
-                        branch.length, range.BL,
+                        branch.length, inv.R,
+                        # rs, cellSz,
                         spat_alg = "bootspat_str",
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
@@ -233,7 +231,7 @@ rast.pe.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
@@ -243,26 +241,26 @@ rast.pe.ses <- function(x, tree,
     } else if(any(miss4)){
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
+      # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.Bl
-      # inv.R <- area.branch$inv.R
-      # branch.length <- data$branch.length
+      # range.BL <- area.branch$range.Bl
+      inv.R <- inv.range(data$x)
+      branch.length <- data$branch.length
       # n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(range.BL))),
-                  # isFALSE(identical(names(x), names(inv.R))),
+    } else if(any(isFALSE(identical(names(x), names(inv.R))),
                   isFALSE(identical(names(x), names(branch.length)))
                   # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
+      # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
+      # range.BL <- area.branch$range.BL
       # inv.R <- area.branch$inv.R
+      inv.R <- inv.range(data$x)
       branch.length <- data$branch.length
       # n.descen <- data$n.descendants
     }
@@ -271,24 +269,17 @@ rast.pe.ses <- function(x, tree,
 
   requireNamespace("SESraster")
 
-  ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
-  spp_seqrange.BL <- spp_seq + nspp
-  # spp_seqINV <- spp_seq + 2*nspp
-  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
-
   ## function arguments
 
-  # .rast.pe.B(c(x, range.BL = range.BL),
-  #            spp_seq, spp_seqrange.BL,
+  # .rast.pe.B(xeSZ*x, branch.length,
   #            cores = cores, filename = filename)
 
   FUN_args = list(
-    # branch.length = branch.length,
+    branch.length = branch.length,
+    inv.R = inv.R,
     # n.descen = n.descen,
-    spp_seq = spp_seq,
-    spp_seqrange.BL = spp_seqrange.BL,
+    # spp_seq = spp_seq,
+    # spp_seqrange.BL = spp_seqrange.BL,
     # spp_seqINV = spp_seqINV,
     # resu = resu,
     cores = cores)
@@ -306,7 +297,7 @@ rast.pe.ses <- function(x, tree,
 
   } else if(random == "spat"){
 
-    ses <- SESraster::SESraster(c(x, range.BL = range.BL),
+    ses <- SESraster::SESraster(x,
                                 FUN = ".rast.pe.B", FUN_args = FUN_args,
                                 # Fa_sample = "branch.length",
                                 # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),

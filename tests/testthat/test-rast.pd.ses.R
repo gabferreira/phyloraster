@@ -7,10 +7,26 @@ test_that("check if the object class is correct", {
 
   # tests
   expect_s4_class(rast.pd.ses(data$x, branch.length = data$branch.length,
-                                           aleats = 10, random = "spat"), "SpatRaster")
+                                           aleats = 3, random = "spat"), "SpatRaster")
   expect_s4_class(rast.pd.ses(data$x, branch.length = data$branch.length,
-                                           aleats = 10, random = "tip"), "SpatRaster")
+                                           aleats = 3, random = "tip"), "SpatRaster")
 
+})
+
+test_that("check if function corrects arguments with wrong names", {
+
+  # load data
+  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  data <- phylo.pres(ras, tree)
+  # inv.R <- inv.range(data$x)
+  branch.length <- data$branch.length
+  names(branch.length) <- sample(names(branch.length))
+  # names(inv.R) <- sample(names(inv.R))
+
+  # tests
+  expect_s4_class(rast.pe.ses(ras, tree, branch.length=branch.length, aleats = 2), "SpatRaster")
+  expect_s4_class(rast.ed(ras, tree, branch.length=branch.length), "SpatRaster")
 })
 
 test_that("error is returned when the raster does not have a longitude/latitude
@@ -37,7 +53,7 @@ test_that("error is returned when the raster does not have a longitude/latitude
                                        spat_alg_args = list(rprob = NULL,
                                                             rich = NULL,
                                                             fr_prob = NULL),
-                                       aleats = 5))
+                                       aleats = 3))
 
 })
 
@@ -55,7 +71,7 @@ test_that("error is returned when only argument x is provided", {
                              spat_alg_args = list(rprob = NULL,
                                                   rich = NULL,
                                                   fr_prob = NULL),
-                             aleats = 5))
+                             aleats = 3))
 })
 
 test_that("error is returned when the user choose a randomization method not available", {
@@ -76,7 +92,7 @@ test_that("error is returned when the user choose a randomization method not ava
                                                   rich = NULL,
                                                   fr_prob = NULL),
                              random = "spatial",
-                             aleats = 5))
+                             aleats = 3))
 })
 
 test_that("function runs ok with the method 'tip'", {
@@ -97,5 +113,5 @@ test_that("function runs ok with the method 'tip'", {
                                             rich = NULL,
                                             fr_prob = NULL),
                        random = "tip",
-                       aleats = 5), ok = T)
+                       aleats = 3), ok = T)
 })

@@ -22,19 +22,11 @@
 # #' @export
 .vec.ed <- function(x, branch.length, n.descen, ed=c(ED=NA)){
 
-  x[is.na(x)] <- 0 # 0 for all value = NA
-
-  if(sum(x) == 0) { # return NA if x = 0
-
+  if(all(is.na(x))){
     return(ed)
-
-  } else { # if the sum of x is non-zero then do this:
-
-    pres <- x == 1 # only species present in the vector
-    # species <- names(x)
-    ed[] <- sum(branch.length[pres]/n.descen[pres]) # evolutionary distinctiveness
-
   }
+
+  ed[] <- sum(x*(branch.length/n.descen), na.rm = TRUE) # evolutionary distinctiveness
 
   return(ed)
 

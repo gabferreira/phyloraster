@@ -20,16 +20,11 @@
 # #' @examples
 .vec.pd <- function(x, branch.length, pd = c(PD=NA)){
 
-  x[is.na(x)] <- 0 # 0 for all value = NA
-
-  if(sum(x)== 0) { # return NA if x = 0
+  if(all(is.na(x))){
     return(pd)
   }
 
-  if(sum(x) != 0) { # if the sum of x is non-zero then do this:
-    # x == 1, only species present in the vector
-    pd[] <- sum(branch.length[x == 1]) # pd Faith 1992
-  }
+  pd[] <- sum(x*branch.length, na.rm = TRUE) # pd Faith 1992
 
   return(pd)
 }
@@ -156,7 +151,7 @@ rast.pd <- function(x, tree,
 
 
   ## phylogenetic diversity
-  rpd <- .rast.pd.B(c(x), branch.length = branch.length,
+  rpd <- .rast.pd.B(x, branch.length = branch.length,
                     cores = cores, filename = filename, ...)
 
   return(rpd)

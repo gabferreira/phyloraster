@@ -6,10 +6,10 @@ test_that("returned object classes are correct", {
   data <- phylo.pres(x, tree)
   branch.length <- data$branch.length
   n.descen <- data$n.descendants
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  inv.R <- phyloraster::inv.range(data$x)
 
-  t <- geo.phylo(data$x, range.BL = area.branch$range.BL, inv.R = area.branch$inv.R,
-  branch.length = data$branch.length, n.descen = data$n.descendants)
+  t <- geo.phylo(data$x, inv.R = inv.R,
+                 branch.length = data$branch.length, n.descen = data$n.descendants)
 
   # tests
   expect_s4_class(t, "SpatRaster")
@@ -30,11 +30,11 @@ test_that("Are the returned values correct?", {
   data <- phylo.pres(xcrop, tree)
   branch.length <- data$branch.length
   n.descen <- data$n.descendants
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  inv.R <- phyloraster::inv.range(data$x)
 
   # metric SE
-  t <- geo.phylo(data$x, range.BL = area.branch$range.BL, inv.R = area.branch$inv.R,
-  branch.length = data$branch.length, n.descen = data$n.descendants)
+  t <- geo.phylo(data$x, inv.R = inv.R,
+                 branch.length = data$branch.length, n.descen = data$n.descendants)
 
   se.observed <- terra::values(t$SR)
   se.expect <- matrix(data = c(12, 12, 12, 13, 14, 14, 14, 14, 12, 12,
@@ -86,15 +86,15 @@ test_that("error is returned when an argument is missing", {
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  inv.R <- phyloraster::inv.range(data$x)
 
   # tests
-  expect_error(geo.phylo(data$x, range.BL = area.branch$range.BL,
-                         inv.R = area.branch$inv.R,
+  expect_error(geo.phylo(data$x,
+                         inv.R = inv.R,
                          branch.length = data$branch.length))
 
-  expect_error(geo.phylo(data$x, range.BL = area.branch$range.BL,
-                         inv.R = area.branch$inv.R,
+  expect_error(geo.phylo(data$x,
+                         inv.R = inv.R,
                          n.descen = data$n.descendants))
 })
 
@@ -104,10 +104,10 @@ test_that("arguments are calculated when is missing and the tree is provided", {
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  # area.branch <- phyloraster::inv.range(data$x)
 
   # tests
-  expect(geo.phylo(data$x, tree, range.BL = area.branch$range.BL), ok = T)
+  expect(geo.phylo(data$x, tree), ok = T)
 
 })
 
@@ -117,11 +117,11 @@ test_that("names are reordened in the function geo.phylo", {
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  inv.R <- phyloraster::inv.range(data$x)
 
   # tests
-  expect(geo.phylo(data$x, tree, range.BL = area.branch$range.BL,
-                   inv.R = area.branch$inv.R,
+  expect(geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
+                   inv.R = inv.R,
                    branch.length = sort(data$branch.length),
                    n.descen = data$n.descendants), ok = T)
 
@@ -137,9 +137,9 @@ test_that("error is returned when the raster does not have a longitude/latitude 
   data <- phyloraster::phylo.pres(w, tree)
   branch.length <- data$branch.length
   n.descen <- data$n.descendants
-  area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+  # inv.R <- phyloraster::inv.range(data$x)
 
   # tests
-  expect_error(geo.phylo(data$x, area.branch$LR, area.branch$inv.R,
+  expect_error(geo.phylo(data$x,
                          data$n.descendants))
 })

@@ -4,9 +4,24 @@ test_that("check if the object class is correct", {
   ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
   # tests
-  expect_s4_class(rast.we.ses(ras[[1:5]], aleats = 3,
-                                           random = "spat"), "SpatRaster")
+  expect_s4_class(rast.we.ses(ras, aleats = 3), "SpatRaster")
 
+})
+
+test_that("check if function corrects arguments with wrong names", {
+
+  # load data
+  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  data <- phylo.pres(ras, tree)
+  inv.R <- inv.range(data$x)
+  # branch.length <- data$branch.length
+  # names(branch.length) <- sample(names(branch.length))
+  names(inv.R) <- sample(names(inv.R))
+
+  # tests
+  expect_s4_class(rast.we.ses(ras, inv.R=inv.R, aleats = 2), "SpatRaster")
+  expect_s4_class(rast.we(ras, inv.R=inv.R), "SpatRaster")
 })
 
 test_that("error is returned when the raster does not have a longitude/latitude

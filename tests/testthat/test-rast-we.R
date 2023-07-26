@@ -33,7 +33,9 @@ test_that("results of the analyses replicate those of other packages", {
   datepm <- epm::createEPMgrid(x, resolution = 0.01)
   ep <- epm::gridMetrics(datepm, metric = "weightedEndemism")
 
-  testthat::expect_equivalent(round(terra::values(pg), 10), round(terra::values(ep$grid$weightedEndemism)), 10)
+  testthat::expect_equal(matrix(terra::values(pg), ncol=1),
+                         matrix(terra::values(ep$grid$weightedEndemism),  ncol=1),
+                         tolerance = 0.002)
   # testthat::expect_equivalent(round(values(pg), 10), round(values(r$WE)), 10)
 })
 

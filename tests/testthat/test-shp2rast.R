@@ -51,7 +51,7 @@ test_that("function runs ok when a mask is applied", {
   require(rnaturalearth)
   shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
                                 package="phyloraster"))
-  countries <- terra::vect(rnaturalearth::ne_countries()) # world map
+  countries <- terra::vect(rnaturalearth::ne_countries(returnclass="sf")) # world map
   coun.crop <- terra::crop(countries, terra::ext(shp)) # cut by the total extension of the polygons
   coun.rast <- terra::rasterize(coun.crop,
                         terra::rast(terra::ext(shp), resolution = 0.5))

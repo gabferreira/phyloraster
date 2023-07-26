@@ -1,4 +1,4 @@
-test_that("check if the object class is correct", {
+test_that("check if function corrects names in branch", {
 
   # load data
   ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
@@ -7,6 +7,23 @@ test_that("check if the object class is correct", {
 
   # tests
   expect_s4_class(rast.pe.ses(ras, tree, aleats = 2, random = "spat"), "SpatRaster")
+
+})
+
+test_that("check if function corrects arguments with wrong names", {
+
+  # load data
+  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+  data <- phylo.pres(ras, tree)
+  inv.R <- inv.range(data$x)
+  branch.length <- data$branch.length
+  names(branch.length) <- sample(names(branch.length))
+  names(inv.R) <- sample(names(inv.R))
+
+  # tests
+  expect_s4_class(rast.pe.ses(ras, tree, branch.length=branch.length, inv.R=inv.R, aleats = 2, random = "spat"), "SpatRaster")
+  expect_s4_class(rast.pe(ras, tree, branch.length=branch.length, inv.R=inv.R), "SpatRaster")
 
 })
 
@@ -20,9 +37,9 @@ test_that("error is returned when the raster does not have a longitude/latitude
             w <- terra::project(x, "EPSG:2169")
 
             data <- phyloraster::phylo.pres(w, tree)
-            branch.length <- data$branch.length
-            n.descen <- data$n.descendants
-            area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+            # branch.length <- data$branch.length
+            # n.descen <- data$n.descendants
+            # area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
 
             expect_error(rast.pe.ses(x = data$x,
                                        tree = data$tree,
@@ -34,7 +51,7 @@ test_that("error is returned when the raster does not have a longitude/latitude
                                        spat_alg_args = list(rprob = NULL,
                                                             rich = NULL,
                                                             fr_prob = NULL),
-                                       aleats = 5))
+                                       aleats = 3))
 })
 
 test_that("error is returned when only argument x is provided", {
@@ -72,7 +89,7 @@ test_that("error is returned when the user choose a randomization method not ava
                                                   rich = NULL,
                                                   fr_prob = NULL),
                              random = "spatial",
-                             aleats = 5))
+                             aleats = 3))
 })
 
 # test_that("function runs ok with the method 'tip'", {

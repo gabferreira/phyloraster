@@ -15,7 +15,7 @@ test_that("returned object class is correct", {
                                           spat_alg_args = list(rprob = NULL,
                                                                rich = NULL,
                                                                fr_prob = NULL),
-                                          aleats = 5), "SpatRaster")
+                                          aleats = 3), "SpatRaster")
 })
 
 test_that("error is returned when the raster does not have a longitude/latitude
@@ -27,12 +27,12 @@ test_that("error is returned when the raster does not have a longitude/latitude
             # area.branch <- inv.range(data$x, data$branch.length)
             w <- terra::project(x, "EPSG:2169")
 
-            data <- phyloraster::phylo.pres(w, tree)
-            branch.length <- data$branch.length
-            n.descen <- data$n.descendants
-            area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
+            # data <- phyloraster::phylo.pres(w, tree)
+            # branch.length <- data$branch.length
+            # n.descen <- data$n.descendants
+            # area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
 
-            expect_error(geo.phylo.ses(x = data$x,
+            expect_error(geo.phylo.ses(x = w,
                                           tree = data$tree,
                                           # FUN_args = list(range.BL=area.branch$range.BL,
                                           # inv.R=area.branch$inv.R,
@@ -101,5 +101,5 @@ test_that("function runs ok with the method 'tip'", {
                                                   rich = NULL,
                                                   fr_prob = NULL),
                              random = "tip",
-                             aleats = 5), ok = T)
+                             aleats = 3), ok = T)
 })

@@ -56,42 +56,63 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 
 #' Calculate phylogenetic community metrics for each raster cell
 #'
-#' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-#' phylogenetic endemism and weighted endemism using vectors as input.
+#' Calculate species richness, phylogenetic diversity, and evolutionary
+#' distinctiveness using vectors as input.
 #'
 #' @param x numeric vector of presence/absence (1/0) data
 #' @param branch.length numeric. A named numerical vector containing the branch
 #' length for each species.
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
 #' each branch
-#' @param spp_seq numeric vector indicating presence/absence data in 'x'
-#' @param spp_seqrange.BL numeric vector indicating range.BL data
-#' (inverse range size * branch lengh) in 'x'
-#' @param spp_seqINV numeric vector indicating INV data (inverse range size) in 'x'
 #' @param resu SpatRaster result returned from the function
 #' @return numeric
 #'
 #' @author Neander Marcel Heming
 #'
-.vec.geo.phylo <- function(x, branch.length, n.descen,
-                           spp_seq, spp_seqrange.BL, spp_seqINV,
-                           resu){
+.vec.geo.phylo <- function(x,
+                           # inv.R,
+                           branch.length, n.descen,
+                           # spp_seq, spp_seqrange.BL, spp_seqINV,
+                           resu = stats::setNames(as.double(rep(NA, 3)), c("SR", "PD", "ED"))){
   if(all(is.na(x))){
     return(resu)
   }
-  ### separating raster layers of each cell
-  # xa <- x[spp_seq]
-  # xrange.BL <- x[spp_seqrange.BL]
-  # xINV <- x[spp_seqINV]
 
   ### computing metrics
-  se <- sum(x[spp_seq], na.rm = T)
-  pd <- .vec.pd(x[spp_seq], branch.length)[[1]] # [[1]] return only the first raster
-  ed <- .vec.ed(x[spp_seq], branch.length, n.descen)[[1]] # [[1]] return only the first raster
-  pe <- .vec.wpe(x, spp_seq, spp_seqrange.BL)
-  we <- .vec.wpe(x, spp_seq, spp_seqINV)
+  se <- sum(x, na.rm = T)
+  pd <- .vec.pd(x, branch.length)[[1]] # [[1]] return only the first raster
+  ed <- .vec.ed(x, branch.length, n.descen)[[1]] # [[1]] return only the first raster
+  # pe <- .vec.pe(x*inv.R, branch.length)
+  # we <- .vec.we(x*inv.R)
 
-  resu[] <- c(se, pd, ed, pe, we)
+  resu[] <- c(se, pd, ed)
+  return(resu)
+}
+
+#' Calculate phylogenetic community metrics for each raster cell
+#'
+#' Calculate phylogenetic endemism and weighted endemism using vectors as input.
+#'
+#' @return numeric
+#'
+#' @author Neander Marcel Heming
+#'
+.vec.geo.phylo2 <- function(xinv.R,
+                           branch.length,
+                           # spp_seq, spp_seqrange.BL, spp_seqINV,
+                           resu = stats::setNames(as.double(rep(NA, 2)), c("PE", "WE"))){
+  # if(all(is.na(x))){
+  #   return(resu)
+  # }
+
+  ### computing metrics
+  # se <- sum(x, na.rm = T)
+  # pd <- .vec.pd(x, branch.length)[[1]] # [[1]] return only the first raster
+  # ed <- .vec.ed(x, branch.length, n.descen)[[1]] # [[1]] return only the first raster
+  pe <- .vec.pe(xinv.R, branch.length)
+  we <- .vec.we(xinv.R)
+
+  resu[] <- c(pe, we)
   return(resu)
 }
 
@@ -127,21 +148,40 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
-.rast.geo.phylo <- function(x, branch.length, n.descen,
-                            spp_seq, spp_seqrange.BL, spp_seqINV,
-                            resu = stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE")),
+.rast.geo.phylo <- function(x,
+                            inv.R,
+                            branch.length, n.descen,
+                            # spp_seq, spp_seqrange.BL, spp_seqINV,
+                            resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
                             cores = 1, filename = "", ...){
 
-  terra::app(x,
-             .vec.geo.phylo,
-             branch.length = branch.length,
-             n.descen = n.descen,
-             spp_seq = spp_seq,
-             spp_seqrange.BL = spp_seqrange.BL,
-             spp_seqINV = spp_seqINV,
-             resu = resu,
-             cores = cores, filename = filename, ...)
+  geop1 <- terra::app(x,
+                      .vec.geo.phylo,
+                      # inv.R = inv.R,
+                      branch.length = branch.length,
+                      n.descen = n.descen,
+                      # spp_seq = spp_seq,
+                      # spp_seqrange.BL = spp_seqrange.BL,
+                      # spp_seqINV = spp_seqINV,
+                      resu = resu[1:3],
+                      cores = cores)
 
+  geop2 <- terra::app(x*inv.R,
+                      .vec.geo.phylo2,
+                      branch.length = branch.length,
+                      # n.descen = n.descen,
+                      # spp_seq = spp_seq,
+                      # spp_seqrange.BL = spp_seqrange.BL,
+                      # spp_seqINV = spp_seqINV,
+                      resu = resu[4:5],
+                      cores = cores)
+
+  geop <- terra::rast(list(geop1, geop2))
+
+  if(filename != ""){
+    geop <- terra::writeRaster(geop, filename, ...)
+  }
+  return(geop)
 }
 
 #' Calculate phylogenetic community metrics for raster data
@@ -195,15 +235,15 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' area.branch <- inv.range(data$x, data$branch.length)
+#' inv.R <- inv.range(data$x)
 #' #t <- geo.phylo(x, tree)
-#' t <- geo.phylo(data$x, range.BL = area.branch$range.BL, inv.R = area.branch$inv.R,
+#' t <- geo.phylo(data$x, inv.R = inv.R,
 #' branch.length = data$branch.length, n.descen = data$n.descendants)
 #' terra::plot(t)
 #'
 #' @export
 geo.phylo <- function(x, tree,
-                      range.BL, inv.R, branch.length, n.descen,
+                      inv.R, branch.length, n.descen,
                       cores = 1, filename = "", ...){
 
   ## object checks
@@ -213,53 +253,48 @@ geo.phylo <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'range.BL', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
-      inv.R <- area.branch$inv.R
+      inv.R <- inv.range(x)
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(range.BL))),
-                  isFALSE(identical(names(x), names(inv.R))),
+    } else if(any(isFALSE(identical(names(x), names(inv.R))),
                   isFALSE(identical(names(x), names(branch.length))),
                   isFALSE(identical(names(x), names(n.descen))))) {
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
-      inv.R <- area.branch$inv.R
+      inv.R <- inv.range(x)
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
+
     }
 
   }
 
   ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
-  spp_seqrange.BL <- spp_seq + nspp
-  spp_seqINV <- spp_seq + 2*nspp
+  # nspp <- terra::nlyr(x)
+  # spp_seq <- seq_len(nspp)
+  # spp_seqrange.BL <- spp_seq + nspp
+  # spp_seqINV <- spp_seq + 2*nspp
   resu <- stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
   ## run function
-  .rast.geo.phylo(c(x, range.BL = range.BL, inv.R = inv.R),
+  .rast.geo.phylo(x, inv.R = inv.R,
                   branch.length = branch.length,
                   n.descen = n.descen,
-                  spp_seq, spp_seqrange.BL, spp_seqINV,
                   resu = resu,
                   cores = cores, filename = filename, ...)
 }
@@ -315,7 +350,7 @@ geo.phylo <- function(x, tree,
 #'
 #' @export
 geo.phylo.ses <- function(x, tree,
-                          range.BL, inv.R, branch.length, n.descen,
+                          inv.R, branch.length, n.descen,
                           spat_alg = "bootspat_str",
                           spat_alg_args = list(rprob = NULL,
                                                rich = NULL,
@@ -331,35 +366,31 @@ geo.phylo.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'range.BL', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
-      inv.R <- area.branch$inv.R
+      inv.R <- inv.range(x)
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(range.BL))),
+    } else if(any(#isFALSE(identical(names(x), names(range.BL))),
                   isFALSE(identical(names(x), names(inv.R))),
                   isFALSE(identical(names(x), names(branch.length))),
                   isFALSE(identical(names(x), names(n.descen))))) {
 
       data <- phylo.pres(x, tree)
-      area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
-      range.BL <- area.branch$range.BL
-      inv.R <- area.branch$inv.R
+      inv.R <- inv.range(x)
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
     }
@@ -369,24 +400,18 @@ geo.phylo.ses <- function(x, tree,
   require(SESraster)
 
   ## vectorization setup
-  nspp <- terra::nlyr(x)
-  spp_seq <- seq_len(nspp)
-  spp_seqrange.BL <- spp_seq + nspp
-  spp_seqINV <- spp_seq + 2*nspp
   resu <- stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
   ## function arguments
-  FUN_args = list(branch.length = branch.length,
+  FUN_args = list(inv.R = inv.R,
+                  branch.length = branch.length,
                   n.descen = n.descen,
-                  spp_seq = spp_seq,
-                  spp_seqrange.BL = spp_seqrange.BL,
-                  spp_seqINV = spp_seqINV,
                   resu = resu,
                   cores = cores)
 
   if(random == "tip"){
 
-    ses <- SESraster::SESraster(c(x, range.BL = range.BL, inv.R = inv.R),
+    ses <- SESraster::SESraster(x,
                                 FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                                 Fa_sample = "branch.length",
                                 Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),
@@ -397,7 +422,7 @@ geo.phylo.ses <- function(x, tree,
 
   } else if(random == "spat"){
 
-    ses <- SESraster::SESraster(c(x, range.BL = range.BL, inv.R = inv.R),
+    ses <- SESraster::SESraster(x,
                                 FUN = ".rast.geo.phylo", FUN_args = FUN_args,
                                 # Fa_sample = "branch.length",
                                 # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
