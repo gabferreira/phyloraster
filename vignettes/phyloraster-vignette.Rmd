@@ -146,7 +146,7 @@ The function `phylo.pres` reorder the raster stack according to phylogenetic tre
 ```{r}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
+dataprep <- phylo.pres(x = ras, tree = tree)
 ```
 
 Now, the raster stack and the tip label of the tree are in the same order!
@@ -168,7 +168,7 @@ Endemism values range from 0 to 1.
 
 ```{r, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
-wer <- phyloraster::rast.we(x = ras, filename = NULL)
+wer <- rast.we(x = ras)
 wer
 ```
 
@@ -186,10 +186,9 @@ The first evolutionary measure is Faith's phylogenetic diversity (PD, Faith 1994
 ```{r, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
+dataprep <- phylo.pres(x = ras, tree = tree)
 
-pdr <- phyloraster::rast.pd(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
-pdr[[1]]
+pdr <- rast.pd(x = dataprep$x, branch.length = dataprep$branch.length, cores = 1)
 ```
 
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
@@ -202,9 +201,7 @@ The function `rast.pe` returns a raster layer containing PE the region of intere
 ```{r, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-dataprep <- phyloraster::phylo.pres(x = ras, tree = tree)
-
-per <- phyloraster::rast.pe(x = dataprep$x, branch.length = dataprep$branch.length, filename = NULL, cores = 1)
+per <- rast.pe(x = dataprep$x, tree, cores = 1)
 per
 ```
 
@@ -232,9 +229,9 @@ Now that we have presented the randomization methods, we can start to build the 
 ```{r}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-data <- phyloraster::phylo.pres(ras, tree)
+data <- phylo.pres(ras, tree)
 
-t <- rast.pd.ses(data$x, data$branch.length, aleats = 10, random = "spat_str")
+t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 10, random = "spat")
 ```
 
 Plotting the results
@@ -256,7 +253,7 @@ In the map below we can visualize the spatial pattern of species richness.
 # load the data
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness
-riq.pres <- rast.se(x)
+riq.pres <- rast.sr(x)
 plot(riq.pres)
 ```
 
@@ -266,8 +263,8 @@ Now imagine that as climate change progresses, 16 relatively more vulnerable spe
 # load the data
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness future
-riq.fut <- rast.se(x[[c(1:15)]]) # imagine we lost some species in the future
-plot(riq.fut)
+riq.fut <- rast.sr(x[[c(1:15)]]) # imagine we lost some species in the future
+terra::plot(riq.fut)
 ```
 
 The delta.grid function allows you to visualize the variation in these richness patterns spatially.
@@ -283,10 +280,9 @@ The delta.grid function can be used for any of the other metrics that are availa
 
 ## References {#references}
 
-Crisp, M., Laffan, S., Linder, H.
-and Monro, A.
+Crisp, M., Laffan, S., Linder, H. and Monro, A.
 (2001).
-Endemism in theAustralian flora.
+Endemism in the Australian flora.
 Journal of Biogeography, 28, 183--198.
 
 Daru, B. H., Karunarathne, P., and Schliep, K.
