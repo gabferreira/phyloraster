@@ -44,7 +44,8 @@
   rpe <- terra::app(x*inv.R,
                     .vec.pe,
                     branch.length = branch.length,
-                     filename = filename, ...)
+                    cores = cores,
+                    filename = filename, ...)
 
   terra::set.names(rpe, "PE") # layer name
 
@@ -143,8 +144,8 @@ rast.pe <- function(x, tree,
   # plot(.rast.pe.B(xeSZ*x, branch.length))
 
   ## run function
-  .rast.pe.B(x, inv.R, branch.length,
-             # spp_seq, spp_seqrange.BL,
+  .rast.pe.B(x,
+             inv.R, branch.length,
              cores = cores, filename = filename, ...)
 }
 

@@ -50,7 +50,8 @@
   rpd <- terra::app(x,
                     .vec.pd,
                     branch.length = branch.length,
-                    cores = cores, filename = filename, ...)
+                    cores = cores,
+                    filename = filename, ...)
 
   terra::set.names(rpd, "PD")
 
@@ -92,8 +93,7 @@ rast.pd <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R",
-                                       "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
@@ -131,7 +131,8 @@ rast.pd <- function(x, tree,
 
 
   ## phylogenetic diversity
-  rpd <- .rast.pd.B(x, branch.length = branch.length,
+  rpd <- .rast.pd.B(x,
+                    branch.length,
                     cores = cores, filename = filename, ...)
 
   return(rpd)
@@ -204,12 +205,12 @@ rast.pd.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      # stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      # stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
       stop("Either argument 'tree' or 'branch.length' need to be supplied")
 
     } else if(any(miss4)){

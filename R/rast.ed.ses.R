@@ -57,8 +57,10 @@
 .rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 
   # evolutionary distinctiveness
-  red <- terra::app(x, fun = .vec.ed,
-                    branch.length, n.descen, cores = cores,
+  red <- terra::app(x,
+                    .vec.ed,
+                    branch.length = branch.length, n.descen = n.descen,
+                    cores = cores,
                     filename = filename, ...)
 
   terra::set.names(red, "ED") # layer name
@@ -105,12 +107,12 @@ rast.ed <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -144,7 +146,7 @@ rast.ed <- function(x, tree,
   ## evolutionary distinctiveness
   red <- .rast.ed.B(x,
                     branch.length, n.descen,
-                    cores, filename, ...)
+                    cores = cores, filename = filename, ...)
 
   return(red)
 
@@ -208,12 +210,12 @@ rast.ed.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'LR', 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 

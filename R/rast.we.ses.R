@@ -49,6 +49,7 @@
   # weighted endemism
   rend <- terra::app(x*inv.R,
                      .vec.we,
+                     cores = cores,
                      filename = filename, ...)
 
   terra::set.names(rend, "WE") # layer name
@@ -98,7 +99,7 @@ rast.we <- function(x, inv.R,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     # miss.tree <- arg.check(match.call(), "tree")
 
     # if(any(miss4) & miss.tree){
@@ -138,10 +139,9 @@ rast.we <- function(x, inv.R,
 
   }
 
-
   ## weighted endemism
-  .rast.we.B(x, inv.R,
-             # spp_seq, spp_seqSZ,
+  .rast.we.B(x,
+             inv.R,
              cores = cores, filename = filename, ...)
 }
 
@@ -203,7 +203,7 @@ rast.we.ses <- function(x,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("LR", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
     # miss.tree <- arg.check(match.call(), "tree")
 
     # if(any(miss4) & miss.tree){

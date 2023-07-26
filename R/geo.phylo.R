@@ -156,22 +156,14 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 
   geop1 <- terra::app(x,
                       .vec.geo.phylo,
-                      # inv.R = inv.R,
                       branch.length = branch.length,
                       n.descen = n.descen,
-                      # spp_seq = spp_seq,
-                      # spp_seqrange.BL = spp_seqrange.BL,
-                      # spp_seqINV = spp_seqINV,
                       resu = resu[1:3],
                       cores = cores)
 
   geop2 <- terra::app(x*inv.R,
                       .vec.geo.phylo2,
                       branch.length = branch.length,
-                      # n.descen = n.descen,
-                      # spp_seq = spp_seq,
-                      # spp_seqrange.BL = spp_seqrange.BL,
-                      # spp_seqINV = spp_seqINV,
                       resu = resu[4:5],
                       cores = cores)
 
@@ -282,14 +274,11 @@ geo.phylo <- function(x, tree,
   }
 
   ## vectorization setup
-  # nspp <- terra::nlyr(x)
-  # spp_seq <- seq_len(nspp)
-  # spp_seqrange.BL <- spp_seq + nspp
-  # spp_seqINV <- spp_seq + 2*nspp
   resu <- stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
   ## run function
-  .rast.geo.phylo(x, inv.R = inv.R,
+  .rast.geo.phylo(x, 
+                  inv.R = inv.R,
                   branch.length = branch.length,
                   n.descen = n.descen,
                   resu = resu,
@@ -380,8 +369,7 @@ geo.phylo.ses <- function(x, tree,
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(#isFALSE(identical(names(x), names(range.BL))),
-                  isFALSE(identical(names(x), names(inv.R))),
+    } else if(any(isFALSE(identical(names(x), names(inv.R))),
                   isFALSE(identical(names(x), names(branch.length))),
                   isFALSE(identical(names(x), names(n.descen))))) {
 
