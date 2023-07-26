@@ -7,7 +7,9 @@
 #' @inheritParams geo.phylo.ses
 #' @inheritParams terra::app
 #'
+#' @param cores Not implemented yet.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#'
 #' @return SpatRaster and numeric
 #'
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
@@ -18,8 +20,9 @@
 #' inv.range(x)
 #'
 #' @export
-inv.range <- function(x, cores = 1, filename = "", overwrite = FALSE, ...){
-
+inv.range <- function(x, cores = 1,
+                      filename = "", overwrite = FALSE, ...){
+  cores = 1
   # Test if there is enough memory in the user's pc
   mi <- .fit.memory(x, 4) ## proc in memory = TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
 
@@ -50,6 +53,7 @@ inv.range <- function(x, cores = 1, filename = "", overwrite = FALSE, ...){
 
   terra::set.names(inv.R, names(x))
 
-  return(inv.R)
+  unlink(temp1)
 
+  return(inv.R)
 }

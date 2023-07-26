@@ -11,7 +11,7 @@ inv.range(x, cores = 1, filename = "", overwrite = FALSE, ...)
 for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+\item{cores}{Not implemented yet.}
 
 \item{filename}{character. Output filename}
 
