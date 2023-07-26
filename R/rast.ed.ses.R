@@ -3,13 +3,14 @@
 #' @description This function calculates evolutionary distinctiveness for a set
 #' of species using the fair-proportion index (Isaac et al., 2007).
 #'
-#' @usage .evol.distin(x, branch.length, n.descen)
+#' @usage .vec.ed(x, branch.length, n.descen, ed=c(ED=NA))
 #'
 #' @param x numeric. A Named numeric vector of presence-absence
 #' @param branch.length numeric. A Named numeric vector of branch length for
 #' each species
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
 #' each branch
+#' @param ed numeric. numeric vector with the values of evolutionary distinctiveness
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -96,6 +97,7 @@
 #' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
+#' @inheritParams geo.phylo
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -112,7 +114,7 @@
 #' # phylogenetic tree
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' ed <- rast.ed(data$x, data$branch.length, data$n.descen)
+#' ed <- rast.ed(data$x, branch.length = data$branch.length, n.descen = data$n.descen)
 #' plot(ed)
 #'
 #' @export
@@ -150,14 +152,20 @@ rast.ed <- function(x, tree,
       isFALSE(identical(names(x), names(branch.length))),
       isFALSE(identical(names(x), names(n.descen))))) {
 
-      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
-         See 'phyloraster::phylo.pres' function.")
+      data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
     }
 
   }
 
 
-  # evolutionary distinctiveness
+  ## evolutionary distinctiveness
   red <- .rast.ed.B(x,
                     branch.length, n.descen,
                     cores, filename, ...)
@@ -172,8 +180,11 @@ rast.ed <- function(x, tree,
 #' @description Calculates the standardized effect size for evolutionary
 #' distinctiveness. See Details for more information.
 #'
-#' @inheritParams rast.pd.ses
-#' @inheritParams rast.ed
+#' @param random character. A character indicating the type of randomization.
+#' The currently available randomization methods are "tip", "site", "species" or
+#' "both" (site and species).
+#' @inheritParams geo.phylo
+#' @inheritParams SESraster::SESraster
 #'
 #' @return SpatRaster
 #'
@@ -184,6 +195,7 @@ rast.ed <- function(x, tree,
 #'  of occupied pixels). The randomization will not assign values to cells with
 #'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
 #'  included in phylogeny.
+#'
 #'
 #' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
 #' \code{\link{geo.phylo.ses}},
@@ -243,12 +255,18 @@ rast.ed.ses <- function(x, tree,
       n.descen <- data$n.descendants
 
     } else if(any(#isFALSE(identical(names(x), names(LR))),
-                  #isFALSE(identical(names(x), names(inv.R))),
-                  isFALSE(identical(names(x), names(branch.length))),
-                  isFALSE(identical(names(x), names(n.descen))))) {
+      #isFALSE(identical(names(x), names(inv.R))),
+      isFALSE(identical(names(x), names(branch.length))),
+      isFALSE(identical(names(x), names(n.descen))))) {
 
-      stop("Species names are not in the same order on 'x' and 'LR', 'inv.R', 'branch.length', and 'n.descen' arguments.
-         See 'phyloraster::phylo.pres' function.")
+      data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      n.descen <- data$n.descendants
     }
 
   }

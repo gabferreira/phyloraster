@@ -1,11 +1,21 @@
 #' Calculate phylogenetic endemism for a vector
 #'
 #' @description This function calculates phylogenetic endemism for a vector
+#'
 #' @param x numeric. A named numerical vector of presence-absence for one sample.
-#' @param branch.length numeric. A named numerical vector containing the branch length for each species.
-#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @param spp_seq2 numeric. numeric vector indicating presence/absence data in 'x'
+#' @param wpe numeric. numeric vector indicating INV data (inverse range size) in 'x'
+#' @inheritParams .vec.geo.phylo
+#'
 #' @return numeric
+#'
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+#' & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#' geographical concentrations of evolutionary history. Molecular ecology,
+#' 18(19), 4061-4072.
+#'
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#'
 # #' @export
 .vec.wpe <- function(x, spp_seq, spp_seq2, wpe = as.double(NA)){
 
@@ -21,28 +31,30 @@
 #' Calculate phylogenetic endemism for a raster
 #'
 #' Calculate phylogenetic endemism using rasters as input and output.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
-#' @param branch.length numeric. A named numerical vector containing the branch length of each specie.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#'
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. The layers (species) must be sorted according to the
+#' tree order. See the phylo.pres function.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with
+#'  that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#' @inheritParams .vec.geo.phylo
+#'
 #' @return SpatRaster
+
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+#'  & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#'  geographical concentrations of evolutionary history. Molecular ecology,
+#'  18(19), 4061-4072.
+# #' @examples
 # #' @export
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
-#' @examples
-#' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
-#' ### TODO correct example
-#' .rast.pe.B(data$x, data$branch.length, cores = 1)
-#' }
-.rast.pe.B <- function(x, spp_seq, spp_seqLR, cores = 1, filename = "", ...){
+.rast.pe.B <- function(x, spp_seq, spp_seqrange.BL, cores = 1, filename = "", ...){
 
   # phylogenetic endemism
   rpe <-terra::app(x,
                    .vec.wpe,
-                   spp_seq, spp_seqLR,
+                   spp_seq, spp_seqrange.BL,
                    cores = cores, filename = filename, ...)
 
   terra::set.names(rpe, "PE") # layer name
@@ -60,167 +72,254 @@
 
 #' Calculate phylogenetic endemism for raster data
 #'
-#' @description Calculate the sum of the inverse of the range size multiplied by the branch length for the species present in raster data.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch length of each specie
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
+#' @description Calculate the sum of the inverse of the range size multiplied
+#' by the branch length for the species present in raster data.
+#'
+#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+#' for a set of species. The layers (species) must be sorted according to the
+#' tree order. See the phylo.pres function.
+#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
+#' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling function.
+#' @inheritParams geo.phylo
+#'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
-#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#'
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
+#' metrics of species and phylogenetic turnover can better resolve biogeographic
+#' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
+#'  and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#'   geographical concentrations of evolutionary history. Molecular ecology,
+#'   18(19), 4061-4072.
+#'
 #' @return SpatRaster
+#'
 #' @examples
 #' library(terra)
 #' library(phyloraster)
-#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
-#' pe <- rast.pe(data$x, data$branch.length)
+#' x <- rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+#' pe <- rast.pe(x = x, tree)
 #' plot(pe)
 #'
 #' @export
-rast.pe <- function(x, branch.length, cores = 1, filename = "", ...){
+rast.pe <- function(x, tree,
+                    range.BL,
+                    cores = 1, filename = "", ...){
 
+  ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
 
-  # 3 rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  if(!all.equal(names(x), names(branch.length))){
-    stop("Species names are not in the same order on 'x' and 'branch.length' arguments! See 'phyloraster::phylo.pres' function.")
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
+
+    if(any(miss4) & miss.tree){
+
+      stop("Either argument 'tree' or 'range.BL' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      range.BL <- area.branch$range.BL
+      # inv.R <- area.branch$inv.R
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+
+    } else if(any(isFALSE(identical(names(x), names(range.BL)))
+                  # isFALSE(identical(names(x), names(inv.R))),
+                  # isFALSE(identical(names(x), names(n.descen))),
+                  # isFALSE(identical(names(x), names(branch.length))))
+    )) {
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      range.BL <- area.branch$range.BL
+      # inv.R <- area.branch$inv.R
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+    }
+
   }
 
-  mi <- .fit.memory(x)
-
-  temp <- vector("list", length = 3) # to create a temporary vector with the raster number
-  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-
-  LR <- inv.range(x, branch.length, # LR = T,
-                  filename = ifelse(mi, "", temp[[1]]))$LR # calculate the inverse of range size multiplied by branch length of each species
-
-
+  ## vectorization setup
   nspp <- terra::nlyr(x)
   spp_seq <- seq_len(nspp)
-  spp_seqLR <- spp_seq + nspp
+  spp_seqrange.BL <- spp_seq + nspp
+  # spp_seqINV <- spp_seq + 2*nspp
+  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
-  # phylogenetic endemism
-  rpe <- .rast.pe.B(c(x, LR),
-                    spp_seq, spp_seqLR,
-                    cores, filename, ...)
+  ## run function
+  # (x, spp_seq, spp_seqrange.BL, cores = 1, filename = "", ...){
 
-  unlink(temp[[1]])
-
-  return(rpe)
-
+  .rast.pe.B(c(x, range.BL = range.BL),
+             spp_seq, spp_seqrange.BL,
+             cores = cores, filename = filename, ...)
 }
 
 
 #' Phylogenetic endemism standardized for specie richness
 #'
-#' @description Calculates the standardized effect size for phylogenetic endemism. See Details for more information.
-#' @inheritParams rast.pd.ses
+#' @description Calculates the standardized effect size for phylogenetic endemism.
+#' See Details for more information.
+#'
+#' @param random character. A character indicating the type of randomization.
+#' The currently available randomization methods are "tip", "site", "species" or
+#' "both" (site and species).
+#' @inheritParams geo.phylo
+#' @inheritParams SESraster::SESraster
+#'
 #' @return SpatRaster
+#'
+#' @details The spatial randomization (spat) keeps the richness exact and samples
+#'  species presences proportionally to their observed frequency (i.e. number
+#'  of occupied pixels). The randomization will not assign values to cells with
+#'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
+#'  included in phylogeny.
+#'
+#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
+#' \code{\link{geo.phylo.ses}},
+#' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+#' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+#'
+#'
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
+#'  & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#'   geographical concentrations of evolutionary history. Molecular ecology, 18(19),
+#'   4061-4072.
+#'
 #' @author Gabriela Alves-Ferreira and Neander Heming
-#' @export
-#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata. The phylogenetic randomization shuffles taxa names across all taxa included in phylogeny.
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C., & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+#'
 #' @examples
-#' \dontrun{
+#' library(terra)
+#' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' t <- rast.pe.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+#' range.BL <- inv.range(data$x, data$branch.length)
+#' t <- rast.pe.ses(x = data$x,  range.BL = range.BL$range.BL, aleats = 10,
+#' random = "spat")
+#' t <- rast.pe.ses(x, tree, aleats = 10, random = "spat")
 #' plot(t)
-#' }
-rast.pe.ses <- function(x, branch.length, aleats,
-                        random = c("tip", "spat"),
+#'
+#' @export
+rast.pe.ses <- function(x, tree,
+                        branch.length, range.BL,
+                        spat_alg = "bootspat_str",
+                        spat_alg_args = list(rprob = NULL,
+                                             rich = NULL,
+                                             fr_prob = NULL),
+                        random = c("tip", "spat")[2],
+                        aleats = 10,
                         cores = 1, filename = "", ...){
 
-  aleats <- aleats # number of null models
-  temp <- vector("list", length = aleats) # to create a temporary vector with the raster number
+  ## object checks
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
 
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("range.BL", "inv.R", "branch.length", "n.descen"))
+    miss.tree <- arg.check(match.call(), "tree")
 
-  # x rasters will be generated in this function, let's see if there is enough
-  # memory in the user's pc
-  mi <- .fit.memory(x)
-  temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
+    if(any(miss4) & miss.tree){
 
-  ## Null model (bootstrap structure)
+      stop("Either argument 'tree' or all 'range.BL', and 'branch.length' need to be supplied")
+
+    } else if(any(miss4)){
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      range.BL <- area.branch$range.Bl
+      # inv.R <- area.branch$inv.R
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+
+    } else if(any(isFALSE(identical(names(x), names(range.BL))),
+                  # isFALSE(identical(names(x), names(inv.R))),
+                  isFALSE(identical(names(x), names(branch.length)))
+                  # isFALSE(identical(names(x), names(n.descen)))
+    )) {
+
+      data <- phylo.pres(x, tree)
+      area.branch <- inv.range(data$x, data$branch.length)
+
+      x <- data$x
+      range.BL <- area.branch$range.BL
+      # inv.R <- area.branch$inv.R
+      branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+    }
+
+  }
+
+  requireNamespace("SESraster")
+
+  ## vectorization setup
+  nspp <- terra::nlyr(x)
+  spp_seq <- seq_len(nspp)
+  spp_seqrange.BL <- spp_seq + nspp
+  # spp_seqINV <- spp_seq + 2*nspp
+  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
+
+  ## function arguments
+
+  # .rast.pe.B(c(x, range.BL = range.BL),
+  #            spp_seq, spp_seqrange.BL,
+  #            cores = cores, filename = filename)
+
+  FUN_args = list(
+    # branch.length = branch.length,
+    # n.descen = n.descen,
+    spp_seq = spp_seq,
+    spp_seqrange.BL = spp_seqrange.BL,
+    # spp_seqINV = spp_seqINV,
+    # resu = resu,
+    cores = cores)
+
   if(random == "tip"){
 
-    pe.rand <- list() # to store the rasters in the loop
-    bl.random <- branch.length
+    ses <- SESraster::SESraster(c(x, range.BL = range.BL),
+                                FUN = ".rast.pe.B", FUN_args = FUN_args,
+                                Fa_sample = "branch.length",
+                                Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),
+                                spat_alg = NULL, spat_alg_args = list(),
+                                # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                aleats = aleats,
+                                cores = cores, filename = filename, ...)
 
-    for(i in 1:aleats){
-      bl.random[] <- sample(branch.length, replace = T) # aleatorize the branch lenght
-      ## check if the values are differents
-      # branch.length == bl.random
-      temp[[i]] <- paste0(tempfile(), i, ".tif") # directory to store the rasters
-      pe.rand[[i]] <- .rast.pe.B(x, branch.length = bl.random,
-                                 filename = temp[[i]], cores = cores)
-    }
+  } else if(random == "spat"){
 
-    pe.rand <- terra::rast(pe.rand) # to transform a list in raster
+    ses <- SESraster::SESraster(c(x, range.BL = range.BL),
+                                FUN = ".rast.pe.B", FUN_args = FUN_args,
+                                # Fa_sample = "branch.length",
+                                # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                # spat_alg = NULL, spat_alg_args = list(),
+                                spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                aleats = aleats,
+                                cores = cores, filename = filename, ...)
+  }  else {
 
-  } else if (random == "spat"){
-
-    pe.rand <- list() # to store the rasters in the loop
-    rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
-
-    fr_prob <- SESraster::fr2prob(x)
-
-    for(i in 1:aleats){
-      # temporary names to rasters
-      temp[[i]] <- paste0(tempfile(), i, ".tif")
-
-      ### shuffle
-      pres.site.null <- SESraster::bootspat_str(x = x, rich = rich, prob = prob,
-                                                fr_prob = fr_prob)
-
-      # calculate pe
-      pe.rand[[i]] <- .rast.pe.B(pres.site.null, branch.length = branch.length,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    pe.rand <- terra::rast(pe.rand) # to transform a list in raster
-  } else {
     stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
+
   }
+  return(ses)
 
-  ## PE observed
-  x.reord <- x[[names(branch.length)]] # to reorder the stack according to the tree
-
-  pe.obs <- rast.pe(x.reord, branch.length = branch.length,
-                    filename = filename, cores = cores)
-
-  ## PE rand mean and PE rand SD
-  pe.rand.mean <- terra::mean(pe.rand, na.rm = TRUE, filename = filename) # mean pd
-  pe.rand.sd <- terra::stdev(pe.rand, na.rm = TRUE, filename = filename) # sd pd
-
-  unlink(temp) # delete the file that will not be used
-  unlink(temp.raster) # delete the file that will not be used
-
-  ## Calculating the standard effect size (SES)
-  {
-    ses <- function(x){
-      (x[1] - x[2])/x[3]
-    }
-    pe.ses <- terra::app(c(pe.obs, pe.rand.mean, pe.rand.sd),
-                         fun = ses, cores = cores)
-  }
-
-  names(pe.ses) <- "SES"
-  out <- c(pe.rand.mean, pe.rand.sd, pe.obs, pe.ses)
-  names(out) <- c("Mean", "SD", "PE Observed", "SES")
-
-  if (!is.null(filename)){ # to save the rasters when the path is provide
-    out <- terra::writeRaster(out, filename)
-  }
-
-  return(out)
 }
+
