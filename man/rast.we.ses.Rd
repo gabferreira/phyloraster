@@ -9,7 +9,7 @@ rast.we.ses(
   inv.R,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
-  random = c("tip", "spat")[2],
+  random = c("spat"),
   aleats = 10,
   cores = 1,
   filename = "",
