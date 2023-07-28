@@ -81,9 +81,8 @@
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' rs <- range_size(x)
-#' cellSz <- terra::cellSize(x)
-#' we <- rast.we(x, rs, cellSz)
+#' inv.R <- inv.range(x)
+#' we <- rast.we(x, inv.R)
 #' plot(we)
 #'
 #' @export

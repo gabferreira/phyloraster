@@ -45,8 +45,8 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
   }
 
   # richness
-  rsr <- terra::app(x, sum, na.rm = TRUE, cores = cores,
-                                     filename = filename, ...)
+  rsr <- sum(x,
+             filename = filename, ...)
 
   names(rsr) <- "SR"
 
@@ -99,8 +99,8 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' @author Neander Marcel Heming
 #'
 .vec.geo.phylo2 <- function(xinv.R,
-                           branch.length,
-                           resu = stats::setNames(as.double(rep(NA, 2)), c("PE", "WE"))){
+                            branch.length,
+                            resu = stats::setNames(as.double(rep(NA, 2)), c("PE", "WE"))){
   # if(all(is.na(x))){
   #   return(resu)
   # }
@@ -151,27 +151,31 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
                             inv.R,
                             branch.length, n.descen,
                             # spp_seq, spp_seqrange.BL, spp_seqINV,
-                            resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
+                            # resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
                             cores = 1, filename = "", ...){
 
-  geop1 <- terra::app(x,
-                      .vec.geo.phylo,
-                      branch.length = branch.length,
-                      n.descen = n.descen,
-                      resu = resu[1:3],
-                      cores = cores)
+  mi <- .fit.memory(x, 1) ## proc in memory = TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
 
-  geop2 <- terra::app(x*inv.R,
-                      .vec.geo.phylo2,
-                      branch.length = branch.length,
-                      resu = resu[4:5],
-                      cores = cores)
+  # temporary files
+  temp <- paste0(tempfile(), 1:5, "g.tif")  # to store the xe raster
 
-  geop <- terra::rast(list(geop1, geop2))
+  geop <- terra::rast(list(rast.sr(x,
+                                   overwrite=TRUE, filename = ifelse(mi, "", temp[1])), # SR
+                           .rast.pd.B(x, branch.length,
+                                      overwrite=TRUE, filename = ifelse(mi, "", temp[2])), # PD
+                           .rast.ed.B(x, branch.length, n.descen,
+                                      overwrite=TRUE, filename = ifelse(mi, "", temp[3])), # ED
+                           .rast.pe.B(x, inv.R, branch.length,
+                                      overwrite=TRUE, filename = ifelse(mi, "", temp[4])), # PE
+                           .rast.we.B(x, inv.R,
+                                      overwrite=TRUE, filename = ifelse(mi, "", temp[5])) # WE
+  ))
 
   if(filename != ""){
     geop <- terra::writeRaster(geop, filename, ...)
   }
+
+  unlink(temp)
   return(geop)
 }
 
@@ -277,7 +281,7 @@ geo.phylo <- function(x, tree,
   resu <- stats::setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
   ## run function
-  .rast.geo.phylo(x, 
+  .rast.geo.phylo(x,
                   inv.R = inv.R,
                   branch.length = branch.length,
                   n.descen = n.descen,
