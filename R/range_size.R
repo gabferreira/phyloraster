@@ -32,12 +32,7 @@ range_size <- function(x, cellSz, unit = "m", ...){
   }
 
   # The function bellow extracts the range size for each species and stores it in a vector
-  rs <- sapply(1:terra::nlyr(x),
-               function(i, a, Z){
-                 az <- terra::zonal(a, Z[[i]], sum)
-                 az <- az[az[,1]==1,2]
-                 ifelse(length(az)==0, 0, az) # avoids returning an error when there is no presence (1), that is, if any species had only 0 in the entire raster
-               }, a = cellSz, Z = x)
+  rs <- terra::global(x*cellSz, fun="sum", na.rm=T)[,1]
 
   names(rs) <- names(x) # to add names
 

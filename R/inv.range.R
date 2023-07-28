@@ -36,20 +36,7 @@ inv.range <- function(x, cores = 1,
   # spp range size
   rs <- range_size(x, cellSz)
 
-  rs <- terra::app(x,
-                   function(x, rs){
-                     ifelse(is.na(x), NA, rs)
-                   }, rs = rs,
-                   filename = ifelse(mi, "", temp1),
-                   overwrite = TRUE, cores = cores)
-
-  # calculating inverse of area
-  inv.R <- terra::sapp(rs,
-                       function(x, cellSz){
-                         cellSz/x
-                       },
-                       cellSz,
-                       filename = filename, overwrite = overwrite)
+  inv.R <- terra::ifel(is.na(x), NA, cellSz/rs, filename = filename, ...)
 
   terra::set.names(inv.R, names(x))
 
