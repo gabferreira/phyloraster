@@ -35,6 +35,7 @@ inv.range <- function(x, cores = 1,
 
   # spp range size
   rs <- range_size(x, cellSz)
+  rs[] <- ifelse(rs==0, Inf, rs)
 
   inv.R <- terra::ifel(is.na(x), NA, cellSz/rs, filename = filename, ...)
 

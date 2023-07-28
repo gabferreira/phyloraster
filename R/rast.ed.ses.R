@@ -57,11 +57,8 @@
 .rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
 
   # evolutionary distinctiveness
-  red <- terra::app(x,
-                    .vec.ed,
-                    branch.length = branch.length, n.descen = n.descen,
-                    cores = cores,
-                    filename = filename, ...)
+  red <- sum(x*(branch.length/n.descen),
+             filename = filename, ...)
 
   terra::set.names(red, "ED") # layer name
 

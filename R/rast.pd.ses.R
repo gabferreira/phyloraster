@@ -47,11 +47,8 @@
 .rast.pd.B <- function(x, branch.length, cores = 1, filename = "", ...){
 
   # phylogenetic diversity
-  rpd <- terra::app(x,
-                    .vec.pd,
-                    branch.length = branch.length,
-                    cores = cores,
-                    filename = filename, ...)
+  rpd <- sum(x*branch.length,
+             filename = filename, ...)
 
   terra::set.names(rpd, "PD")
 

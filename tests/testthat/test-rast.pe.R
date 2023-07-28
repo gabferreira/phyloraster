@@ -32,7 +32,7 @@ test_that("results of the analyses replicate those of other packages", {
 
   requireNamespace("epm")
   requireNamespace("phyloraster")
-  requireNamespace("phyloregion")
+  # requireNamespace("phyloregion")
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))

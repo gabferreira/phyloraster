@@ -41,11 +41,8 @@
 .rast.pe.B <- function(x, inv.R, branch.length, cores = 1, filename = "", ...){
 
   # phylogenetic endemism
-  rpe <- terra::app(x*inv.R,
-                    .vec.pe,
-                    branch.length = branch.length,
-                    cores = cores,
-                    filename = filename, ...)
+  rpe <- sum(x*inv.R*branch.length,
+             filename = filename, ...)
 
   terra::set.names(rpe, "PE") # layer name
 

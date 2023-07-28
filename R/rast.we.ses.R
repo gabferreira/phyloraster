@@ -47,10 +47,8 @@
 .rast.we.B <- function(x, inv.R,  cores = 1, filename = "", ...){
 
   # weighted endemism
-  rend <- terra::app(x*inv.R,
-                     .vec.we,
-                     cores = cores,
-                     filename = filename, ...)
+  rend <- sum(x*inv.R,
+              filename = filename, ...)
 
   terra::set.names(rend, "WE") # layer name
 
