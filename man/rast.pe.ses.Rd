@@ -69,13 +69,14 @@ included in phylogeny.
 \examples{
 library(terra)
 library(phyloraster)
+library(SESraster)
+
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-range.BL <- inv.range(data$x, data$branch.length)
-t <- rast.pe.ses(x = data$x,  range.BL = range.BL$range.BL, aleats = 10,
+range.BL <- inv.range(data$x)
+t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
 random = "spat")
-t <- rast.pe.ses(x, tree, aleats = 10, random = "spat")
 plot(t)
 
 }

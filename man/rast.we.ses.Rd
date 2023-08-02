@@ -10,7 +10,6 @@ rast.we.ses(
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
   aleats = 10,
-  cores = 1,
   filename = "",
   ...
 )
@@ -34,8 +33,6 @@ chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[S
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
 
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
-
 \item{filename}{character. Output filename}
 
 \item{...}{additional arguments passed for terra::app}
@@ -57,8 +54,10 @@ included in phylogeny.
 \examples{
 library(terra)
 library(phyloraster)
+library(SESraster)
+
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-t <- rast.we.ses(x, aleats = 10, random = "spat")
+t <- rast.we.ses(x, aleats = 3)
 plot(t)
 
 }

@@ -4,16 +4,13 @@
 \alias{rast.sr}
 \title{Calculate species richness for raster data}
 \usage{
-rast.sr(x, filename = "", cores = 1, ...)
+rast.sr(x, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species.}
 
 \item{filename}{character. Output filename.}
-
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
-with that many cores is created and used.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }

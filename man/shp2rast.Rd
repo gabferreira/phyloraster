@@ -22,7 +22,7 @@ shp2rast(
 
 \item{y}{SpatRaster}
 
-\item{sps.col}{character. It should be a variable name in x}
+\item{sps.col}{character. It should be a variable name in x.}
 
 \item{ymask}{SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example}
 
@@ -45,7 +45,6 @@ SpatRaster
 The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
 }
 \examples{
-\dontrun{
 library(terra)
 library(rnaturalearth)
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
@@ -56,11 +55,12 @@ coun.rast <- terra::rasterize(coun.crop,
                       terra::rast(ext(shp), resolution = 0.5))
 plot(coun.rast, col = "green")
 
-rasterizing with a mask of a country for example
+# rasterizing with a mask of a country for example
 teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
 plot(teste, col = c("grey", "green"))
 
-teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.5)
-plot(teste2, col = c("grey", "green"))
-}
+# rasterizing based on extent and without using mask
+teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.1)
+plot(teste2[[9]], col = c("grey", "green"))
+
 }

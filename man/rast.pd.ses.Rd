@@ -12,7 +12,6 @@ rast.pd.ses(
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
   random = c("tip", "spat")[2],
   aleats = 10,
-  cores = 1,
   filename = "",
   ...
 )
@@ -42,8 +41,6 @@ The currently available randomization methods are "tip", "site", "species" or
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
-
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 
@@ -77,10 +74,12 @@ across all taxa included in phylogeny.
 \examples{
 library(terra)
 library(phyloraster)
+library(SESraster)
+
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 10, random = "spat")
+t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 3, random = "spat")
 plot(t)
 
 }
