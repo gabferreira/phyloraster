@@ -48,15 +48,20 @@ test_that("Are the returned values correct?", {
 test_that("function runs ok when a mask is applied", {
 
   # load data
-  require(rnaturalearth)
   shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
-                                package="phyloraster"))
-  countries <- terra::vect(rnaturalearth::ne_countries(returnclass="sf")) # world map
-  coun.crop <- terra::crop(countries, terra::ext(shp)) # cut by the total extension of the polygons
+                                 package="phyloraster"))
+
+  # create a polygon to use as mask
+  ## with an extent
+  e <- terra::ext(113, 123, -43.64, -33.90)
+  p <- terra::as.polygons(e, crs="")
+
+  coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of the polygons
   coun.rast <- terra::rasterize(coun.crop,
-                        terra::rast(terra::ext(shp), resolution = 0.5))
+                                terra::rast(terra::ext(shp), resolution = 0.5))
 
   # rasterizing with a mask of a country for example
-  expect(shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE,
-                  background = 0), ok = T)
+  expect(phyloraster::shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE,
+                               background = 0), ok = T)
 })
+

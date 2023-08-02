@@ -20,13 +20,11 @@
 #'
 #' @description Calculate the species richness for raster data.
 #'
-#' @usage rast.sr(x, filename = "", cores = 1, ...)
+#' @usage rast.sr(x, filename = "", ...)
 #'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species.
 #' @param filename character. Output filename.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
-#' with that many cores is created and used.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #'
 #' @author Gabriela Alves Ferreira and Neander Marcel Heming
@@ -38,7 +36,7 @@
 #' rse <- rast.sr(x)
 #' terra::plot(rse)
 #' }
-rast.sr <- function(x, filename = "", cores = 1, ...){
+rast.sr <- function(x, filename = "", ...){
 
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
@@ -71,7 +69,8 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #'
 .vec.geo.phylo <- function(x,
                            branch.length, n.descen,
-                           resu = stats::setNames(as.double(rep(NA, 3)), c("SR", "PD", "ED"))){
+                           resu = stats::setNames(as.double(rep(NA, 3)),
+                                                  c("SR", "PD", "ED"))){
   if(all(is.na(x))){
     return(resu)
   }
@@ -152,7 +151,7 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
                             branch.length, n.descen,
                             # spp_seq, spp_seqrange.BL, spp_seqINV,
                             # resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
-                            cores = 1, filename = "", ...){
+                            filename = "", ...){
 
   mi <- .fit.memory(x, 1) ## proc in memory = TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
 
@@ -237,7 +236,7 @@ rast.sr <- function(x, filename = "", cores = 1, ...){
 #' @export
 geo.phylo <- function(x, tree,
                       inv.R, branch.length, n.descen,
-                      cores = 1, filename = "", ...){
+                      filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -286,7 +285,7 @@ geo.phylo <- function(x, tree,
                   branch.length = branch.length,
                   n.descen = n.descen,
                   resu = resu,
-                  cores = cores, filename = filename, ...)
+                  filename = filename, ...)
 }
 
 

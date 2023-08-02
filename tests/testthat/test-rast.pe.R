@@ -30,10 +30,6 @@ test_that("error is returned with wrong order of the species names", {
 
 test_that("results of the analyses replicate those of other packages", {
 
-  requireNamespace("epm")
-  requireNamespace("phyloraster")
-  # requireNamespace("phyloregion")
-
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
@@ -53,14 +49,13 @@ test_that("results of the analyses replicate those of other packages", {
   # r <- terra::rasterize(terra::vect(m), x, field = "PE")
 
   # epm
-  require(epm)
-  datepm <- epm::createEPMgrid(x, resolution = 0.01)
-  data$tree <- as(data$tree, "phylo")
-  datepm <- epm::addPhylo(datepm, data$tree)
-  ep <- epm::gridMetrics(datepm, metric = "phyloWeightedEndemism")
+  # epm
+  ep <- terra::rast(system.file("extdata", "epm_PE.tif", package="phyloraster"))
 
-  testthat::expect_equivalent(round(terra::values(pg), 10), round(terra::values(ep$grid$phyloWeightedEndemism)), 10)
-  # testthat::expect_equivalent(round(terra::values(pg), 10), round(terra::values(m$PE), 10))
+
+  testthat::expect_equal(matrix(terra::values(pg), ncol=1),
+                         matrix(terra::values(ep),  ncol=1),
+                         tolerance = 0.01)
 })
 
 test_that("returned object classes are correct", {
