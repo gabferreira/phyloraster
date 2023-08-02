@@ -39,8 +39,6 @@
 #' length of each specie.
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
 #' each branch
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster
-#' with that many cores is created and used.
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed for fun.
 #'
@@ -54,7 +52,7 @@
 #'
 # #' @export
 # #' @examples
-.rast.ed.B <- function(x, branch.length, n.descen, cores = 1, filename = "", ...){
+.rast.ed.B <- function(x, branch.length, n.descen, filename = "", ...){
 
   # evolutionary distinctiveness
   red <- sum(x*(branch.length/n.descen),
@@ -95,7 +93,7 @@
 #' @export
 rast.ed <- function(x, tree,
                     branch.length, n.descen,
-                    cores = 1, filename = "", ...){
+                    filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -143,7 +141,7 @@ rast.ed <- function(x, tree,
   ## evolutionary distinctiveness
   red <- .rast.ed.B(x,
                     branch.length, n.descen,
-                    cores = cores, filename = filename, ...)
+                    filename = filename, ...)
 
   return(red)
 
@@ -184,9 +182,11 @@ rast.ed <- function(x, tree,
 #' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
 #' @examples
+#' library(phyloraster)
+#' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' t <- rast.ed.ses(x, tree, aleats = 5, random = "spat")
+#' t <- rast.ed.ses(x, tree, aleats = 3, random = "spat")
 #' terra::plot(t)
 #'
 #' @export
@@ -198,7 +198,9 @@ rast.ed.ses <- function(x, tree,
                                              fr_prob = NULL),
                         random = c("tip", "spat")[2],
                         aleats = 10,
-                        cores = 1, filename = "", ...){
+                        filename = "", ...){
+
+  requireNamespace("SESraster")
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -242,18 +244,18 @@ rast.ed.ses <- function(x, tree,
 
   }
 
-  requireNamespace("SESraster")
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
   FUN_args = list(branch.length = branch.length,
-                  n.descen = n.descen,
+                  n.descen = n.descen
                   # spp_seq = spp_seq,
                   # spp_seqLR = spp_seqLR,
                   # spp_seqINV = spp_seqINV,
                   # resu = resu,
-                  cores = cores)
+                  # cores = cores
+                  )
 
 
   ## Null model (bootstrap structure)
@@ -266,7 +268,9 @@ rast.ed.ses <- function(x, tree,
                                    spat_alg = NULL, spat_alg_args = list(),
                                    # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                                    aleats = aleats,
-                                   cores = cores, filename = filename, ...)
+                                   # cores = cores,
+                                   filename = filename, ...)
+
 
   } else if(random == "spat"){
 
@@ -277,7 +281,7 @@ rast.ed.ses <- function(x, tree,
                                    # spat_alg = NULL, spat_alg_args = list(),
                                    spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                                    aleats = aleats,
-                                   cores = cores, filename = filename, ...)
+                                   filename = filename, ...)
 
   }  else {
 

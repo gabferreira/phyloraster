@@ -38,7 +38,7 @@
 #'  18(19), 4061-4072.
 # #' @examples
 # #' @export
-.rast.pe.B <- function(x, inv.R, branch.length, cores = 1, filename = "", ...){
+.rast.pe.B <- function(x, inv.R, branch.length, filename = "", ...){
 
   # phylogenetic endemism
   rpe <- sum(x*inv.R*branch.length,
@@ -88,7 +88,7 @@
 #' @export
 rast.pe <- function(x, tree,
                     inv.R, branch.length,
-                    cores = 1, filename = "", ...){
+                    filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -143,7 +143,7 @@ rast.pe <- function(x, tree,
   ## run function
   .rast.pe.B(x,
              inv.R, branch.length,
-             cores = cores, filename = filename, ...)
+             filename = filename, ...)
 }
 
 
@@ -180,13 +180,14 @@ rast.pe <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
+#' library(SESraster)
+#'
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' range.BL <- inv.range(data$x, data$branch.length)
-#' t <- rast.pe.ses(x = data$x,  range.BL = range.BL$range.BL, aleats = 10,
+#' range.BL <- inv.range(data$x)
+#' t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
 #' random = "spat")
-#' t <- rast.pe.ses(x, tree, aleats = 10, random = "spat")
 #' plot(t)
 #'
 #' @export
@@ -200,6 +201,8 @@ rast.pe.ses <- function(x, tree,
                         random = c("tip", "spat")[2],
                         aleats = 10,
                         cores = 1, filename = "", ...){
+
+  requireNamespace("SESraster")
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -244,7 +247,6 @@ rast.pe.ses <- function(x, tree,
 
   }
 
-  requireNamespace("SESraster")
 
   ## function arguments
 
@@ -253,13 +255,14 @@ rast.pe.ses <- function(x, tree,
 
   FUN_args = list(
     branch.length = branch.length,
-    inv.R = inv.R,
+    inv.R = inv.R
     # n.descen = n.descen,
     # spp_seq = spp_seq,
     # spp_seqrange.BL = spp_seqrange.BL,
     # spp_seqINV = spp_seqINV,
     # resu = resu,
-    cores = cores)
+    # cores = cores
+    )
 
   if(random == "tip"){
 

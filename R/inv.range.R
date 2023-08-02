@@ -5,9 +5,8 @@
 #' branch length for multiple species using a raster of presence-absence.
 #'
 #' @inheritParams geo.phylo.ses
-#' @inheritParams terra::app
 #'
-#' @param cores Not implemented yet.
+#' @param overwrite logical. If TRUE, filename is overwritten
 #' @param ... additional arguments to be passed passed down from a calling function.
 #'
 #' @return SpatRaster and numeric
@@ -20,7 +19,7 @@
 #' inv.range(x)
 #'
 #' @export
-inv.range <- function(x, cores = 1,
+inv.range <- function(x,
                       filename = "", overwrite = FALSE, ...){
   cores = 1
   # Test if there is enough memory in the user's pc

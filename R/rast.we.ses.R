@@ -44,7 +44,7 @@
 #'
 # #' @export
 # #' @examples
-.rast.we.B <- function(x, inv.R,  cores = 1, filename = "", ...){
+.rast.we.B <- function(x, inv.R, filename = "", ...){
 
   # weighted endemism
   rend <- sum(x*inv.R,
@@ -87,7 +87,7 @@
 #'
 #' @export
 rast.we <- function(x, inv.R,
-                    cores = 1, filename = "", ...){
+                    filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -139,7 +139,7 @@ rast.we <- function(x, inv.R,
   ## weighted endemism
   .rast.we.B(x,
              inv.R,
-             cores = cores, filename = filename, ...)
+             filename = filename, ...)
 }
 
 
@@ -178,8 +178,10 @@ rast.we <- function(x, inv.R,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
+#' library(SESraster)
+#'
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' t <- rast.we.ses(x, aleats = 10, random = "spat")
+#' t <- rast.we.ses(x, aleats = 3)
 #' plot(t)
 #'
 #' @export
@@ -191,12 +193,15 @@ rast.we.ses <- function(x,
                                              fr_prob = NULL),
                         # random = c("spat"),
                         aleats = 10,
-                        cores = 1, filename = "", ...){
+                        filename = "", ...){
+
+  requireNamespace("SESraster")
 
   ## object checks
   if(!terra::is.lonlat(x)){
     stop("Geographic coordinates are needed for the calculations.")
   }
+
 
   ### initial argument check
   {
@@ -236,7 +241,6 @@ rast.we.ses <- function(x,
 
   }
 
-  requireNamespace("SESraster")
 
   ## vectorization setup
   # nspp <- terra::nlyr(x)
@@ -248,14 +252,15 @@ rast.we.ses <- function(x,
 
   ## function arguments
   FUN_args = list(
-    inv.R = inv.R,
+    inv.R = inv.R
     # branch.length = branch.length,
     # n.descen = n.descen,
     # spp_seq = spp_seq,
     # # spp_seqLR = spp_seqLR,
     # spp_seqINV = spp_seqINV,
     # resu = resu,
-    cores = cores)
+    # cores = cores
+    )
 
 
   we.ses <- SESraster::SESraster(x,
@@ -265,7 +270,8 @@ rast.we.ses <- function(x,
                                  # spat_alg = NULL, spat_alg_args = list(),
                                  spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                                  aleats = aleats,
-                                 cores = cores, filename = filename, ...)
+                                 # cores = cores,
+                                 filename = filename, ...)
 
   return(we.ses)
 

@@ -18,11 +18,15 @@
 #'
 #' @export
 tip.rand <- function(x, aleats, replace = FALSE){
+
   # aleats <- aleats # number of null models
 
   bl.random <- list() # to store the branch length in the loop
+
   for(i in 1:aleats){
     bl.random[[i]] <- sample(x, replace = replace) # randomize branch lengths
   }
+
   return(bl.random)
+
 }

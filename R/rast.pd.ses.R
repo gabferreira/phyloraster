@@ -44,7 +44,7 @@
 #'
 # #' @export
 # #' @examples
-.rast.pd.B <- function(x, branch.length, cores = 1, filename = "", ...){
+.rast.pd.B <- function(x, branch.length, filename = "", ...){
 
   # phylogenetic diversity
   rpd <- sum(x*branch.length,
@@ -81,7 +81,7 @@
 #' @export
 rast.pd <- function(x, tree,
                     branch.length,
-                    cores = 1, filename = "", ...){
+                    filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -130,7 +130,7 @@ rast.pd <- function(x, tree,
   ## phylogenetic diversity
   rpd <- .rast.pd.B(x,
                     branch.length,
-                    cores = cores, filename = filename, ...)
+                    filename = filename, ...)
 
   return(rpd)
 
@@ -178,10 +178,12 @@ rast.pd <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
+#' library(SESraster)
+#'
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 10, random = "spat")
+#' t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 3, random = "spat")
 #' plot(t)
 #'
 #' @export
@@ -193,7 +195,10 @@ rast.pd.ses <- function(x, tree,
                                              fr_prob = NULL),
                         random = c("tip", "spat")[2],
                         aleats = 10,
-                        cores = 1, filename = "", ...){
+                        # cores = 1,
+                        filename = "", ...){
+
+  requireNamespace("SESraster")
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -239,18 +244,18 @@ rast.pd.ses <- function(x, tree,
 
   }
 
-  requireNamespace("SESraster")
 
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
-  FUN_args = list(branch.length = branch.length,
+  FUN_args = list(branch.length = branch.length
                   # n.descen = n.descen,
                   # spp_seq = spp_seq,
                   # spp_seqLR = spp_seqLR,
                   # spp_seqINV = spp_seqINV,
                   # resu = resu,
-                  cores = cores)
+                  # cores = cores
+                  )
 
 
   ## Null model (bootstrap structure)
@@ -263,7 +268,7 @@ rast.pd.ses <- function(x, tree,
                                    spat_alg = NULL, spat_alg_args = list(),
                                    # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                                    aleats = aleats,
-                                   cores = cores, filename = filename, ...)
+                                   filename = filename, ...)
 
   } else if(random == "spat"){
 
@@ -274,7 +279,8 @@ rast.pd.ses <- function(x, tree,
                                    # spat_alg = NULL, spat_alg_args = list(),
                                    spat_alg = spat_alg, spat_alg_args = spat_alg_args,
                                    aleats = aleats,
-                                   cores = cores, filename = filename, ...)
+                                   # cores = cores,
+                                   filename = filename, ...)
 
   } else {
 
