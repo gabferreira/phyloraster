@@ -4,16 +4,7 @@
 \alias{.rast.geo.phylo}
 \title{Calculate phylogenetic community metrics for raster data}
 \usage{
-.rast.geo.phylo(
-  x,
-  inv.R,
-  branch.length,
-  n.descen,
-  resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
-  cores = 1,
-  filename = "",
-  ...
-)
+.rast.geo.phylo(x, inv.R, branch.length, n.descen, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -27,10 +18,6 @@ length for each species.}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
-
-\item{resu}{vector structuring SpatRaster result}
-
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 

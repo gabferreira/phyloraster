@@ -4,7 +4,7 @@
 \alias{.rast.pd.B}
 \title{Calculate phylogenetic diversity for each raster cell}
 \usage{
-.rast.pd.B(x, branch.length, cores = 1, filename = "", ...)
+.rast.pd.B(x, branch.length, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -13,8 +13,6 @@ tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
-
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 

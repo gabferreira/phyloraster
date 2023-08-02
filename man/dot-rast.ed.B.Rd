@@ -4,7 +4,7 @@
 \alias{.rast.ed.B}
 \title{Calculate Evolutionary distinctiveness for each raster cell}
 \usage{
-.rast.ed.B(x, branch.length, n.descen, cores = 1, filename = "", ...)
+.rast.ed.B(x, branch.length, n.descen, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -16,9 +16,6 @@ length of each specie.}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch}
-
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
-with that many cores is created and used.}
 
 \item{filename}{character. Output filename.}
 

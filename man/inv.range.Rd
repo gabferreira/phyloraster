@@ -4,18 +4,16 @@
 \alias{inv.range}
 \title{Calculate the inverse of range size}
 \usage{
-inv.range(x, cores = 1, filename = "", overwrite = FALSE, ...)
+inv.range(x, filename = "", overwrite = FALSE, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{cores}{Not implemented yet.}
-
 \item{filename}{character. Output filename}
 
-\item{overwrite}{logical. If \code{TRUE}, \code{filename} is overwritten}
+\item{overwrite}{logical. If TRUE, filename is overwritten}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }

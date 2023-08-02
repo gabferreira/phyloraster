@@ -4,7 +4,7 @@
 \alias{.rast.we.B}
 \title{Calculate weighted endemism for each raster cell}
 \usage{
-.rast.we.B(x, inv.R, cores = 1, filename = "", ...)
+.rast.we.B(x, inv.R, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,8 +12,6 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
-
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 
 \item{filename}{character. Output filename}
 
