@@ -52,69 +52,6 @@ rast.sr <- function(x, filename = "", ...){
 }
 
 
-#' Calculate phylogenetic community metrics for each raster cell
-#'
-#' Calculate species richness, phylogenetic diversity, and evolutionary
-#' distinctiveness using vectors as input.
-#'
-#' @param x numeric. A named numerical vector of presence-absence for one sample.
-#' @param branch.length numeric. A named numerical vector containing the branch
-#' length for each species.
-#' @param n.descen numeric. A Named numeric vector of number of descendants for
-#' each branch
-#' @param resu vector structuring SpatRaster result
-#' @return numeric
-#'
-#' @author Neander Marcel Heming
-#'
-.vec.geo.phylo <- function(x,
-                           branch.length, n.descen,
-                           resu = stats::setNames(as.double(rep(NA, 3)),
-                                                  c("SR", "PD", "ED"))){
-  if(all(is.na(x))){
-    return(resu)
-  }
-
-  ### computing metrics
-  se <- sum(x, na.rm = T)
-  pd <- .vec.pd(x, branch.length)[[1]] # [[1]] return only the first raster
-  ed <- .vec.ed(x, branch.length, n.descen)[[1]] # [[1]] return only the first raster
-  # pe <- .vec.pe(x*inv.R, branch.length)
-  # we <- .vec.we(x*inv.R)
-
-  resu[] <- c(se, pd, ed)
-  return(resu)
-}
-
-#' Calculate phylogenetic community metrics for each raster cell
-#'
-#' Calculate phylogenetic endemism and weighted endemism using vectors as input.
-#'
-#' @param xinv.R SpatRaster. multiplication of x and inv.R from \code{\link{.rast.geo.phylo}}
-#' @inheritParams .vec.geo.phylo
-#'
-#' @return numeric
-#'
-#' @author Neander Marcel Heming
-#'
-.vec.geo.phylo2 <- function(xinv.R,
-                            branch.length,
-                            resu = stats::setNames(as.double(rep(NA, 2)), c("PE", "WE"))){
-  # if(all(is.na(x))){
-  #   return(resu)
-  # }
-
-  ### computing metrics
-  # se <- sum(x, na.rm = T)
-  # pd <- .vec.pd(x, branch.length)[[1]] # [[1]] return only the first raster
-  # ed <- .vec.ed(x, branch.length, n.descen)[[1]] # [[1]] return only the first raster
-  pe <- .vec.pe(xinv.R, branch.length)
-  we <- .vec.we(xinv.R)
-
-  resu[] <- c(pe, we)
-  return(resu)
-}
-
 #' Calculate phylogenetic community metrics for raster data
 #'
 #' Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
@@ -123,7 +60,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species. The layers (species) must be sorted according to the
 #' tree order. See the phylo.pres function.
-#' @inheritParams .vec.geo.phylo
+#'
 #' @inheritParams geo.phylo
 #'
 #' @return SpatRaster with one layer for each metric

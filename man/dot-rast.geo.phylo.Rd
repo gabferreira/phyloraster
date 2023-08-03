@@ -24,11 +24,11 @@ tree order. See the phylo.pres function.}
 \item{edge.path}{matrix representing the paths through the tree from root
 to each tip. See \code{\link{phylo.pres}}}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch
-length for each species.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
-each branch}
+each branch. See \code{\link{phylo.pres}}}
 
 \item{filename}{character. Output filename}
 
