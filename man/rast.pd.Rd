@@ -4,7 +4,7 @@
 \alias{rast.pd}
 \title{Calculate phylogenetic diversity for raster data}
 \usage{
-rast.pd(x, tree, branch.length, filename = "", ...)
+rast.pd(x, tree, edge.path, branch.length, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,6 +12,9 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
@@ -33,7 +36,7 @@ library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-pd <- rast.pd(data$x, branch.length = data$branch.length)
+pd <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
 plot(pd)
 
 }

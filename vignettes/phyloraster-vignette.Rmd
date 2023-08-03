@@ -184,15 +184,15 @@ plot(wer$WE, main ="Weigthed Endemism")
 
 The first evolutionary measure is Faith's phylogenetic diversity (PD, Faith 1994), which is calculated as the sum of the branch length for all species occurring in a given region (Faith 1994).
 
-```{r, warning= FALSE}
+```{r pdr, warning= FALSE}
 ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
 dataprep <- phylo.pres(x = ras, tree = tree, pruning = "tree")
 
-pdr <- rast.pd(x = dataprep$x, branch.length = dataprep$branch.length)
+pdr <- rast.pd(x = dataprep$x, edge.path = dataprep$edge.path, branch.length = dataprep$branch.length)
 ```
 
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+```{r pdr-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(pdr$PD, main = "Phylogenetic diversity")
 ```
 
@@ -208,7 +208,7 @@ per
 
 The result can be visualized using the R `plot` function from the `terra` package.
 
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+```{r per-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(per$PE, main = "Phylogenetic Endemism")
 ```
 
@@ -233,12 +233,12 @@ ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloras
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
 data <- phylo.pres(ras, tree, pruning = "tree")
 
-t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 10, random = "spat")
+t <- rast.pd.ses(data$x, edge.path = data$edge.path, branch.length = data$branch.length, aleats = 10, random = "spat")
 ```
 
 Plotting the results
 
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+```{r pds-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(t)
 ```
 
@@ -251,7 +251,7 @@ This function would allow assessing how species richness varies between differen
 For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia.
 In the map below we can visualize the spatial pattern of species richness.
 
-```{r}
+```{r sr-plot}
 # load the data
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness
@@ -261,7 +261,7 @@ plot(riq.pres)
 
 Now imagine that as climate change progresses, 16 relatively more vulnerable species are heavily affected and become locally extinct.
 
-```{r}
+```{r srf-plot}
 # load the data
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # richness future
@@ -272,7 +272,7 @@ terra::plot(riq.fut)
 The delta.grid function allows you to visualize the variation in these richness patterns spatially.
 See an example below.
 
-```{r}
+```{r dg}
 dg <- delta.grid(riq.pres, riq.fut)
 plot(dg)
 ```

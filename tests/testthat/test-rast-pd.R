@@ -6,7 +6,7 @@ test_that("returned object classes are correct", {
   data <- phylo.pres(x, tree)
 
   # tests
-  expect_s4_class(rast.pd(data$x, branch.length = data$branch.length), "SpatRaster")
+  expect_s4_class(rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length), "SpatRaster")
 })
 
 test_that("Test that error is returned with wrong order of the species names", {
@@ -16,7 +16,7 @@ test_that("Test that error is returned with wrong order of the species names", {
   data <- phylo.pres(x, tree)
 
   # metric PE
-  expect_error(rast.pd(x, branch.length = data$branch.length[5:8]))
+  expect_error(rast.pd(x, edge.path = data$edge.path, branch.length = data$branch.length[5:8]))
 })
 
 test_that("results of the analyses replicate those of other packages", {
@@ -26,7 +26,7 @@ test_that("results of the analyses replicate those of other packages", {
   data <- phylo.pres(x, tree)
 
   # phyloraster
-  pg <- rast.pd(data$x, branch.length = data$branch.length)
+  pg <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
 
   # epm
   # epm

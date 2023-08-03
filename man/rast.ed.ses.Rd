@@ -7,6 +7,7 @@
 rast.ed.ses(
   x,
   tree,
+  edge.path,
   branch.length,
   n.descen,
   spat_alg = "bootspat_str",
@@ -23,6 +24,9 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}

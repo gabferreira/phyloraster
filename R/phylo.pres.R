@@ -1,3 +1,78 @@
+#'  Compute tree edge lengths and node paths from root to each tip
+#'
+#' Computation of tree edge lengths and node paths from root to each tip to
+#' calculate PD for a entire phylogeny (= sum of all edge or branch lengths)
+#'
+#' @inheritParams phylo.pres
+#'
+#' @returns returns a list with two components: matrix H1
+#' representing the paths through the tree from root to each tip, and edge.length a
+#' numeric vector giving the length of each branch in the tree. Some matrix
+#' algebra and a summation of the resulting vector gives the whole-tree PD value.
+#'
+#' @details
+#' Based on the algorithm FastXtreePhylo of Peter D. Wilson
+#'
+#' @author Peter Wilson
+#'
+#' @examples
+#' library(phyloraster)
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#'
+#' fxtp <- tip_root_path(tree)
+#' H1 <- fxtp$H1
+#' edge.length <- fxtp$edge.length
+#' # PD for the whole community
+#' pres <- rep(1, nrow(H1))
+#' sum((crossprod(H1, pres)>0) * edge.length)
+#'
+#' # PD for a random subset of the community
+#' pres <- sample(c(1, 0), nrow(H1), TRUE)
+#' sum((crossprod(H1, pres)>0) * edge.length)
+#'
+#' @export
+tip_root_path <- function(tree){
+  # In edge matrix in a phylo object, OTUs are indexed 1:Ntip, the root node has
+  # index Ntip + 1, and internal nodes are indexed from root.node to
+  # total.nodes. This is clever because it lets us very efficiently
+  # cross-reference between edge indicies and the left and right terminal node
+  # indices of each edge. So, compute the key values:
+  root.node <- ape::Ntip(tree) + 1
+  total.nodes <- max(tree$edge)
+
+  # Matrix H1 of Schumacher's Xtree method, which is exactly the same as
+  # David Nipperess's phylomatrix:
+  H1 <- matrix(0, ape::Ntip(tree), ape::Nedge(tree),
+               dimnames=list(tree$tip.label, NULL))
+
+  # A short-cut: we can instantly populate H1 with terminal edges:
+  rc.ind <- cbind("row"=1:ape::Ntip(tree),
+                  "col"=which(tree$edge[,2] < root.node))
+  H1[rc.ind] <- 1
+
+  # Make a vector of internal node indices in descending order so we can traverse
+  # tree from first nodes below tip nodes down to the root:
+  internal.nodes <- seq(total.nodes,root.node,-1)
+
+  # Now, visit each internal node accumulating subtended child edge records:
+  for(thisNode in internal.nodes){
+    # Find the edge which has thisNode on its left:
+    next.edge <- which(tree$edge[,2]==thisNode)
+
+    # Which edges are children of the node to the right:
+    child.edges <- which(tree$edge[,1]==thisNode)
+
+    # Do the magic rowSums() trick to accumulate edges subtended by the current edge:
+    H1[,next.edge] <- rowSums(H1[,child.edges])
+  }
+
+  # All done...package results
+  return(list("edge.length" = tree$edge.length,
+              "H1" = H1))
+  # return(H1)
+}
+
+
 #' Prepare rasters and phylogenetic tree to run community metrics
 #'
 #' @description Reorder a stack of rasters of species distribution according to
@@ -11,9 +86,8 @@
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species.
 #' @param tree phylo. A dated tree.
-#' @param pruning character. Character indicating whether branch length and number
-#' of descendants should be calculated before or after pruning the tree. To calculate
-#' before pruning use 'tree' and after pruning use 'subtree'.
+#' @param full_tree_metr logical. Whether edge.path, branch length and number
+#' of descendants should be calculated with the full or the prunned the tree.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return Returns a list containing a SpatRaster reordered according to the order
 #'  that the species appear in the phylogenetic tree, a subtree containing only
@@ -26,10 +100,10 @@
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' phylo.pres(x[[1:3]], tree, prunning = "tree")
+#' phylo.pres(x[[1:3]], tree, full_tree_metr = TRUE)
 #'
 #' @export
-phylo.pres <- function(x, tree, pruning = c("tree", "subtree")[1], ...) {
+phylo.pres <- function(x, tree, full_tree_metr = TRUE, ...) {
 
   if(!inherits(x, "SpatRaster")){ # class "Raster" in "SpatRaster"
     # x <- terra::rast(x)
@@ -41,88 +115,48 @@ phylo.pres <- function(x, tree, pruning = c("tree", "subtree")[1], ...) {
     stop("The phylogeny 'tree' must be of class 'phylo'")
   }
 
-  if(pruning == "tree"){
-
-    spat.names <- names(x) # to extract species names in the raster
-
-    tip.names <- as.character(phylobase::tipLabels(phylobase::phylo4(tree))) # extracting species names in the tree
-
-    int.tip.spat <- intersect(spat.names, tip.names) # species in common for the raster and the tree
-    tip.in.spat <- tip.names %in% spat.names # species of the tree that are in the raster
-    spat.in.tip <- spat.names %in% tip.names # species of the raster that are in the tree
-
-    if(identical(int.tip.spat, character(0))){
-      stop("The SpatRaster 'x' and the phylogeny 'tree' have no species in common, or the species names do not match between them")
-    }
-
-    # if (sum(!tip.in.spat)>0){
-    #   warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
-    #                 paste0(tip.names[!tip.in.spat], collapse = ", ")))
-    #   tree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
-    # }
-    # if (sum(!spat.in.tip)>0){
-    #   warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
-    #                 paste0(spat.names[!spat.in.tip], collapse = ", ")))
-    # }
-
-    # Get branch length
-    branch.length <- stats::setNames(as.numeric(phylobase::edgeLength(phylobase::phylo4(tree), int.tip.spat)), int.tip.spat)
-    # branch.length <- branch.length[[int.tip.spat]]
-
-    # Get descendant node numbers
-    n.descen <- stats::setNames(as.numeric(phylobase::ancestor(phylobase::phylo4(tree), int.tip.spat)), int.tip.spat)
-    # n.descen <- n.descen[[int.tip.spat]]
-
-    # Pruning the tree based on spat names
-    tree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
-
-    # int.tip.spat[] <- phylobase::tipLabels(phylobase::phylo4(tree)) # ensure tips names are in proper order
-
-    # branch.length <- branch.length[[tip.in.spat]]
-    # n.descen <- n.descen[[tip.in.spat]]
-
-  } else if (pruning == "subtree") {
-
   ## species name check
   spat.names <- names(x) # to extract species names in the raster
-  tip.names <- as.character(phylobase::tipLabels(phylobase::phylo4(tree))) # extracting species names in the tree
+  tip.names <- tree$tip.label # as.character(phylobase::tipLabels(phylobase::phylo4(tree))) # extracting species names in the tree
 
-  int.tip.spat <- intersect(spat.names, tip.names) # species in common for the raster and the tree
+  int.tip.spat <- intersect(tip.names, spat.names) # species in common for the raster and the tree
   tip.in.spat <- tip.names %in% spat.names # species of the tree that are in the raster
   spat.in.tip <- spat.names %in% tip.names # species of the raster that are in the tree
 
   if(identical(int.tip.spat, character(0))){
     stop("The SpatRaster 'x' and the phylogeny 'tree' have no species in common, or the species names do not match between them")
   }
-  if (sum(!tip.in.spat)>0){
-    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
-                  paste0(tip.names[!tip.in.spat], collapse = ", ")))
-    tree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
-  }
   if (sum(!spat.in.tip)>0){
     warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
                   paste0(spat.names[!spat.in.tip], collapse = ", ")))
   }
+  if (sum(!tip.in.spat)>0){
+    warning(paste("Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped:",
+                  paste0(tip.names[!tip.in.spat], collapse = ", ")))
 
-  tree <- phylobase::phylo4(tree) # phylo in phylo4
+  }
+  subtree <- ape::keep.tip(tree, int.tip.spat) # to make a subset of the tree and keep only the species that are in the raster
 
-  int.tip.spat[] <- phylobase::tipLabels(tree) # ensure tips names are in proper order
+  # int.tip.spat[] <- subtree$tip.label #phylobase::tipLabels(phylobase::phylo4(subtree)) # ensure tips names are in proper order
 
-  # Get branch length
-  branch.length <- stats::setNames(as.numeric(phylobase::edgeLength(tree, int.tip.spat)), int.tip.spat)
+  if(full_tree_metr){
+    ## Compute node paths through the tree from root to each tip
+    edge.info <- tip_root_path(tree)
+    # Get descendant node numbers
+    n.descen <- stats::na.exclude(as.numeric(phylobase::ancestor(phylobase::phylo4(tree))))
 
-  # Get descendant node numbers
-  n.descen <- stats::setNames(as.numeric(phylobase::ancestor(tree, int.tip.spat)), int.tip.spat)
+  } else {
+    ## Compute node paths through the tree from root to each tip
+    edge.info <- tip_root_path(subtree)
+    # Get descendant node numbers
+    n.descen <- stats::na.exclude(as.numeric(phylobase::ancestor(phylobase::phylo4(subtree))))
 
-  } else{
-
-    stop("Choose a valid pruning method! The methods currently available are: 'tree', 'subtree'.")
-
-}
+  }
 
   return(list(x = x[[int.tip.spat]], # reorder the stack according to the tree tips
-              tree = tree,
-              branch.length = branch.length,
+              tree = subtree,
+              edge.path = edge.info$H1[int.tip.spat,],
+              branch.length = edge.info$edge.length,
               n.descendants = n.descen))
 
 }

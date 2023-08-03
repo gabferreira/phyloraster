@@ -4,7 +4,7 @@
 \alias{rast.ed}
 \title{Calculate Evolutionary distinctiveness for raster data}
 \usage{
-rast.ed(x, tree, branch.length, n.descen, filename = "", ...)
+rast.ed(x, tree, edge.path, branch.length, n.descen, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,6 +12,9 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
@@ -37,7 +40,8 @@ x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # phylogenetic tree
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-ed <- rast.ed(data$x, branch.length = data$branch.length, n.descen = data$n.descen)
+ed <- rast.ed(data$x, edge.path = data$edge.path,
+              branch.length = data$branch.length, n.descen = data$n.descen)
 plot(ed)
 
 }

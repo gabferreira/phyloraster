@@ -35,12 +35,7 @@
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species. The layers (species) must be sorted according to the
 #' tree order. See the phylo.pres function.
-#' @param branch.length numeric. A Named numeric vector containing the branch
-#' length of each specie.
-#' @param n.descen numeric. A Named numeric vector of number of descendants for
-#' each branch
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed for fun.
+#' @inheritParams geo.phylo
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -52,11 +47,16 @@
 #'
 # #' @export
 # #' @examples
-.rast.ed.B <- function(x, branch.length, n.descen, filename = "", ...){
+.rast.ed.B <- function(x, edge.path, branch.length, n.descen, filename = "", ...){
 
   # evolutionary distinctiveness
-  red <- sum(x*(branch.length/n.descen),
-             filename = filename, ...)
+  red <- terra::app(x,
+                    function(x, H1, branch.length, n.descen){
+                      sum((crossprod(H1, x)>0) * (branch.length/n.descen) )
+                    }, H1 = edge.path, branch.length = branch.length, n.descen = n.descen,
+                    filename = filename, ...)
+  # red <- sum(x*(branch.length/n.descen),
+  #            filename = filename, ...)
 
   terra::set.names(red, "ED") # layer name
 
@@ -87,12 +87,13 @@
 #' # phylogenetic tree
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' ed <- rast.ed(data$x, branch.length = data$branch.length, n.descen = data$n.descen)
+#' ed <- rast.ed(data$x, edge.path = data$edge.path,
+#'               branch.length = data$branch.length, n.descen = data$n.descen)
 #' plot(ed)
 #'
 #' @export
 rast.ed <- function(x, tree,
-                    branch.length, n.descen,
+                    edge.path, branch.length, n.descen,
                     filename = "", ...){
 
   ## object checks
@@ -102,12 +103,12 @@ rast.ed <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'edge.path', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -117,13 +118,15 @@ rast.ed <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(#isFALSE(identical(names(x), names(LR))),
-      #isFALSE(identical(names(x), names(inv.R))),
-      isFALSE(identical(names(x), names(branch.length))),
-      isFALSE(identical(names(x), names(n.descen))))) {
+    } else if(any(isFALSE(identical(names(x), rownames(edge.path))) #,
+                  #isFALSE(identical(names(x), names(LR))),
+                  # isFALSE(identical(names(x), names(branch.length))),
+                  # isFALSE(identical(names(x), names(n.descen)))
+                  )) {
 
       data <- phylo.pres(x, tree)
       # area.branch <- inv.range(data$x, data$branch.length)
@@ -131,6 +134,7 @@ rast.ed <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
     }
@@ -140,7 +144,7 @@ rast.ed <- function(x, tree,
 
   ## evolutionary distinctiveness
   red <- .rast.ed.B(x,
-                    branch.length, n.descen,
+                    edge.path, branch.length, n.descen,
                     filename = filename, ...)
 
   return(red)
@@ -191,7 +195,7 @@ rast.ed <- function(x, tree,
 #'
 #' @export
 rast.ed.ses <- function(x, tree,
-                        branch.length, n.descen,
+                        edge.path, branch.length, n.descen,
                         spat_alg = "bootspat_str",
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
@@ -209,12 +213,12 @@ rast.ed.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'edge.path', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -224,13 +228,14 @@ rast.ed.ses <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(#isFALSE(identical(names(x), names(LR))),
-      #isFALSE(identical(names(x), names(inv.R))),
-      isFALSE(identical(names(x), names(branch.length))),
-      isFALSE(identical(names(x), names(n.descen))))) {
+    } else if(any(isFALSE(identical(names(x), rownames(edge.path))) #,
+                  # isFALSE(identical(names(x), names(branch.length))),
+                  # isFALSE(identical(names(x), names(n.descen)))
+      )) {
 
       data <- phylo.pres(x, tree)
       # area.branch <- inv.range(data$x, data$branch.length)
@@ -238,6 +243,7 @@ rast.ed.ses <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
     }
@@ -248,7 +254,8 @@ rast.ed.ses <- function(x, tree,
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
-  FUN_args = list(branch.length = branch.length,
+  FUN_args = list(edge.path = edge.path,
+                  branch.length = branch.length,
                   n.descen = n.descen
                   # spp_seq = spp_seq,
                   # spp_seqLR = spp_seqLR,

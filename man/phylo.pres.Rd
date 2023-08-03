@@ -4,7 +4,7 @@
 \alias{phylo.pres}
 \title{Prepare rasters and phylogenetic tree to run community metrics}
 \usage{
-phylo.pres(x, tree, pruning = c("tree", "subtree")[1], ...)
+phylo.pres(x, tree, full_tree_metr = TRUE, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,9 +12,8 @@ for a set of species.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{pruning}{character. Character indicating whether branch length and number
-of descendants should be calculated before or after pruning the tree. To calculate
-before pruning use 'tree' and after pruning use 'subtree'.}
+\item{full_tree_metr}{logical. Whether edge.path, branch length and number
+of descendants should be calculated with the full or the prunned the tree.}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -37,7 +36,7 @@ lowercase letters.
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-phylo.pres(x[[1:3]], tree, prunning = "tree")
+phylo.pres(x[[1:3]], tree, full_tree_metr = TRUE)
 
 }
 \author{

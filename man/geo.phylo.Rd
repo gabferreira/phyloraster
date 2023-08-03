@@ -4,7 +4,16 @@
 \alias{geo.phylo}
 \title{Calculate phylogenetic community metrics for raster data}
 \usage{
-geo.phylo(x, tree, inv.R, branch.length, n.descen, filename = "", ...)
+geo.phylo(
+  x,
+  tree,
+  inv.R,
+  edge.path,
+  branch.length,
+  n.descen,
+  filename = "",
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -14,6 +23,9 @@ tree order. See the phylo.pres function.}
 \item{tree}{phylo. A dated tree.}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
@@ -50,7 +62,7 @@ tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster")
 data <- phylo.pres(x, tree)
 inv.R <- inv.range(data$x)
 #t <- geo.phylo(x, tree)
-t <- geo.phylo(data$x, inv.R = inv.R,
+t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 branch.length = data$branch.length, n.descen = data$n.descendants)
 terra::plot(t)
 

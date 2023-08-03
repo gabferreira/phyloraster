@@ -7,6 +7,7 @@
 rast.pd.ses(
   x,
   tree,
+  edge.path,
   branch.length,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
@@ -22,6 +23,9 @@ for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
@@ -79,7 +83,8 @@ library(SESraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 3, random = "spat")
+t <- rast.pd.ses(data$x, edge.path = data$edge.path,
+                branch.length = data$branch.length, aleats = 3, random = "spat")
 plot(t)
 
 }

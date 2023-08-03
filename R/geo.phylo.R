@@ -148,7 +148,7 @@ rast.sr <- function(x, filename = "", ...){
 #'
 .rast.geo.phylo <- function(x,
                             inv.R,
-                            branch.length, n.descen,
+                            edge.path, branch.length, n.descen,
                             # spp_seq, spp_seqrange.BL, spp_seqINV,
                             # resu = stats::setNames(as.double(rep(NA, 5)), c("SR", "PD", "ED", "PE", "WE")),
                             filename = "", ...){
@@ -160,9 +160,9 @@ rast.sr <- function(x, filename = "", ...){
 
   geop <- terra::rast(list(rast.sr(x,
                                    overwrite=TRUE, filename = ifelse(mi, "", temp[1])), # SR
-                           .rast.pd.B(x, branch.length,
+                           .rast.pd.B(x, edge.path, branch.length,
                                       overwrite=TRUE, filename = ifelse(mi, "", temp[2])), # PD
-                           .rast.ed.B(x, branch.length, n.descen,
+                           .rast.ed.B(x, edge.path, branch.length, n.descen,
                                       overwrite=TRUE, filename = ifelse(mi, "", temp[3])), # ED
                            .rast.pe.B(x, inv.R, branch.length,
                                       overwrite=TRUE, filename = ifelse(mi, "", temp[4])), # PE
@@ -189,6 +189,8 @@ rast.sr <- function(x, filename = "", ...){
 #'
 #' @inheritParams phylo.pres
 #' @param inv.R SpatRaster. Inverse of range size. See \code{\link{inv.range}}
+#' @param edge.path matrix representing the paths through the tree from root
+#' to each tip. See \code{\link{phylo.pres}}
 #' @param branch.length numeric. A Named numeric vector of branch length for
 #' each species. See \code{\link{phylo.pres}}
 #' @param n.descen numeric. A Named numeric vector of number of descendants for
@@ -229,13 +231,13 @@ rast.sr <- function(x, filename = "", ...){
 #' data <- phylo.pres(x, tree)
 #' inv.R <- inv.range(data$x)
 #' #t <- geo.phylo(x, tree)
-#' t <- geo.phylo(data$x, inv.R = inv.R,
+#' t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 #' branch.length = data$branch.length, n.descen = data$n.descendants)
 #' terra::plot(t)
 #'
 #' @export
 geo.phylo <- function(x, tree,
-                      inv.R, branch.length, n.descen,
+                      inv.R, edge.path, branch.length, n.descen,
                       filename = "", ...){
 
   ## object checks
@@ -250,7 +252,7 @@ geo.phylo <- function(x, tree,
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'edge.path', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -258,17 +260,20 @@ geo.phylo <- function(x, tree,
 
       x <- data$x
       inv.R <- inv.range(x)
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(inv.R))),
-                  isFALSE(identical(names(x), names(branch.length))),
-                  isFALSE(identical(names(x), names(n.descen))))) {
+    } else if(any(isFALSE(identical(names(x), names(inv.R))) #,
+                  # isFALSE(identical(names(x), names(branch.length))),
+                  # isFALSE(identical(names(x), names(n.descen)))
+                  )) {
 
       data <- phylo.pres(x, tree)
 
       x <- data$x
       inv.R <- inv.range(x)
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
@@ -282,6 +287,7 @@ geo.phylo <- function(x, tree,
   ## run function
   .rast.geo.phylo(x,
                   inv.R = inv.R,
+                  edge.path = edge.path,
                   branch.length = branch.length,
                   n.descen = n.descen,
                   resu = resu,
@@ -340,7 +346,7 @@ geo.phylo <- function(x, tree,
 #'
 #' @export
 geo.phylo.ses <- function(x, tree,
-                          inv.R, branch.length, n.descen,
+                          inv.R, edge.path, branch.length, n.descen,
                           spat_alg = "bootspat_str",
                           spat_alg_args = list(rprob = NULL,
                                                rich = NULL,
@@ -361,7 +367,7 @@ geo.phylo.ses <- function(x, tree,
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', 'edge.path', 'branch.length', and 'n.descen' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -369,17 +375,20 @@ geo.phylo.ses <- function(x, tree,
 
       x <- data$x
       inv.R <- inv.range(x)
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(inv.R))),
-                  isFALSE(identical(names(x), names(branch.length))),
-                  isFALSE(identical(names(x), names(n.descen))))) {
+    } else if(any(isFALSE(identical(names(x), names(inv.R))) #,
+                  # isFALSE(identical(names(x), names(branch.length))),
+                  # isFALSE(identical(names(x), names(n.descen)))
+                  )) {
 
       data <- phylo.pres(x, tree)
 
       x <- data$x
       inv.R <- inv.range(x)
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       n.descen <- data$n.descendants
     }
@@ -393,6 +402,7 @@ geo.phylo.ses <- function(x, tree,
 
   ## function arguments
   FUN_args = list(inv.R = inv.R,
+                  edge.path = edge.path,
                   branch.length = branch.length,
                   n.descen = n.descen,
                   resu = resu,

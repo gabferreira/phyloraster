@@ -57,8 +57,8 @@ test_that("Are the returned values correct?", {
   terra::ext(r) <- c(150.0157, 150.8157, -23.044, -22.8563)
   xcrop <- terra::crop(x, terra::ext(r))
 
-  pp.obs <- suppressWarnings(phylo.pres(xcrop[[1:10]], tree, pruning = "subtree"))
-  descen.expect <- c(12, 12, 13, 13, 12, 14, 15, 16, 16, 15)
+  pp.obs <- suppressWarnings(phylo.pres(xcrop[[1:10]], tree, full_tree_metr = FALSE))
+  descen.expect <- c(12, 12, 13, 13, 12, 14, 15, 16, 16, 15, 11, 12, 11, 14, 15)
   # (terra::values(pp.obs[[1]]))[,10]
   rast.expect <- matrix(data = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
@@ -71,23 +71,24 @@ test_that("Are the returned values correct?", {
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
 
-  branch.expect <- c(0.589016, 0.589015, 0.395144, 0.395144, 0.589015,
-                     0.288907, 0.196139, 0.129514, 0.129514, 0.196139)
+  branch.expect <- c(0.175442, 0.589016, 0.589015, 0.193871, 0.395144, 0.395144,
+                     0.589015, 0.475550, 0.288907, 0.092767, 0.196139, 0.066625,
+                     0.129514, 0.129514, 0.196139)
   # test
   expect_equivalent(pp.obs$n.descendants, descen.expect)
   expect_equivalent(terra::values(pp.obs$x), rast.expect)
   expect_equivalent(pp.obs$branch.length, branch.expect)
 })
 
-test_that("names in the raster and in the branch lenght are in the same order", {
+test_that("names in the raster and in the node path matrix are in the same order", {
 
   # load data
   ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-  datapres <- phylo.pres(ras, tree, pruning = "subtree")
+  datapres <- phylo.pres(ras, tree, full_tree_metr = FALSE)
 
   # test
-  expect_equal(all.equal(names(datapres$x), tree$tip.label), TRUE)
+  expect_equal(all.equal(rownames(datapres$edge.path), tree$tip.label), TRUE)
 })
 
 test_that("error is returned when x class is different of SpatRaster", {

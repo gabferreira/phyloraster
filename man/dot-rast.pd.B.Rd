@@ -4,12 +4,15 @@
 \alias{.rast.pd.B}
 \title{Calculate phylogenetic diversity for each raster cell}
 \usage{
-.rast.pd.B(x, branch.length, filename = "", ...)
+.rast.pd.B(x, edge.path, branch.length, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
