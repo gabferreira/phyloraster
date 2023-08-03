@@ -1,29 +1,3 @@
-#' Calculate phylogenetic endemism for a vector
-#'
-#' @description This function calculates phylogenetic endemism for a vector
-#'
-#' @inheritParams .vec.geo.phylo
-#'
-#' @return numeric
-#'
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
-#' & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
-#' geographical concentrations of evolutionary history. Molecular ecology,
-#' 18(19), 4061-4072.
-#'
-#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#'
-# #' @export
-.vec.pe <- function(x, branch.length, resu = as.double(NA)){
-
-  if(all(is.na(x))){
-    return(resu)
-  }
-
-  resu[] <- sum(x*branch.length, na.rm = TRUE)
-
-}
-
 #' Calculate phylogenetic endemism for a raster
 #'
 #' Calculate phylogenetic endemism using rasters as input and output.

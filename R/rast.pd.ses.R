@@ -1,32 +1,3 @@
-#' Calculate phylogenetic diversity (Faith 1992) for a vector
-#'
-#' @description This function calculates the sum of the branch length for a set
-#'  of species for one sample.
-#'
-#' @inheritParams .vec.geo.phylo
-#'
-#' @return numeric
-#'
-#'
-#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic
-#' diversity. Biological conservation, 61(1), 1-10.
-#'
-#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#'
-# #' @export
-# #' @examples
-.vec.pd <- function(x, branch.length, resu = c(PD=NA)){
-
-  if(all(is.na(x))){
-    return(resu)
-  }
-
-  resu[] <- sum(x*branch.length, na.rm = TRUE) # pd Faith 1992
-
-  return(resu)
-}
-
-
 #' Calculate phylogenetic diversity for each raster cell
 #'
 #' @description Calculate the sum of the branch length for species present in

@@ -2,6 +2,9 @@ test_that("returned object classes are correct", {
 
   # load data
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
   branch.length <- data$branch.length
@@ -22,9 +25,7 @@ test_that("Are the returned values correct?", {
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   # getting fewer cells to test all values
-  r <- terra::rast()
-  terra::ext(r) <- c(150.0157, 150.8157, -23.044, -22.8563)
-  xcrop <- terra::crop(x, terra::ext(r))
+  xcrop <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
   # matching phylogenetic tree and the raster
   data <- phylo.pres(xcrop, tree)
@@ -84,6 +85,10 @@ test_that("error is returned when an argument is missing", {
 
   # load data
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
   inv.R <- phyloraster::inv.range(data$x)
@@ -102,6 +107,10 @@ test_that("arguments are calculated when is missing and the tree is provided", {
 
   # load data
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
   # area.branch <- phyloraster::inv.range(data$x)
@@ -115,6 +124,9 @@ test_that("names are reordened in the function geo.phylo", {
 
   # load data
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
   inv.R <- phyloraster::inv.range(data$x)
@@ -132,6 +144,9 @@ test_that("error is returned when the raster does not have a longitude/latitude 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   w <- terra::project(x, "EPSG:2169")
 
   data <- phyloraster::phylo.pres(w, tree)
@@ -143,3 +158,4 @@ test_that("error is returned when the raster does not have a longitude/latitude 
   expect_error(geo.phylo(data$x,
                          data$n.descendants))
 })
+

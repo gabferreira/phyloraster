@@ -1,6 +1,10 @@
 test_that("check if the object class is correct", {
+
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
   # metric SE richness
   riq.pres <- phyloraster::rast.sr(x)
@@ -17,9 +21,7 @@ test_that("Are the returned values correct?", {
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 
   # getting fewer cells to test all values
-  r <- terra::rast()
-  terra::ext(r) <- c(150.0157, 150.8157, -23.044, -22.8563)
-  xcrop <- terra::crop(x, terra::ext(r))
+  xcrop <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
   # metric SE richness
   riq.pres <- phyloraster::rast.sr(xcrop)

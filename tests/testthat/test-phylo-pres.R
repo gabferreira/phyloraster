@@ -1,9 +1,12 @@
 test_that("check if the returned object class is correct", {
 
   # load data
-  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-  pp <- phylo.pres(ras, tree)
+  pp <- phylo.pres(x, tree)
 
   # tests
   expect_s4_class(pp$x, "SpatRaster")
@@ -13,18 +16,23 @@ test_that("check if the returned object class is correct", {
 test_that("Test that error is returned with wrong input class", {
 
   # load data and functions
-  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-  pp <- phylo.pres(ras, tree)
+  pp <- phylo.pres(x, tree)
 
   # tests
-  expect_error(phylo.pres(ras, pp$branch.length))
+  expect_error(phylo.pres(x, pp$branch.length))
 })
 
 test_that("Test that error when species names do not match between the raster and the tree", {
 
   # load data and functions
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   names(x) <- c( "1Litoria_revelata" ,  "1Litoria_rothii" ,  "1Litoria_longirostris" ,
@@ -41,6 +49,9 @@ test_that("Test that error when species names do not match between the raster an
                  "1Litoria_nannotis"    ,      "1Litoria_lorica"    ,
                  "1Litoria_rheocola"  ,        "1Litoria_nyakalensis" ,
                  "1Litoria_infrafrenata")
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
 
   # tests
   expect_error(phylo.pres(x, tree))
@@ -53,9 +64,7 @@ test_that("Are the returned values correct?", {
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   # getting fewer cells to test all values
-  r <- terra::rast()
-  terra::ext(r) <- c(150.0157, 150.8157, -23.044, -22.8563)
-  xcrop <- terra::crop(x, terra::ext(r))
+  xcrop <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
   pp.obs <- suppressWarnings(phylo.pres(xcrop[[1:10]], tree, pruning = "subtree"))
   descen.expect <- c(12, 12, 13, 13, 12, 14, 15, 16, 16, 15)
@@ -82,9 +91,12 @@ test_that("Are the returned values correct?", {
 test_that("names in the raster and in the branch lenght are in the same order", {
 
   # load data
-  ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-  datapres <- phylo.pres(ras, tree, pruning = "subtree")
+  datapres <- phylo.pres(x, tree, pruning = "subtree")
 
   # test
   expect_equal(all.equal(names(datapres$x), tree$tip.label), TRUE)
@@ -94,10 +106,11 @@ test_that("error is returned when x class is different of SpatRaster", {
 
   # load data
   require(raster)
-  ras <- raster::brick(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- raster::brick(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   # tests
-  expect_error(phylo.pres(ras, tree))
+  expect_error(phylo.pres(x, tree))
 
 })

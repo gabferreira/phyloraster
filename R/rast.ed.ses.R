@@ -1,32 +1,3 @@
-#' Calculate Evolutionary Distinctiveness for a vector
-#'
-#' @description This function calculates evolutionary distinctiveness for a set
-#' of species using the fair-proportion index (Isaac et al., 2007).
-#'
-#' @usage .vec.ed(x, branch.length, n.descen, resu=c(ED=NA))
-#'
-#' @inheritParams .vec.geo.phylo
-#'
-#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
-#'
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
-#' Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
-#' threat and phylogeny. PLoS ONE 2, e296.
-#'
-#' @return numeric
-# #' @export
-.vec.ed <- function(x, branch.length, n.descen, resu=c(ED=NA)){
-
-  if(all(is.na(x))){
-    return(resu)
-  }
-
-  resu[] <- sum(x*(branch.length/n.descen), na.rm = TRUE) # evolutionary distinctiveness
-
-  return(resu)
-
-}
-
 #' Calculate Evolutionary distinctiveness for each raster cell
 #'
 #' @description This function calculates evolutionary distinctiveness according

@@ -2,6 +2,9 @@ test_that("returned object classes are correct", {
 
   # load data
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   # tests
@@ -12,6 +15,9 @@ test_that("returned object classes are correct", {
 test_that("error is returned when the argument n.descendents is missing", {
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
   data <- phylo.pres(x, tree)
 
@@ -23,6 +29,10 @@ test_that("error is returned when the argument n.descendents is missing", {
 test_that("error is returned when the raster does not have a longitude/latitude coordinate reference system (CRS)", {
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
   w <- terra::project(x, "EPSG:2169")

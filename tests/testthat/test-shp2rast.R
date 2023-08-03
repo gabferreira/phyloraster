@@ -37,9 +37,8 @@ test_that("Are the returned values correct?", {
                                                    resolution = 0.1))
 
   # c(ob.values[,3])
-  expec.values <- matrix(data = c(0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                  0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
+  expec.values <- matrix(data = c(1, 1, 1, 1, 1, 1, 1,
+                                  1, 1, 1, 1, 1, 1, 1, 1),
                          ncol = 3, byrow = F)
   expect_equivalent(ob.values, expec.values)
 

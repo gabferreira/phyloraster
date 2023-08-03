@@ -11,7 +11,7 @@
 for a set of species. The layers (species) must be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+\item{inv.R}{SpatRaster. inverse of range size calculated from \code{\link{inv.range}}}
 
 \item{branch.length}{numeric. A named numerical vector containing the branch
 length for each species.}
