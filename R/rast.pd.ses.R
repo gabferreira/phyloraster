@@ -156,8 +156,8 @@ rast.pd <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
-#' library(SESraster)
-#'
+#' require(devtools)
+#' install_github("HemingNM/SESraster", build_vignettes = TRUE)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
