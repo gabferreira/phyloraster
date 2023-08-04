@@ -28,18 +28,25 @@ test_that("Are the returned values correct?", {
                                  package="phyloraster"))
 
   # getting fewer cells to test all values
-  r <- terra::rast()
-  terra::ext(r) <- c(113.380470276, 114.55355835, -28.06026001, -27.65233326)
+  r <- terra::rast(vals=1)
+  terra::ext(r) <- c(112.380470276, 115.55355835, -30.06026001, -28.55233326)
+  # plot(shp)
+  # plot(r, add=T, col="gray")
   shpc <- terra::crop(shp, terra::ext(r))
-
-  ob.values <- terra::values(phyloraster::shp2rast(shpc, sps.col = "BINOMIAL",
-                                                   ymask = FALSE, background = 0,
-                                                   resolution = 0.1))
+  shpr <- phyloraster::shp2rast(shpc, sps.col = "BINOMIAL",
+                                ymask = FALSE, background = 0,
+                                resolution = 0.25)
+  # plot(shpr, add=T)
+  ob.values <- as.vector(terra::values(shpr))
 
   # c(ob.values[,3])
   expec.values <- matrix(data = c(1, 1, 1, 1, 1, 1, 1,
                                   1, 1, 1, 1, 1, 1, 1, 1),
                          ncol = 3, byrow = F)
+  expec.values <- c(1, 1, 1, 0, 1, 1,
+                    1, 0, 0, 1, 1, 1,
+                    0, 1, 1, 1, 0, 1,
+                    1, 1, 0, 1, 1, 1)
   expect_equivalent(ob.values, expec.values)
 
 })

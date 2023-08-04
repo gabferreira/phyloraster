@@ -10,10 +10,12 @@ test_that("check if the object class is correct", {
 
   require("SESraster")
   # tests
-  expect_s4_class(rast.pd.ses(data$x, branch.length = data$branch.length,
-                                           aleats = 3, random = "spat"), "SpatRaster")
-  expect_s4_class(rast.pd.ses(data$x, branch.length = data$branch.length,
-                                           aleats = 3, random = "tip"), "SpatRaster")
+  expect_s4_class(rast.pd.ses(data$x, edge.path = data$edge.path,
+                              branch.length = data$branch.length,
+                              aleats = 3, random = "spat"), "SpatRaster")
+  expect_s4_class(rast.pd.ses(data$x, edge.path = data$edge.path,
+                              branch.length = data$branch.length,
+                              aleats = 3, random = "tip"), "SpatRaster")
 
 })
 
