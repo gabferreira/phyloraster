@@ -5,7 +5,7 @@
 #' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
-
+#'
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
 #'  & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
 #'  geographical concentrations of evolutionary history. Molecular ecology,

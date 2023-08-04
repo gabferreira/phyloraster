@@ -15,11 +15,16 @@
 #'
 # #' @export
 # #' @examples
-.rast.pd.B <- function(x, branch.length, filename = "", ...){
+.rast.pd.B <- function(x, edge.path, branch.length, filename = "", ...){
 
   # phylogenetic diversity
-  rpd <- sum(x*branch.length,
-             filename = filename, ...)
+  rpd <- terra::app(x,
+                    function(x, H1, branch.length){
+                      sum((crossprod(H1, x)>0) * branch.length)
+                    }, H1 = edge.path, branch.length = branch.length,
+                    filename = filename, ...)
+  # rpd <- sum(x*branch.length,
+  #            filename = filename, ...)
 
   terra::set.names(rpd, "PD")
 
@@ -46,12 +51,12 @@
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' pd <- rast.pd(data$x, branch.length = data$branch.length)
+#' pd <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
 #' plot(pd)
 #'
 #' @export
 rast.pd <- function(x, tree,
-                    branch.length,
+                    edge.path, branch.length,
                     filename = "", ...){
 
   ## object checks
@@ -61,12 +66,12 @@ rast.pd <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or 'branch.length' need to be supplied")
+      stop("Either argument 'tree' or 'edge.path' and 'branch.length' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -76,12 +81,13 @@ rast.pd <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       # n.descen <- data$n.descendants
 
-    } else if(any(isFALSE(identical(names(x), names(branch.length)))
+    } else if(any(#isFALSE(identical(names(x), names(branch.length))),
                   # isFALSE(identical(names(x), names(inv.R))),
-                  # isFALSE(identical(names(x), names(LR))),
+                  isFALSE(identical(names(x), rownames(edge.path)))
                   # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
@@ -91,6 +97,7 @@ rast.pd <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       # n.descen <- data$n.descendants
     }
@@ -100,7 +107,7 @@ rast.pd <- function(x, tree,
 
   ## phylogenetic diversity
   rpd <- .rast.pd.B(x,
-                    branch.length,
+                    edge.path, branch.length,
                     filename = filename, ...)
 
   return(rpd)
@@ -154,12 +161,13 @@ rast.pd <- function(x, tree,
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
-#' t <- rast.pd.ses(data$x, branch.length = data$branch.length, aleats = 3, random = "spat")
+#' t <- rast.pd.ses(data$x, edge.path = data$edge.path,
+#'                 branch.length = data$branch.length, aleats = 3, random = "spat")
 #' plot(t)
 #'
 #' @export
 rast.pd.ses <- function(x, tree,
-                        branch.length,
+                        edge.path, branch.length,
                         spat_alg = "bootspat_str",
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
@@ -178,13 +186,13 @@ rast.pd.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
       # stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
-      stop("Either argument 'tree' or 'branch.length' need to be supplied")
+      stop("Either argument 'tree' or both 'edge.path' and branch.length' need to be supplied")
 
     } else if(any(miss4)){
 
@@ -194,13 +202,14 @@ rast.pd.ses <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       # n.descen <- data$n.descendants
 
-    } else if(any(#isFALSE(identical(names(x), names(LR))),
-      #isFALSE(identical(names(x), names(inv.R))),
-      isFALSE(identical(names(x), names(branch.length)))
-      # isFALSE(identical(names(x), names(n.descen)))
+    } else if(any(isFALSE(identical(names(x), rownames(edge.path)))
+                  # isFALSE(identical(names(x), names(inv.R))),
+                  # isFALSE(identical(names(x), names(branch.length)))
+                  # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
       data <- phylo.pres(x, tree)
@@ -209,6 +218,7 @@ rast.pd.ses <- function(x, tree,
       x <- data$x
       # LR <- area.branch$LR
       # inv.R <- area.branch$inv.R
+      edge.path <- data$edge.path
       branch.length <- data$branch.length
       # n.descen <- data$n.descendants
     }
@@ -219,13 +229,9 @@ rast.pd.ses <- function(x, tree,
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
-  FUN_args = list(branch.length = branch.length
-                  # n.descen = n.descen,
-                  # spp_seq = spp_seq,
-                  # spp_seqLR = spp_seqLR,
-                  # spp_seqINV = spp_seqINV,
-                  # resu = resu,
-                  # cores = cores
+  FUN_args = list(edge.path = edge.path,
+                  branch.length = branch.length
+                  # n.descen = n.descen
                   )
 
 

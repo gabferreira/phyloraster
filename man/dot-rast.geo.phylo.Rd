@@ -4,7 +4,15 @@
 \alias{.rast.geo.phylo}
 \title{Calculate phylogenetic community metrics for raster data}
 \usage{
-.rast.geo.phylo(x, inv.R, branch.length, n.descen, filename = "", ...)
+.rast.geo.phylo(
+  x,
+  inv.R,
+  edge.path,
+  branch.length,
+  n.descen,
+  filename = "",
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -12,6 +20,9 @@ for a set of species. The layers (species) must be sorted according to the
 tree order. See the phylo.pres function.}
 
 \item{inv.R}{SpatRaster. inverse of range size calculated from \code{\link{inv.range}}}
+
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A named numerical vector containing the branch
 length for each species.}
