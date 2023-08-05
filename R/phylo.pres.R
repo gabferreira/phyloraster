@@ -103,11 +103,9 @@ tip_root_path <- function(tree){
 #' phylo.pres(x[[1:3]], tree, full_tree_metr = TRUE)
 #'
 #' @export
-phylo.pres <- function(x, tree, full_tree_metr = TRUE, ...) {
+phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
 
   if(!inherits(x, "SpatRaster")){ # class "Raster" in "SpatRaster"
-    # x <- terra::rast(x)
-    # warning("Object 'x' has been converted to an object of class 'SpatRaster'")
     stop("Object 'x' must be of class 'SpatRaster'. See ?terra::rast")
   }
 
