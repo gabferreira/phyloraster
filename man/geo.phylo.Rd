@@ -6,29 +6,32 @@
 \usage{
 geo.phylo(
   x,
-  area.branch,
+  tree,
   inv.R,
+  edge.path,
   branch.length,
   n.descen,
-  cores = 1,
   filename = "",
   ...
 )
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
-for a set of species. The layers (species) must be sorted according to the
+for a set of species. The layers (species) will be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{area.branch}{description}
+\item{tree}{phylo. A dated tree.}
 
-\item{inv.R}{description}
+\item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
 
-\item{branch.length}{description}
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
-\item{n.descen}{description}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch. See \code{\link{phylo.pres}}}
 
 \item{filename}{character. Output filename}
 
@@ -39,7 +42,7 @@ SpatRaster with one layer for each metric
 }
 \description{
 Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
-phylogenetic endemism and weighted endemism using rasters as input and output.
+phylogenetic endemism and weighted endemism using rasters as input.
 }
 \details{
 Community metrics calculated:
@@ -52,14 +55,15 @@ Community metrics calculated:
 }
 }
 \examples{
+library(terra)
+library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
-branch.length = data$branch.length
-n.descen = data$n.descendants
-area.branch <- phyloraster::inv.range(data$x, data$branch.length, LR = T)
-
-t <- geo.phylo(x, area.branch$LR, area.branch$inv.R, data$branch.length, data$n.descendants)
+inv.R <- inv.range(data$x)
+#t <- geo.phylo(x, tree)
+t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
+branch.length = data$branch.length, n.descen = data$n.descendants)
 terra::plot(t)
 
 }
@@ -75,4 +79,13 @@ Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralia
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+}
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{rast.ed}}, \code{\link{rast.pd}},
+\code{\link{rast.we}}, \code{\link{rast.pe}}, \code{\link{rast.sr}},
+\code{\link{geo.phylo.ses}},
+}
+\author{
+Neander Marcel Heming
 }

@@ -4,12 +4,14 @@
 \alias{tip.rand}
 \title{Randomize branch lengths for n times}
 \usage{
-tip.rand(x, aleats)
+tip.rand(x, aleats, replace = FALSE)
 }
 \arguments{
 \item{x}{numeric. A numeric vector containing the branch lengths.}
 
 \item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
+
+\item{replace}{should sampling be with replacement?}
 }
 \value{
 list of numeric vectors
@@ -18,12 +20,11 @@ list of numeric vectors
 This function randomize branch lengths or another vector for n times.
 }
 \examples{
-\dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x = x, tree = tree)
 sa <- tip.rand(data$branch.length, aleats = 10)
-}
+
 
 }
 \author{

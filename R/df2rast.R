@@ -13,7 +13,7 @@
 #' }
 df2rast <- function(x, CRS = "+proj=longlat +datum=WGS84", ...){
 
-  if(!class(x) == "matrix"){
+  if(!inherits(x, "matrix")){
     xm <- as.matrix(x) # to matrix
   }
 

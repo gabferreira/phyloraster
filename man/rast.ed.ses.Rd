@@ -6,31 +6,53 @@
 \usage{
 rast.ed.ses(
   x,
+  tree,
+  edge.path,
   branch.length,
   n.descen,
-  aleats,
-  random = c("tip", "spat"),
-  cores = 1,
-  filename = NULL,
+  spat_alg = "bootspat_str",
+  spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
+  random = c("tip", "spat")[2],
+  aleats = 10,
+  filename = "",
   ...
 )
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A named numerical vector containing the branch length of each species. See phylo.pres function.}
+\item{tree}{phylo. A dated tree.}
 
-\item{n.descen}{numeric. A Named numeric vector of number of descendants for each branch}
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
-\item{aleats}{positive integer. A positive integer indicating how many times the calculation should be repeated.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{random}{character. A character indicating the type of randomization. The currently available randomization methods are "tip", "site", "species" or "both" (site and species).}
+\item{n.descen}{numeric. A Named numeric vector of number of descendants for
+each branch. See \code{\link{phylo.pres}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_ff}}.}
 
-\item{filename}{character. Output filename.}
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_ff}}}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{random}{character. A character indicating the type of randomization.
+The currently available randomization methods are "tip", "site", "species" or
+"both" (site and species).}
+
+\item{aleats}{positive integer. A positive integer indicating how many times
+the calculation should be repeated.}
+
+\item{filename}{character. Output filename}
+
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster
@@ -47,13 +69,13 @@ nodata. The phylogenetic randomization shuffles taxa names across all taxa
 included in phylogeny.
 }
 \examples{
-\dontrun{
+library(phyloraster)
+library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phyloraster::phylo.pres(x, tree)
-t <- rast.ed.ses(data$x, data$branch.length, data$n.descendants, aleats = 5, random = "spat")
+t <- rast.ed.ses(x, tree, aleats = 3, random = "spat")
 terra::plot(t)
-}
+
 }
 \references{
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
@@ -65,6 +87,14 @@ González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weigh
 metrics of species and phylogenetic turnover can better resolve biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
+\seealso{
+\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{geo.phylo.ses}},
+\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+}
 \author{
-Gabriela Alves-Ferreira and Neander Heming
+Neander M. Heming and Gabriela Alves-Ferreira
 }

@@ -2,16 +2,18 @@
 % Please edit documentation in R/geo.phylo.R
 \name{.fit.memory}
 \alias{.fit.memory}
-\title{Function to evaluate if the rasters generated in the function fits on memory}
+\title{Evaluate if the rasters generated in the function fits on available memory}
 \usage{
-.fit.memory(x)
+.fit.memory(x, n = 1)
 }
 \arguments{
-\item{x}{number of rasters generated in the function}
+\item{x}{SpatRaster}
+
+\item{n}{positive integer. The number of copies of \code{x} that are needed}
 }
 \value{
 logical
 }
 \description{
-Function to evaluate if the rasters generated in the function fits on memory
+Tests if the amount of RAM required is available to process a SpatRaster
 }

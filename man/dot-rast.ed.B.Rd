@@ -4,25 +4,25 @@
 \alias{.rast.ed.B}
 \title{Calculate Evolutionary distinctiveness for each raster cell}
 \usage{
-.rast.ed.B(x, branch.length, n.descen, cores = 1, filename = NULL, ...)
+.rast.ed.B(x, edge.path, branch.length, n.descen, filename = "", ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species. The layers (species) must be sorted according to the
 tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numeric vector containing the branch
-length of each specie.}
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
+
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
-each branch}
+each branch. See \code{\link{phylo.pres}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster
-with that many cores is created and used.}
+\item{filename}{character. Output filename}
 
-\item{filename}{character. Output filename.}
-
-\item{...}{additional arguments to be passed passed for fun.}
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster

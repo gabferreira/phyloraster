@@ -4,35 +4,33 @@
 \alias{.rast.pd.B}
 \title{Calculate phylogenetic diversity for each raster cell}
 \usage{
-.rast.pd.B(x, branch.length, filename = NULL, cores = 1, ...)
+.rast.pd.B(x, edge.path, branch.length, filename = "", ...)
 }
 \arguments{
-\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species. The layers (species) must be sorted according to the tree order. See the phylo.pres function.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{branch.length}{numeric. A Named numerical vector containing the branch length for a set of species.}
+\item{edge.path}{matrix representing the paths through the tree from root
+to each tip. See \code{\link{phylo.pres}}}
 
-\item{filename}{character. Output filename.}
+\item{branch.length}{numeric. A Named numeric vector of branch length for
+each species. See \code{\link{phylo.pres}}}
 
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{filename}{character. Output filename}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{...}{additional arguments passed for terra::app}
 }
 \value{
 SpatRaster
 }
 \description{
-Calculate the sum of the branch length for species present in each cell of the raster.
-}
-\examples{
-\dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
-rast.pd(data$x, data$branch.length)
-}
+Calculate the sum of the branch length for species present in
+raster data.
 }
 \references{
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992). Conservation evaluation and phylogenetic
+diversity. Biological conservation, 61(1), 1-10.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

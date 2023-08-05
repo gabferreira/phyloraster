@@ -1,143 +1,252 @@
 #' Calculate weighted endemism for each raster cell
 #'
-#' @description Calculate the sum of the inverse of the range size for species present in each raster cell.
-#' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#' @return SpatRaster
-# #' @export
-#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
-#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
-#' @examples
-#' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' rs <- range_size(x)
-#' .rast.we.B(x, rs)
-#' }
+#' @description Calculate the sum of the inverse of the range size for species
+#' present in each raster cell.
 #'
-.rast.we.B <- function(x, filename = NULL, cores = 1, ...){
-
-  temp <- vector("list", length = 2) # to create a temporary vector with the raster number
-  temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
-
-  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  mi <- .fit.memory(x)
-
-  # inverse of range size
-  # inverse of range size
-  inv.R <- inv.range(x, filename = ifelse(mi, "", temp[[1]])) # calculate the inverse of range size multiplied by branch length of each species
+#' @inheritParams geo.phylo.ses
+#'
+#' @return SpatRaster
+#'
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#'
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+#' VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
+#' in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+#' Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in
+#' the Australian flora. Journal of Biogeography, 28, 183–198.
+#'
+# #' @export
+# #' @examples
+.rast.we.B <- function(x, inv.R, filename = "", ...){
 
   # weighted endemism
-  { # calculating we
-    rend <- terra::app(inv.R$inv.R,
-                       function(x){
-                         if(all(is.na(x))){
-                           return(NA)}
-                         sum(x, na.rm = T)
-                       }, cores = cores)
-  }
-  names(rend) <- "WE" # layer name
+  rend <- sum(x*inv.R,
+              filename = filename, ...)
 
-  if (!is.null(filename)){ # to save the rasters when the path is provide
-    rend <- terra::writeRaster(rend, filename, ...)
-  }
-  unlink(temp[[1]]) # delete the archive
+  terra::set.names(rend, "WE") # layer name
 
   return(rend)
 }
 
+#' Calculate weighted endemism for raster data
+#'
+#' @description Calculate the weighted endemism for species present in raster data.
+#'
+#' @inheritParams geo.phylo.ses
+#'
+#' @return SpatRaster
+#'
+#'
+#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
+#' metrics of species and phylogenetic turnover can better resolve biogeographic
+#' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+#' VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in
+#'  conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+#'  Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism
+#' in the Australian flora. Journal of Biogeography, 28, 183–198.
+#'
+#' @author Neander Marcel Heming and Gabriela Alves Ferreira
+#'
+#' @examples
+#' library(terra)
+#' library(phyloraster)
+#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' inv.R <- inv.range(x)
+#' we <- rast.we(x, inv.R)
+#' plot(we)
+#'
+#' @export
+rast.we <- function(x, inv.R,
+                    filename = "", ...){
+
+  ## object checks
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
+  }
+
+  ### initial argument check
+  {
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    # miss.tree <- arg.check(match.call(), "tree")
+
+    # if(any(miss4) & miss.tree){
+    #
+    #   stop("Argument 'inv.R'need to be supplied")
+    #
+    # } else
+    if(any(miss4)){
+
+      # data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+      inv.R <- inv.range(x)
+
+      # x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- inv.range(x)$inv.R
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+
+    } else if(any(#isFALSE(identical(names(x), names(LR))),
+      isFALSE(identical(names(x), names(inv.R)))
+      # isFALSE(identical(names(x), names(branch.length))),
+      # isFALSE(identical(names(x), names(n.descen)))
+    )) {
+
+      # data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+      inv.R <- inv.range(x)
+
+      # x <- data$x
+      # LR <- area.branch$LR
+      # inv.R <- inv.range(x)$inv.R
+      # rs <- range_size(x)
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+    }
+
+  }
+
+  ## weighted endemism
+  .rast.we.B(x,
+             inv.R,
+             filename = filename, ...)
+}
+
+
 
 #' Calculate weighted endemism standardized for species richness
 #'
-#' @description Calculates the standardized effect size for weighted endemism. See Details for more information.
-#' @param x  A SpatRaster containing presence-absence data (0 or 1) for a set of species.
-#' @param aleats positive integer. A positive integer indicating how many times the calculation should be repeated.
-#' @param random character. A character indicating what type of randomization. Could be by "site", "species" or "both" (site and species).
-#' @param cores positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.
-#' @param filename character. Output filename.
-#' @param ... additional arguments to be passed passed down from a calling function.
+#' @description Calculates the standardized effect size for weighted endemism.
+#' See Details for more information.
+#'
+#' @inheritParams geo.phylo.ses
+#'
 #' @return SpatRaster
-#' @details The spatial randomization (spat) keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels). The randomization will not assign values to cells with nodata.
-#' @export
-#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
-#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+#'
+#' @details The spatial randomization (spat) keeps the richness exact and samples
+#'  species presences proportionally to their observed frequency (i.e. number
+#'  of occupied pixels). The randomization will not assign values to cells with
+#'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
+#'  included in phylogeny.
+#'
+#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
+#' \code{\link{geo.phylo.ses}},
+#' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
+#' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
+#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+#'
+#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+#' VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
+#' in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+#' Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in the
+#' Australian flora. Journal of Biogeography, 28, 183–198.
+#'
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#'
 #' @examples
-#' \dontrun{
+#' library(terra)
+#' library(SESraster)
+#' require(devtools)
+#' install_github("HemingNM/SESraster", build_vignettes = TRUE)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' t <- rast.we.ses(data$x, data$branch.length, aleats = 10, random = "spat")
+#' t <- rast.we.ses(x, aleats = 3)
 #' plot(t)
-#' }
-rast.we.ses <- function(x, aleats,
-                        random = c("spat"),
-                        cores = 1, filename = NULL, ...){
+#'
+#' @export
+rast.we.ses <- function(x,
+                        inv.R,
+                        spat_alg = "bootspat_str",
+                        spat_alg_args = list(rprob = NULL,
+                                             rich = NULL,
+                                             fr_prob = NULL),
+                        # random = c("spat"),
+                        aleats = 10,
+                        filename = "", ...){
 
-  aleats <- aleats # number of randomizations
-  temp <- vector("list", length = aleats) # "temp" is to store each round of the null model
+  requireNamespace("SESraster")
 
-  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  mi <- .fit.memory(x)
-
-  temp.raster <- paste0(tempfile(), ".tif") # temporary names to rasters
-
-  ## Null model (bootstrap structure)
-
-  if(random == "spat"){
-
-    we.rand <- list() # to store the rasters in the loop
-    rich <- rast.se(x)
-    prob <- terra::app(x,
-                       function(x){
-                         ifelse(is.na(x), 0, 1)
-                       })
-
-    fr_prob <- SESraster::fr2prob(x)
-
-    for(i in 1:aleats){
-      # temporary names to rasters
-      temp[[i]] <- paste0(tempfile(), i, ".tif")
-
-      ### embaralha por lyr - ordem dos sítios de cada espécie separada
-      ### shuffle
-      site.rand <- SESraster::bootspat_str(x = x, rich = rich, prob = prob,
-                                                fr_prob = fr_prob)
-      we.rand[[i]] <- .rast.we.B(site.rand,
-                                 filename = temp[[i]], cores = cores)
-    }
-
-    we.rand <- terra::rast(we.rand) # to transform a list in raster
-
-  } else {
-    stop("Choose a valid randomization method! The method currently available is: 'spat'.")
+  ## object checks
+  if(!terra::is.lonlat(x)){
+    stop("Geographic coordinates are needed for the calculations.")
   }
 
-  ## WE observed
-  we.obs <- rast.we(x = x, filename = filename)
 
-  ## WE rand mean and WE rand SD
-  we.rand.mean <- terra::mean(we.rand, na.rm = TRUE, filename = filename) # mean pd
-  we.rand.sd <- terra::stdev(we.rand, na.rm = TRUE, filename = filename) # sd pd
-
-  unlink(temp) # delete the file that will not be used
-  unlink(temp.raster) # delete the file that will not be used
-
-  ## Calculating the standard effect size (SES)
+  ### initial argument check
   {
-    ses <- function(x){
-      (x[1] - x[2])/x[3]
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    # miss.tree <- arg.check(match.call(), "tree")
+
+    # if(any(miss4) & miss.tree){
+    #
+    #   stop("Argument 'inv.R' need to be supplied")
+    #
+    # } else if(any(miss4)){
+    if(any(miss4)){
+
+      # data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      # x <- data$x
+      # LR <- area.branch$LR
+      inv.R <- inv.range(x)
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
+
+    } else if(any(#isFALSE(identical(names(x), names(LR))),
+      # isFALSE(identical(names(x), names(n.descen))),
+      # isFALSE(identical(names(x), names(branch.length))),
+      isFALSE(identical(names(x), names(inv.R))))) {
+
+      # data <- phylo.pres(x, tree)
+      # area.branch <- inv.range(data$x, data$branch.length)
+
+      # x <- data$x
+      # LR <- area.branch$LR
+      inv.R <- inv.range(x)
+      # branch.length <- data$branch.length
+      # n.descen <- data$n.descendants
     }
-    we.ses <- terra::app(c(we.obs, we.rand.mean, we.rand.sd), fun = ses,
-                         cores = cores)
+
   }
 
-  names(we.ses) <- "SES"
-  out <- c(we.rand.mean, we.rand.sd, we.obs, we.ses)
-  names(out) <- c("Mean", "SD", "WE Observed", "SES")
 
-  if(!is.null(filename)){ # to save the rasters when the path is provide
-    out <- terra::writeRaster(out, filename)
-  }
+  ## vectorization setup
+  # nspp <- terra::nlyr(x)
+  # spp_seq <- seq_len(nspp)
+  # spp_seqLR <- spp_seq + nspp
+  # spp_seqINV <- spp_seq + 2*nspp
+  # spp_seqINV <- spp_seq + nspp
+  # resu <- setNames(rep(NA, 5), c("SR", "PD", "ED", "PE", "WE"))
 
-  return(out)
+  ## function arguments
+  FUN_args = list(
+    inv.R = inv.R
+    # branch.length = branch.length,
+    # n.descen = n.descen,
+    # spp_seq = spp_seq,
+    # # spp_seqLR = spp_seqLR,
+    # spp_seqINV = spp_seqINV,
+    # resu = resu,
+    # cores = cores
+    )
+
+
+  we.ses <- SESraster::SESraster(x,
+                                 FUN = ".rast.we.B", FUN_args = FUN_args,
+                                 # Fa_sample = "branch.length",
+                                 # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                 # spat_alg = NULL, spat_alg_args = list(),
+                                 spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                 aleats = aleats,
+                                 # cores = cores,
+                                 filename = filename, ...)
+
+  return(we.ses)
+
 }

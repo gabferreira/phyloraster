@@ -1,35 +1,42 @@
 Package: phyloraster
 Title: Calculating community metrics for each raster cell
-Version: 1.1
+Version: 2.0
 Authors@R: 
     person(given = "Gabriela",
            family = "Alves-Ferreira",
            role = c("aut", "cre"),
            email = "gabriela-alves77@hotmail.com",
            comment = c(ORCID = "0000-0001-5661-3381"))
-    person("Flávio", "Mota", , "flaviomoc@gmail.com", 
+    person(c("Flávio", "M.", "M."), "Mota", , "flaviomoc@gmail.com", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0308-7151"))
-    person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
+    person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2461-5045"))
 Description: This package calculates phylogenetic indices (such as
     phylogenetic diversity (Faith 1992), phylogenetic endemism (Rosauer et
-    al. 2009) and taxonomic endemism) for presence-absence rasters.
+    al. 2009) and weighted endemism (Laffan et al., 2016)) for
+    presence-absence rasters.
 License: GPL (>= 3)
 URL: https://gabferreira.github.io/phyloraster/
 Depends: 
     R (>= 2.10)
 Imports: 
     ape,
+    methods,
     phylobase,
     SESraster,
+    stats,
     terra
 Suggests: 
     devtools,
+    epm,
     knitr,
     maps,
+    phyloregion,
+    raster,
     rmarkdown,
+    rnaturalearth,
     testthat (>= 2.0.0)
 VignetteBuilder: 
     knitr
@@ -37,6 +44,5 @@ Config/testthat/edition: 2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.2.1
 StagedInstall: no
-URL: https://gabferreira.github.io/phyloraster/

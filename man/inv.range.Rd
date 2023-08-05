@@ -4,18 +4,16 @@
 \alias{inv.range}
 \title{Calculate the inverse of range size}
 \usage{
-inv.range(x, LR = F, branch.length, filename = NULL, cores = 1, ...)
+inv.range(x, filename = "", overwrite = FALSE, ...)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster with the layers ordered according to the tree order.}
+\item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
+for a set of species. The layers (species) will be sorted according to the
+tree order. See the phylo.pres function.}
 
-\item{LR}{logical. If LR = TRUE, the function will returns a raster with the clade range.}
+\item{filename}{character. Output filename}
 
-\item{branch.length}{numeric. A vector containing the branch length of each specie.}
-
-\item{filename}{character. Output filename.}
-
-\item{cores}{positive integer. If cores > 1, a 'parallel' package cluster with that many cores is created and used.}
+\item{overwrite}{logical. If TRUE, filename is overwritten}
 
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
@@ -23,13 +21,15 @@ inv.range(x, LR = F, branch.length, filename = NULL, cores = 1, ...)
 SpatRaster and numeric
 }
 \description{
-Get range size in square kilometers for all cells that are not NA, the inverse of range size and the inverse of range size multiplied by branch length for multiple species using a raster of presence-absence.
+Get range size in square kilometers for all cells that are not
+NA, the inverse of range size and the inverse of range size multiplied by
+branch length for multiple species using a raster of presence-absence.
 }
 \examples{
-\dontrun{
+# calculating the inverse of range size
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 inv.range(x)
-}
+
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

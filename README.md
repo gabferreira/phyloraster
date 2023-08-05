@@ -42,14 +42,14 @@ dataprep <- phyloraster::phylo.pres(ras, tree)
 ### Now, we are already able to calculate the phylogenetic diversity.
 
 ``` r
-pd <- phyloraster::rast.pd(data$x, data$branch.length)
+pd <- phyloraster::rast.pd(data$x, branch.length = data$branch.length)
 pd
 ```
 
 ### The result can be visualized using the R `plot` function from the `terra` package.
 
 ``` r
-terra::plot(pe, main = "Phylogenetic Endemism")
+terra::plot(pd, main = "Phylogenetic Endemism")
 ```
 
 A vignette with other examples can be found loading:

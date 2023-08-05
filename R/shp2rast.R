@@ -5,33 +5,40 @@
 #' @inheritParams terra::rasterize
 #' @inheritParams terra::rast
 #' @param ymask SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example
-#' @param sps.col character. It should be a variable name in x
+#' @param sps.col character. It should be a variable name in x.
+#'
 #' @return SpatRaster
-#' @export
+#'
+#'
 #' @examples
-#' \dontrun{
 #' library(terra)
-#' library(rnaturalearth)
+#'
 #' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
 #'                               package="phyloraster"))
-#' countries <- terra::vect(ne_countries()) # world map
-#' coun.crop <- terra::crop(countries, ext(shp)) # cut by the total extension of the polygons
+#'
+#' # create a polygon to use as mask with an extent
+#' e <- terra::ext(113, 123, -43.64, -33.90)
+#' p <- terra::as.polygons(e, crs="")
+#' coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of the polygons
 #' coun.rast <- terra::rasterize(coun.crop,
-#'                       terra::rast(ext(shp), resolution = 0.5))
+#' terra::rast(terra::ext(shp), resolution = 0.5))
+#'
 #' plot(coun.rast, col = "green")
 #'
-#' rasterizing with a mask of a country for example
-#' teste <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
-#' plot(teste, col = c("grey", "green"))
+#' # rasterizing with the mask of the polygon
+#' shp.t <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
+#' plot(shp.t, col = c("grey", "green"))
 #'
-# rasterizing based on extent and without using mask
-#' teste2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.5)
-#' plot(teste2, col = c("grey", "green"))
-#' }
+#' # rasterizing without using mask
+#' shp.t2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.1)
+#' plot(shp.t2[[9]], col = c("grey", "green"))
+#'
+#' @export
+#'
 shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
                      touches = TRUE, resolution, values = 1, filename = NULL, ...){
 
-  if(!class(x) == "SpatVector"){
+  if(!inherits(x, "SpatVector")){
     x <- terra::vect(x)
   }
 
@@ -46,7 +53,7 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
 
   r_list <- list() # list to store the objects created in a loop for
 
-  for(i in 1:length(nm)){
+  for(i in seq_along(nm)){
     r_list[[i]] <- terra::rasterize(x[data.frame(x)[,sps.col] == nm[i],], y,
                                     # field = NULL,
                                     values = values,
