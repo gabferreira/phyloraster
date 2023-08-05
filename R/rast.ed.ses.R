@@ -23,6 +23,8 @@
   # evolutionary distinctiveness
   red <- terra::app(x,
                     function(x, H1, branch.length, n.descen){
+                      if(all(is.na(x))) return(NA)
+
                       sum((crossprod(H1, x)>0) * (branch.length/n.descen) )
                     }, H1 = edge.path, branch.length = branch.length, n.descen = n.descen,
                     filename = filename, ...)

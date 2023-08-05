@@ -20,6 +20,8 @@
   # phylogenetic diversity
   rpd <- terra::app(x,
                     function(x, H1, branch.length){
+                      if(all(is.na(x))) return(NA)
+
                       sum((crossprod(H1, x)>0) * branch.length)
                     }, H1 = edge.path, branch.length = branch.length,
                     filename = filename, ...)
