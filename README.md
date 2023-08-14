@@ -17,10 +17,13 @@
 
 ### Installation
 
-You can install the development version of *phyloraster* package from [GitHub](https://github.com/) with:
+The CRAN version of the package can be installed using:
+```
+install.packages("phyloraster") 
+```
 
-``` r
-# install.packages("devtools")
+The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster) using the following code:
+```
 devtools::install_github("gabferreira/phyloraster")
 ```
 
@@ -28,7 +31,7 @@ devtools::install_github("gabferreira/phyloraster")
 
 ### phyloraster basics
 
-Basic information about the package can be found in the vignette `browseVignettes("phyloraster")`
+Basic information about the package can be found at the [package's webpage](https://gabferreira.github.io/phyloraster/) or in the vignette `vignette("phyloraster-vignette")`
 
 <br>
 
