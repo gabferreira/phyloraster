@@ -30,7 +30,7 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,comment = "
 [`phyloraster`](https://github.com/gabferreira/phyloraster) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
 A lot of packages such as `phyloregion` (Daru et al., 2020), `picante` (Kembel et al., 2010) and `pez` (Pearse et al. 2015) can be used to calculate patterns of endemism and evolutionary diversity.
 However, most of these packages use matrices that can be computationally expensive if the user is working with global or local data with high resolution.
-`phylorgid` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, reducing the amount of RAM required for data processing.
+`phyloraster` brings an alternative to these packages by providing functions that calculate diversity and endemism metrics for each raster cell, reducing the amount of RAM required for data processing.
 The functions are focused on the steps of pre-processing, processing and post-processing of macroecological and phylogenetic data.
 
 The pre-processing step offers basic functions for preparing the data before running the analyses.
@@ -70,7 +70,7 @@ library(phylobase)
 ## Data processing {#data}
 
 In the step of pre processing, we offer support to manipulate matrices, shapefiles, rasters, and phylogenetic trees.
-In the processing step, we provide functions to calculate Faith's phylogenetic diversity (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009), evolutionary distinctiveness (Isaac et al., 2007) and weighted endemism (Williams et al., 1994).
+In the processing step, we provide functions to calculate Faith's phylogenetic diversity (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009), evolutionary distinctiveness (Isaac et al., 2007), and weighted endemism (Williams et al., 1994).
 
 -   **Dataset**
 
@@ -270,7 +270,7 @@ riq.fut <- rast.sr(x[[c(1:15)]]) # imagine we lost some species in the future
 terra::plot(riq.fut)
 ```
 
-The delta.grid function allows you to visualize the variation in these richness patterns spatially.
+The `delta.grid` function allows you to visualize the variation in these richness patterns spatially.
 See an example below.
 
 ```{r dg}
@@ -279,7 +279,7 @@ plot(dg)
 ```
 
 On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species.
-The delta.grid function can be used for any of the other metrics that are available in the `phyloraster` package.
+The `delta.grid` function can be used for any of the other metrics that are available in the `phyloraster` package.
 
 ## References {#references}
 
