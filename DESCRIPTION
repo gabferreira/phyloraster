@@ -1,5 +1,5 @@
 Package: phyloraster
-Title: Calculating Evolutionary Diversity Metrics for Raster Data
+Title: Evolutionary Diversity Metrics for Raster Data
 Version: 2.0
 Authors@R:  c(
     person("Gabriela", "Alves-Ferreira", email = "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),

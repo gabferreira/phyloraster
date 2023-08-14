@@ -6,7 +6,7 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
   bibtype = "Misc",
-  title   = "phyloraster: Calculating evolutionary diversity metrics for raster data",
+  title   = "phyloraster: Evolutionary Diversity Metrics for Raster Data",
   author = c(person("Gabriela", "Alves-Ferreira"),
               person(c("Flávio", "M.", "M."), "Mota"),
               person(c("Neander", "Marcel"), "Heming")),
