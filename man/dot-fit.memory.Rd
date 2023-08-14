@@ -17,3 +17,4 @@ logical
 \description{
 Tests if the amount of RAM required is available to process a SpatRaster
 }
+\keyword{internal}
