@@ -1,15 +1,18 @@
-
-# phyloraster
-
 <!-- badges: start -->
-  [![.travis](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml)
-  <!-- badges: end -->
 
-# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" align="right" height="139" alt="phyloraster website" /></a>
+[![CRAN-status](https://www.r-pkg.org/badges/version/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![](http://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![](http://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
+
+<!-- badges: end -->
+
+# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
+
+<br>
 
 [`phyloraster`](https://github.com/gabferreira/phyloraster) is an R package to calculate measures of endemism and evolutionary diversity using rasters of presence-absence as input, allowing to join the results derived from species distribution models (SDMs) with phylogenetic information.
 
-## Installation
+<br>
+
+### Installation
 
 You can install the development version of *phyloraster* package from [GitHub](https://github.com/) with:
 
@@ -18,43 +21,31 @@ You can install the development version of *phyloraster* package from [GitHub](h
 devtools::install_github("gabferreira/phyloraster")
 ```
 
-## Steps to calculte phylogenetic diversity using ```phyloraster```
+<br>
 
-### First, load phylogenetic data and rasters of presence-absence for a set of species.
+### phyloraster basics
 
-``` r 
-library(phyloraster)
-library(terra)
-library(ape)
+Basic information about the package can be found in the vignette `browseVignettes("phyloraster")`
+
+<br>
+
+### Citation
+
+- If you use this R package, please cite in your publications: <br>
+
+Alves-Ferreira G., Heming N. M., Mota F. M. M. (2023). phyloraster: Calculating
+  community metrics for each raster cell. R package version 1.1.
+
+- For more information:
+
+```         
+citation("phyloraster")
 ```
 
-``` r
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-```
+<br>
 
-### Now, let's prepare the dataset. The raster stack will be sorted according to the tree order and the branch lengths will be extracted from the tree for each species.
+### Issues
 
-``` r
-dataprep <- phyloraster::phylo.pres(ras, tree)
-```
+If you have any question or find any bug, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
 
-### Now, we are already able to calculate the phylogenetic diversity.
-
-``` r
-pd <- phyloraster::rast.pd(data$x, branch.length = data$branch.length)
-pd
-```
-
-### The result can be visualized using the R `plot` function from the `terra` package.
-
-``` r
-terra::plot(pd, main = "Phylogenetic Endemism")
-```
-
-A vignette with other examples can be found loading:
-
-``` r
-browseVignettes("phyloraster")
-```
-
+<br>

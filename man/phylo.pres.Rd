@@ -4,7 +4,7 @@
 \alias{phylo.pres}
 \title{Prepare rasters and phylogenetic tree to run community metrics}
 \usage{
-phylo.pres(x, tree, full_tree_metr = TRUE, ...)
+phylo.pres(x, tree, full_tree_metr = FALSE, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)

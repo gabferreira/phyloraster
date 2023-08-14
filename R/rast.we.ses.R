@@ -151,9 +151,9 @@ rast.we <- function(x, inv.R,
 #'
 #' @examples
 #' library(terra)
-#' library(SESraster)
 #' require(devtools)
 #' install_github("HemingNM/SESraster", build_vignettes = TRUE)
+#' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' t <- rast.we.ses(x, aleats = 3)
 #' plot(t)
