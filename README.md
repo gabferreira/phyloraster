@@ -1,9 +1,3 @@
-<!-- badges: start -->
-
-[![.travis](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/.travis.yml)
-
-<!-- badges: end -->
-
 # phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
 
 <br>
