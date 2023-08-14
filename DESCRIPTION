@@ -1,8 +1,7 @@
 Package: phyloraster
 Title: Calculating evolutionary diversity metrics for raster data
 Version: 2.0
-Authors@R: 
-    Authors@R: c(
+Authors@R:  c(
     person("Gabriela", "Alves-Ferreira", email = "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
     person(c("Flávio", "M.", "M."), "Mota", email = "flaviomoc@gmail.com", role = "aut",
@@ -29,7 +28,6 @@ Suggests:
     devtools,
     knitr,
     maps,
-    raster,
     rmarkdown,
     testthat (>= 2.0.0)
 VignetteBuilder: 
