@@ -105,7 +105,7 @@ phylogenetic information. A lot of packages such as
 used to calculate patterns of endemism and evolutionary diversity.
 However, most of these packages use matrices that can be computationally
 expensive if the user is working with global or local data with high
-resolution. <code>phylorgid</code> brings an alternative to these
+resolution. <code>phyloraster</code> brings an alternative to these
 packages by providing functions that calculate diversity and endemism
 metrics for each raster cell, reducing the amount of RAM required for
 data processing. The functions are focused on the steps of
@@ -162,7 +162,7 @@ Once installed, packages can be loaded into R using
 matrices, shapefiles, rasters, and phylogenetic trees. In the processing
 step, we provide functions to calculate Faith’s phylogenetic diversity
 (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009),
-evolutionary distinctiveness (Isaac et al., 2007) and weighted endemism
+evolutionary distinctiveness (Isaac et al., 2007), and weighted endemism
 (Williams et al., 1994).</p>
 <ul>
 <li><strong>Dataset</strong></li>
@@ -515,16 +515,17 @@ vulnerable species are heavily affected and become locally extinct.</p>
 <span><span class="va">riq.fut</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.sr.html">rast.sr</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># imagine we lost some species in the future</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">riq.fut</span><span class="op">)</span></span></code></pre></div>
 <p><img src="phyloraster-vignette_files/figure-html/srf-plot-1.png" width="700"></p>
-<p>The delta.grid function allows you to visualize the variation in
-these richness patterns spatially. See an example below.</p>
+<p>The <code>delta.grid</code> function allows you to visualize the
+variation in these richness patterns spatially. See an example
+below.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/delta.grid.html">delta.grid</a></span><span class="op">(</span><span class="va">riq.pres</span>, <span class="va">riq.fut</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="phyloraster-vignette_files/figure-html/dg-1.png" width="700"></p>
 <p>On the map we can see that the greatest loss occurs in the eastern
-region of the map, losing up to 16 species. The delta.grid function can
-be used for any of the other metrics that are available in the
-<code>phyloraster</code> package.</p>
+region of the map, losing up to 16 species. The <code>delta.grid</code>
+function can be used for any of the other metrics that are available in
+the <code>phyloraster</code> package.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
