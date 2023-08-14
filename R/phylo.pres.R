@@ -19,7 +19,7 @@
 #' library(phyloraster)
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #'
-#' fxtp <- tip_root_path(tree)
+#' fxtp <- tip.root.path(tree)
 #' H1 <- fxtp$H1
 #' edge.length <- fxtp$edge.length
 #' # PD for the whole community
@@ -31,7 +31,7 @@
 #' sum((crossprod(H1, pres)>0) * edge.length)
 #'
 #' @export
-tip_root_path <- function(tree){
+tip.root.path <- function(tree){
   # In edge matrix in a phylo object, OTUs are indexed 1:Ntip, the root node has
   # index Ntip + 1, and internal nodes are indexed from root.node to
   # total.nodes. This is clever because it lets us very efficiently
@@ -54,13 +54,15 @@ tip_root_path <- function(tree){
   # tree from first nodes below tip nodes down to the root:
   internal.nodes <- seq(total.nodes,root.node,-1)
 
+  child.edges <- next.edge <- logical(length(tree$edge[,2]))
+
   # Now, visit each internal node accumulating subtended child edge records:
   for(thisNode in internal.nodes){
     # Find the edge which has thisNode on its left:
-    next.edge <- which(tree$edge[,2]==thisNode)
+    next.edge[] <- tree$edge[,2]==thisNode
 
     # Which edges are children of the node to the right:
-    child.edges <- which(tree$edge[,1]==thisNode)
+    child.edges[] <- tree$edge[,1]==thisNode
 
     # Do the magic rowSums() trick to accumulate edges subtended by the current edge:
     H1[,next.edge] <- rowSums(H1[,child.edges])
@@ -139,13 +141,20 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
 
   if(full_tree_metr){
     ## Compute node paths through the tree from root to each tip
-    edge.info <- tip_root_path(tree)
+    edge.info <- tip.root.path(tree)
     # Get descendant node numbers
     n.descen <- stats::na.exclude(as.numeric(phylobase::ancestor(phylobase::phylo4(tree))))
 
+    ### sum common edges to reduce matrix dim
+    # rownames(edge.info$H1) <- tree$tip.label
+    H1agg <- aggregate(reformulate(int.tip.spat, 'edge.length'), FUN="sum", data = cbind(t(edge.info$H1[int.tip.spat,]), edge.info$edge.length))
+
+    edge.info$H1 <- t(H1agg)[int.tip.spat,]
+    edge.info$edge.length <- H1agg[,"edge.length"]
+
   } else {
     ## Compute node paths through the tree from root to each tip
-    edge.info <- tip_root_path(subtree)
+    edge.info <- tip.root.path(subtree)
     # Get descendant node numbers
     n.descen <- stats::na.exclude(as.numeric(phylobase::ancestor(phylobase::phylo4(subtree))))
 
