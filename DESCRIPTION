@@ -30,13 +30,10 @@ Imports:
     terra
 Suggests: 
     devtools,
-    epm,
     knitr,
     maps,
-    phyloregion,
     raster,
     rmarkdown,
-    rnaturalearth,
     testthat (>= 2.0.0)
 VignetteBuilder: 
     knitr
