@@ -220,10 +220,7 @@ The standardized effect size (SES) measure, also known as z-score or z-value, is
 
 -   **Spatial and phylogenetic randomization**
 
-The randomization procedure for the calculation of SES is done internally in the functions rast.we.ses(), rast.ed.ses(), rast.pd.ses(), and rast.pe.ses() through the package SESraster (Heming et al., 2023).
-The function bootspat_str() from the package SESraster keeps the richness exact and samples species presences proportionally to their observed frequency (i.e. number of occupied pixels).
-The randomization will not assign values to cells with nodata.
-In turn, for phylogenetic randomization, we provide the function tip.rand that shuffle taxa names across all taxa included in phylogeny.
+The randomization procedure for the calculation of SES is done internally in the func- tions rast.we.ses(), rast.pd.ses(), rast.ed.ses(), rast.pe.ses(), and geo.phylo.ses() through the package SESraster (Heming et al., 2023). SESraster currently implements six algorithms to randomize binary species distribution with several levels of constraints: SIM1, SIM2, SIM3, SIM5, SIM6, and SIM9 (sensu Gotelli, 2000). The methods implemented in the SESraster are based on how species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums) (Gotelli, 2000). The randomization algorithms currently available in SESraster are: SIM1 (species occurrence equiprobable and site richness equiprobable), SIM2 (species occurrence fixed and site richness equiprobable), SIM3 (species occurrence equiprobable and site richness fixed), SIM5 (species occurrence proportional and site richness fixed), SIM6 (species occurrence proportional and site richness fixed) and SIM9 (species occurrence fixed and site richness fixed, similar to the preserved model of Laffan & Crisp, 2003). In addition, SESraster (consequently phyloraster) supports user’s cus- tom randomization algorithms for SES calculation, as long as the function returns objects of class SpatRaster. This allows complete flexibility for using any algorithm not yet implemented by the package.
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
