@@ -90,7 +90,7 @@ tses <- geo.phylo.ses(x = x,
                       spat_alg_args = list(rprob = NULL,
                                            rich = NULL,
                                            fr_prob = NULL),
-                      aleats = 5)
+                      aleats = 2)
 terra::plot(tses)
 
 }

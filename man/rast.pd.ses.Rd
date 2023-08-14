@@ -78,8 +78,6 @@ across all taxa included in phylogeny.
 \examples{
 library(terra)
 library(phyloraster)
-require(devtools)
-install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))

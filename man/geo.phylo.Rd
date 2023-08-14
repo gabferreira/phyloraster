@@ -57,7 +57,7 @@ Community metrics calculated:
 \examples{
 library(terra)
 library(phyloraster)
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))[[1:10]]
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 data <- phylo.pres(x, tree)
 inv.R <- inv.range(data$x)

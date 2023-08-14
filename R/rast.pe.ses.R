@@ -10,8 +10,8 @@
 #'  & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
 #'  geographical concentrations of evolutionary history. Molecular ecology,
 #'  18(19), 4061-4072.
-# #' @examples
-# #' @export
+#'
+#' @keywords internal
 .rast.pe.B <- function(x, inv.R, branch.length, filename = "", ...){
 
   # phylogenetic endemism
@@ -154,8 +154,6 @@ rast.pe <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
-#' require(devtools)
-#' install_github("HemingNM/SESraster", build_vignettes = TRUE)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))

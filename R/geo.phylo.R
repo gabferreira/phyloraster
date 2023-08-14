@@ -6,8 +6,7 @@
 #' @inheritParams terra::mem_info
 #'
 #' @return logical
-# #' @export
-# #' @examples
+#' @keywords internal
 .fit.memory <- function(x, n=1){
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   sink(nullfile())    # suppress output
@@ -87,6 +86,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
+#' @keywords internal
 .rast.geo.phylo <- function(x,
                             inv.R,
                             edge.path, branch.length, n.descen,
@@ -167,7 +167,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @examples
 #' library(terra)
 #' library(phyloraster)
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))[[1:10]]
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' inv.R <- inv.range(data$x)
@@ -282,7 +282,7 @@ geo.phylo <- function(x, tree,
 #'                       spat_alg_args = list(rprob = NULL,
 #'                                            rich = NULL,
 #'                                            fr_prob = NULL),
-#'                       aleats = 5)
+#'                       aleats = 2)
 #' terra::plot(tses)
 #'
 #' @export

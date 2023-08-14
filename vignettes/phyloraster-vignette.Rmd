@@ -44,15 +44,17 @@ In this vignette, we demonstrate the use of the functions of the `phyloraster` p
 
 ## Installation {#install}
 
-The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster).
-If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
-To install the package, run the following code:
-
-```{r}
-require(devtools)
-devtools::load_all()
- # devtools::install_github("gabferreira/phyloraster")
+The CRAN version of the package can be installed using:
+```{r, eval = FALSE}
+ install.packages("phyloraster")
 ```
+
+The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster) using the following code:
+```{r, eval = FALSE}
+devtools::install_github("gabferreira/phyloraster")
+```
+
+If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
 
 `phyloraster` uses some R packages as dependencies such as `terra` (version \>= 1.6) (Hijmans, 2022), `ape` (version \>= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version \>= 0.810) (Hackathon et al. 2020).
 Once installed, packages can be loaded into R using `library()`:
