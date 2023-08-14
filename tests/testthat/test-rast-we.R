@@ -11,9 +11,7 @@ test_that("returned object classes are correct", {
 
 test_that("results of the analyses replicate those of other packages", {
 
-  library(epm)
   library(phyloraster)
-  # library(phyloregion)
 
   x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 

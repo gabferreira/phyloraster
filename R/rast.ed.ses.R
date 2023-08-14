@@ -16,8 +16,7 @@
 #'
 #' @return SpatRaster
 #'
-# #' @export
-# #' @examples
+#' @keywords internal
 .rast.ed.B <- function(x, edge.path, branch.length, n.descen, filename = "", ...){
 
   # evolutionary distinctiveness
@@ -160,8 +159,6 @@ rast.ed <- function(x, tree,
 #'
 #' @examples
 #' library(phyloraster)
-#' require(devtools)
-#' install_github("HemingNM/SESraster", build_vignettes = TRUE)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))

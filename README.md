@@ -1,7 +1,10 @@
 <!-- badges: start -->
 
-[![CRAN-status](https://www.r-pkg.org/badges/version/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![](http://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![](http://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster) [![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
-
+[![CRAN-status](https://www.r-pkg.org/badges/version/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
+[![](http://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
+[![R-CMD-check](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
 <!-- badges: end -->
 
 # phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
@@ -33,8 +36,7 @@ Basic information about the package can be found in the vignette `browseVignette
 
 - If you use this R package, please cite in your publications: <br>
 
-Alves-Ferreira G., Heming N. M., Mota F. M. M. (2023). phyloraster: Calculating
-  community metrics for each raster cell. R package version 1.1.
+Alves-Ferreira G., Heming N. M., Mota F. M. M. (2023). phyloraster: Evolutionary Diversity Metrics for Raster Data. R package version 2.0.
 
 - For more information:
 

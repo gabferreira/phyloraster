@@ -1,0 +1,16 @@
+citHeader("Please cite both the package and the original article describing the methods in your publications:")
+
+year <- sub("-.*", "", meta$Date)
+year <- ifelse(length(as.numeric(year))==0, "2023", year) # sub("-.*", "", Sys.Date())
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+  bibtype = "Misc",
+  title   = "phyloraster: Evolutionary Diversity Metrics for Raster Data",
+  author = c(person("Gabriela", "Alves-Ferreira"),
+              person(c("Flávio", "M.", "M."), "Mota"),
+              person(c("Neander", "Marcel"), "Heming")),
+  year   = year,
+  note   = note,
+  url    = c("https://CRAN.R-project.org/package=phyloraster")
+)

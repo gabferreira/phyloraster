@@ -13,8 +13,7 @@
 #'
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
-# #' @export
-# #' @examples
+#' @keywords internal
 .rast.pd.B <- function(x, edge.path, branch.length, filename = "", ...){
 
   # phylogenetic diversity
@@ -158,8 +157,6 @@ rast.pd <- function(x, tree,
 #' @examples
 #' library(terra)
 #' library(phyloraster)
-#' require(devtools)
-#' install_github("HemingNM/SESraster", build_vignettes = TRUE)
 #' library(SESraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))

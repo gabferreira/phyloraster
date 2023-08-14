@@ -53,8 +53,6 @@ included in phylogeny.
 }
 \examples{
 library(terra)
-require(devtools)
-install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 t <- rast.we.ses(x, aleats = 3)

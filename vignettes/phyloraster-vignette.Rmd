@@ -44,15 +44,17 @@ In this vignette, we demonstrate the use of the functions of the `phyloraster` p
 
 ## Installation {#install}
 
-The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster).
-If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
-To install the package, run the following code:
-
-```{r}
-require(devtools)
-devtools::load_all()
- # devtools::install_github("gabferreira/phyloraster")
+The CRAN version of the package can be installed using:
+```{r, eval = FALSE}
+ install.packages("phyloraster")
 ```
+
+The development version of `phyloraster` can be downloaded from [GitHub](https://github.com/gabferreira/phyloraster) using the following code:
+```{r, eval = FALSE}
+devtools::install_github("gabferreira/phyloraster")
+```
+
+If you have any questions, let us know through the topic ["Issues"](https://github.com/gabferreira/phyloraster/issues).
 
 `phyloraster` uses some R packages as dependencies such as `terra` (version \>= 1.6) (Hijmans, 2022), `ape` (version \>= 5.6) (Paradis & Schliep, 2019), and `phylobase` (version \>= 0.810) (Hackathon et al. 2020).
 Once installed, packages can be loaded into R using `library()`:
@@ -220,7 +222,9 @@ The standardized effect size (SES) measure, also known as z-score or z-value, is
 
 -   **Spatial and phylogenetic randomization**
 
-The randomization procedure for the calculation of SES is done internally in the func- tions rast.we.ses(), rast.pd.ses(), rast.ed.ses(), rast.pe.ses(), and geo.phylo.ses() through the package SESraster (Heming et al., 2023). SESraster currently implements six algorithms to randomize binary species distribution with several levels of constraints: SIM1, SIM2, SIM3, SIM5, SIM6, and SIM9 (sensu Gotelli, 2000). The methods implemented in the SESraster are based on how species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums) (Gotelli, 2000). The randomization algorithms currently available in SESraster are: SIM1 (species occurrence equiprobable and site richness equiprobable), SIM2 (species occurrence fixed and site richness equiprobable), SIM3 (species occurrence equiprobable and site richness fixed), SIM5 (species occurrence proportional and site richness fixed), SIM6 (species occurrence proportional and site richness fixed) and SIM9 (species occurrence fixed and site richness fixed, similar to the preserved model of Laffan & Crisp, 2003). In addition, SESraster (consequently phyloraster) supports user’s cus- tom randomization algorithms for SES calculation, as long as the function returns objects of class SpatRaster. This allows complete flexibility for using any algorithm not yet implemented by the package.
+The randomization procedure for the calculation of SES is done internally in the functions `rast.we.ses()`, `rast.pd.ses()`, `rast.ed.ses()`, `rast.pe.ses()`, and `geo.phylo.ses()` through the package `SESraster` (Heming et al., 2023). `SESraster` currently implements six algorithms to randomize binary species distribution with several levels of constraints: SIM1, SIM2, SIM3, SIM5, SIM6, and SIM9 (sensu Gotelli, 2000). The methods implemented in the `SESraster` are based on how species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums) (Gotelli, 2000). The randomization algorithms currently available in `SESraster` are: SIM1 (species occurrence equiprobable and site richness equiprobable), SIM2 (species occurrence fixed and site richness equiprobable), SIM3 (species occurrence equiprobable and site richness fixed), SIM5 (species occurrence proportional and site richness fixed), SIM6 (species occurrence proportional and site richness fixed) and SIM9 (species occurrence fixed and site richness fixed, similar to the preserved model of Laffan & Crisp, 2003). In addition, `SESraster` (consequently `phyloraster`) supports user’s custom randomization algorithms for SES calculation, as long as the function returns objects of class SpatRaster. This allows complete flexibility for using any algorithm not yet implemented by the package.
+
+As default, the `phyloraster` uses the function `bootspat_str()` from the `SESraster` package to conduct the randomizations, but the user is free to choose any of the other methods mentioned above through the spat_alg argument in the `*.ses()` functions of the `phyloraster` package. The function `bootspat_str()` is equivalent to the SIM5 (proportional-fixed) method of Gotelli (2000), which partially relaxes the spatial structure of species distributions but keeps the spatial structure of the observed richness pattern across cells.
 
 Now that we have presented the randomization methods, we can start to build the null models.
 
@@ -275,7 +279,7 @@ plot(dg)
 ```
 
 On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species.
-The delta.grid function can be used for any of the other metrics that are available in the phyloraster package.
+The delta.grid function can be used for any of the other metrics that are available in the `phyloraster` package.
 
 ## References {#references}
 
