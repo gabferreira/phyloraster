@@ -147,7 +147,7 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
 
     ### sum common edges to reduce matrix dim
     # rownames(edge.info$H1) <- tree$tip.label
-    H1agg <- aggregate(reformulate(int.tip.spat, 'edge.length'), FUN="sum", data = cbind(t(edge.info$H1[int.tip.spat,]), edge.info$edge.length))
+    H1agg <- stats::aggregate(stats::reformulate(int.tip.spat, 'edge.length'), FUN="sum", data = cbind(t(edge.info$H1[int.tip.spat,]), edge.length = edge.info$edge.length))
 
     edge.info$H1 <- t(H1agg)[int.tip.spat,]
     edge.info$edge.length <- H1agg[,"edge.length"]

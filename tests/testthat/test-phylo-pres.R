@@ -107,8 +107,7 @@ test_that("names in the raster and in the node path matrix are in the same order
 test_that("error is returned when x class is different of SpatRaster", {
 
   # load data
-  require(raster)
-  x <- raster::brick(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- matrix(nrow = 5, ncol = 5)
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 
