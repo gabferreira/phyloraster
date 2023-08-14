@@ -1,5 +1,5 @@
 Package: phyloraster
-Title: Calculating evolutionary diversity metrics for raster data
+Title: Calculating Evolutionary Diversity Metrics for Raster Data
 Version: 2.0
 Authors@R:  c(
     person("Gabriela", "Alves-Ferreira", email = "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
@@ -9,9 +9,9 @@ Authors@R:  c(
     person(c("Neander", "Marcel"), "Heming", email = "neanderh@yahoo.com.br", role = c("aut"),
            comment = c(ORCID = "0000-0003-2461-5045"))
   )
-Description: This package calculates phylogenetic indices (such as
+Description: Phylogenetic indices (such as
     phylogenetic diversity (Faith 1992), phylogenetic endemism (Rosauer et
-    al. 2009) and weighted endemism (Laffan et al., 2016)) for
+    al. 2009), and weighted endemism (Laffan et al., 2016)) for
     presence-absence rasters.
 License: GPL (>= 3)
 URL: https://gabferreira.github.io/phyloraster/
