@@ -73,7 +73,7 @@ library(phyloraster)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-t <- rast.ed.ses(x, tree, aleats = 3, random = "spat")
+t <- rast.ed.ses(x[[1:10]], tree, aleats = 3, random = "spat")
 terra::plot(t)
 
 }

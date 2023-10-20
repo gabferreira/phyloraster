@@ -55,7 +55,7 @@ included in phylogeny.
 library(terra)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-t <- rast.we.ses(x, aleats = 3)
+t <- rast.we.ses(x[[1:10]], aleats = 3)
 plot(t)
 
 }

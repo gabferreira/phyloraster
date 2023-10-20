@@ -5,7 +5,7 @@
 \alias{dataR}
 \title{Presence-absence of 33 Australian tree frogs (Rosauer 2017)}
 \format{
-A matrix with 2891 rows and 33 columns.
+A matrix with 2891 rows and 35 columns.
 }
 \source{
 Rosauer, 2017. Available on: \url{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data}

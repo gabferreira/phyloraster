@@ -71,7 +71,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @details Community metrics calculated:
 #' \itemize{
 ##'    \item{Phylogenetic diversity (Faith 1992)}
-##'    \item{Richness}
+##'    \item{Species Richness}
 ##'    \item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
 ##'    \item{Phylogenetic endemism (Rosauer et al. 2009)}
 ##'    \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
@@ -144,7 +144,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @details Community metrics calculated:
 #' \itemize{
 ##'    \item{Phylogenetic diversity (Faith 1992)}
-##'    \item{Richness}
+##'    \item{Species Richness}
 ##'    \item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
 ##'    \item{Phylogenetic endemism (Rosauer et al. 2009)}
 ##'    \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
@@ -165,6 +165,7 @@ rast.sr <- function(x, filename = "", ...){
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))[[1:10]]
@@ -175,7 +176,7 @@ rast.sr <- function(x, filename = "", ...){
 #' t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 #' branch.length = data$branch.length, n.descen = data$n.descendants)
 #' terra::plot(t)
-#'
+#' }
 #' @export
 geo.phylo <- function(x, tree,
                       inv.R, edge.path, branch.length, n.descen,
@@ -265,6 +266,7 @@ geo.phylo <- function(x, tree,
 #' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in the Australian flora. Journal of Biogeography, 28, 183–198.
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' require("SESraster")
@@ -284,7 +286,7 @@ geo.phylo <- function(x, tree,
 #'                                            fr_prob = NULL),
 #'                       aleats = 2)
 #' terra::plot(tses)
-#'
+#' }
 #' @export
 geo.phylo.ses <- function(x, tree,
                           inv.R, edge.path, branch.length, n.descen,

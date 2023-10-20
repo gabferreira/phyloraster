@@ -37,6 +37,7 @@
 #' by the branch length for the species present in raster data.
 #'
 #' @inheritParams geo.phylo.ses
+#' @inheritParams phylo.pres
 #'
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
@@ -62,6 +63,7 @@
 #' @export
 rast.pe <- function(x, tree,
                     inv.R, branch.length,
+                    full_tree_metr = FALSE,
                     filename = "", ...){
 
   ## object checks
@@ -80,7 +82,7 @@ rast.pe <- function(x, tree,
 
     } else if(any(miss4)){
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
@@ -97,7 +99,7 @@ rast.pe <- function(x, tree,
                   # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
@@ -157,7 +159,7 @@ rast.pe <- function(x, tree,
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
+#' data <- phylo.pres(x[[1:10]], tree)
 #' range.BL <- inv.range(data$x)
 #' t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
 #' random = "spat")

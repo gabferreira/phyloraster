@@ -28,7 +28,7 @@ branch length for multiple species using a raster of presence-absence.
 \examples{
 # calculating the inverse of range size
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-inv.range(x)
+inv.range(x[[1:10]])
 
 }
 \author{

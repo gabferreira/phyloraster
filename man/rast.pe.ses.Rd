@@ -72,7 +72,7 @@ library(phyloraster)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
+data <- phylo.pres(x[[1:10]], tree)
 range.BL <- inv.range(data$x)
 t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
 random = "spat")

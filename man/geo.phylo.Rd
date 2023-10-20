@@ -48,13 +48,14 @@ phylogenetic endemism and weighted endemism using rasters as input.
 Community metrics calculated:
 \itemize{
 \item{Phylogenetic diversity (Faith 1992)}
-\item{Richness}
+\item{Species Richness}
 \item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
 \item{Phylogenetic endemism (Rosauer et al. 2009)}
 \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
 }
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))[[1:10]]
@@ -65,7 +66,7 @@ inv.R <- inv.range(data$x)
 t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 branch.length = data$branch.length, n.descen = data$n.descendants)
 terra::plot(t)
-
+}
 }
 \references{
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.

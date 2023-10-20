@@ -15,5 +15,5 @@ load.data.rosauer()
 data.frame, SpatRaster, SpatVector and phylo
 }
 \description{
-This function load a phylogenetic tree, a raster and a data.frame with presence-absence of 33 Australian tree frogs from Rosauer (2017). We also provide distribution shapefiles for each species according to the IUCN.
+This function load a phylogenetic tree, a raster and a data.frame with presence-absence of 33 Australian tree frogs from Rosauer (2017). We also provide distribution shapefiles for ten species according to the IUCN.
 }

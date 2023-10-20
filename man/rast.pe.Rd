@@ -4,7 +4,15 @@
 \alias{rast.pe}
 \title{Calculate phylogenetic endemism for raster data}
 \usage{
-rast.pe(x, tree, inv.R, branch.length, filename = "", ...)
+rast.pe(
+  x,
+  tree,
+  inv.R,
+  branch.length,
+  full_tree_metr = FALSE,
+  filename = "",
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -17,6 +25,9 @@ tree order. See the phylo.pres function.}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
+
+\item{full_tree_metr}{logical. Whether edge.path, branch length and number
+of descendants should be calculated with the full (TRUE) or the prunned tree (FALSE).}
 
 \item{filename}{character. Output filename}
 

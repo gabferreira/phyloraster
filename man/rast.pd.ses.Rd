@@ -81,7 +81,7 @@ library(phyloraster)
 library(SESraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
+data <- phylo.pres(x[[1:10]], tree)
 t <- rast.pd.ses(data$x, edge.path = data$edge.path,
                 branch.length = data$branch.length, aleats = 3, random = "spat")
 plot(t)

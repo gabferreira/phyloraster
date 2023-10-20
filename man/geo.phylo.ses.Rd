@@ -73,6 +73,7 @@ species presences proportionally to their observed frequency (i.e. number of
 occupied pixels). The randomization will not assign values to cells with nodata.
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 require("SESraster")
@@ -92,7 +93,7 @@ tses <- geo.phylo.ses(x = x,
                                            fr_prob = NULL),
                       aleats = 2)
 terra::plot(tses)
-
+}
 }
 \references{
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.

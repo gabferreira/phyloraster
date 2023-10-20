@@ -45,7 +45,7 @@ phylogenetic endemism and weighted endemism using rasters as input
 Community metrics calculated:
 \itemize{
 \item{Phylogenetic diversity (Faith 1992)}
-\item{Richness}
+\item{Species Richness}
 \item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
 \item{Phylogenetic endemism (Rosauer et al. 2009)}
 \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}

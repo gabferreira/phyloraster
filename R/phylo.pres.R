@@ -77,19 +77,21 @@ tip.root.path <- function(tree){
 
 #' Prepare rasters and phylogenetic tree to run community metrics
 #'
-#' @description Reorder a stack of rasters of species distribution according to
-#' tree order and get branch length for each species to calculate diversity
-#' metrics using phyloraster::geo.phylo(). The names must be the same in the
-#' phylogenetic tree and in the raster for the same species. For example, if you
-#' have the name "Leptodactylus_latrans" in the raster and "Leptodactylus latrans"
-#' in the tree, the function will not work. The same goes for uppercase and
-#' lowercase letters.
+#' @description Reorder a stack of rasters of species distribution to match the order
+#' of the tips of the tree, and get branch length and number of descendants for
+#' each species to calculate diversity metrics using phyloraster::geo.phylo(). The
+#'  branch length and the number of descendants can be calculated based on the full
+#'  tree or the raster based tree subset.
+#'  The names must be the same in the phylogenetic tree and in the raster for the
+#'  same species. For example, if you have the name "Leptodactylus_latrans" in
+#'  the raster and "Leptodactylus latrans" in the tree, the function will not
+#'  work. The same goes for uppercase and lowercase letters.
 #'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species.
 #' @param tree phylo. A dated tree.
 #' @param full_tree_metr logical. Whether edge.path, branch length and number
-#' of descendants should be calculated with the full or the prunned the tree.
+#' of descendants should be calculated with the full (TRUE) or the prunned tree (FALSE).
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return Returns a list containing a SpatRaster reordered according to the order
 #'  that the species appear in the phylogenetic tree, a subtree containing only
@@ -103,6 +105,9 @@ tip.root.path <- function(tree){
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' phylo.pres(x[[1:3]], tree, full_tree_metr = TRUE)
+#'
+#' # using the prunned tree
+#' phylo.pres(x[[1:3]], tree, full_tree_metr = FALSE)
 #'
 #' @export
 phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
