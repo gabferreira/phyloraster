@@ -161,7 +161,21 @@ names(dataprep$x) == tree$tip.label
 ## Analysis {#analysis}
 
 Great!!
-Now, we are already able to calculate the measures of endemism and evolutionary diversity.
+Now, we are already able to calculate the measures of species richness, endemism and evolutionary diversity.
+
+- **Species richness**
+
+Our package allows you to calculate species richness using the `rast.sr` function.
+
+```{r, warning= FALSE}
+ras <- terra::rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
+sr <- rast.sr(x = ras)
+sr
+```
+
+```{r plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
+plot(sr, main = "Species richness")
+```
 
 -   **Endemism measurements**
 
@@ -213,6 +227,7 @@ The result can be visualized using the R `plot` function from the `terra` packag
 ```{r per-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(per$PE, main = "Phylogenetic Endemism")
 ```
+
 
 ## Null models {#null}
 
