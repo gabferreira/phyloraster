@@ -4,7 +4,7 @@
 #'
 #' @inheritParams terra::rasterize
 #' @inheritParams terra::rast
-#' @param ymask SpatVector Mask used to delimit the region of interest, like the shapefile of a country for example
+#' @param ymask logical. If TRUE, y will be used as a mask for x.
 #' @param sps.col character. It should be a variable name in x.
 #'
 #' @return SpatRaster
