@@ -42,7 +42,7 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
     x <- terra::vect(x)
   }
 
-  nm <- unique(data.frame(x)[,sps.col])
+  nm <- unique(data.frame(x)[,sps.col]) # get the species names from shapefile x
 
   ynull <- is.null(y) # y is null?
 
