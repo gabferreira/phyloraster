@@ -184,7 +184,7 @@ The user also has the option to compute branch length and descendant number usin
 ```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE, echo = FALSE}
 knitr::include_graphics("/media/gabriela/HDD/Documents/Doutorado_UESC/Artigo_phylogrid/submissao Ecography/Revisao 3 Ecography Minor/tree.jpg")
 ```
-Figure 1. Phylogenetic tree for tree frogs denoting the implications of using the full or the subsetted tree in the phylo.pres function. Figure A) demonstrates the full phylogenetic tree for some tree frog species. In figure B), we have the full tree considering species A and B that are present in the region (blue), as well as the common ancestor between the two species (red). In figure C) we only have the species present in the region.  
+Figure 1. Phylogenetic tree for tree frogs denoting the implications of using the full or the subsetted tree in the phylo.pres function. Figure a) demonstrates the full phylogenetic tree for some tree frog species. In figure b), we have the full tree considering species A and B that are present in the region (blue), as well as the common ancestor between the two species (red). In figure c) we only have the species present in the region.  
 
 ## Analysis {#analysis}
 
