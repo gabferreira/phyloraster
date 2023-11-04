@@ -30,7 +30,7 @@ delta.grid <- function(r1, r2, filename = NULL, cores = 1, ...){
 
   # match extension for r1 and r2?
   if(!terra::ext(r1) == terra::ext(r2)){
-   stop("Extents do not match")
+   stop("Extents do not match. If you use multiple SpatRaster objects, they must have the same resolution and extent. See terra::crop and terra::intersect to resolve extension issues.")
   }
 
   # delta
