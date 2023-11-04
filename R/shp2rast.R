@@ -39,7 +39,7 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
                      touches = TRUE, resolution, values = 1, filename = NULL, ...){
 
   if(!inherits(x, "SpatVector")){
-    x <- terra::vect(x)
+    stop("The object must be of the class 'SpatVector' from terra package. See terra::vect.")
   }
 
   nm <- unique(data.frame(x)[,sps.col]) # get the species names from shapefile x
