@@ -132,6 +132,27 @@ maps::map(add = TRUE)
 ```{r, message = F}
 r2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
 r2
+plot(r2[[9]])
+```
+
+You can also masking the shapefile using another shapefile, as follows:
+
+```{r, message = F}
+library(terra)
+
+shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                              package="phyloraster"))
+
+# create a polygon to use as mask with an extent
+e <- terra::ext(113, 123, -43.64, -33.90)
+p <- terra::as.polygons(e, crs="")
+coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of the polygons
+coun.rast <- terra::rasterize(coun.crop,
+terra::rast(terra::ext(shp), resolution = 0.5))
+
+# rasterizing with the mask of the polygon
+shp.t <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE)
+plot(shp.t[[1]], col = c("grey", "green"))
 ```
 
 -   **Function** `phylo.pres`
@@ -157,6 +178,13 @@ Now, the raster stack and the tip label of the tree are in the same order!
 ```{r}
 names(dataprep$x) == tree$tip.label
 ```
+
+The user also has the option to compute branch length and descendant number using the full supplied tree or the tree subsetted by the species present in the raster. Notice the implications of using the full or the subsetted tree. Consider, for instance, a scenario where a clade comprises three species (A, B, C and D - Figure 1A)), and the particular area of study involves two of these species (A and B, in blue- Figure 1B). Furthermore, let's assume that species A and B share a branch, denoted as D (in red- Figure 1A) and 1B)). Using the full phylogenetic tree will estimate the whole length of branches for these two species, including the branch shared between them (D), that connects them with the ancestor shared with the species absent from that specific region. On the other hand, when using the subsetted tree, branch D will be disregarded and only the terminal branches will be used to calculate branch length, so that the calculated branch lengths of the species A and B will be shorter. 
+
+```{r}
+knitr::include_graphics("/media/gabriela/HDD/Documents/Doutorado_UESC/Artigo_phylogrid/submissao Ecography/Revisao 3 Ecography Minor/tree.jpg")
+```
+Figure 1. Phylogenetic tree for tree frogs denoting the implications of using the full or the subsetted tree in the phylo.pres function. Figure A) demonstrates the full phylogenetic tree for some tree frog species. In figure B), we have the full tree considering species A and B that are present in the region (blue), as well as the common ancestor between the two species (red). In figure C) we only have the species present in the region.  
 
 ## Analysis {#analysis}
 
