@@ -25,7 +25,9 @@
 #' @export
 arg.check <- function(call,
                       arguments = c("LR", "inv.R", "branch.length", "n.descen", "tree")  ){
-  fun <- match.fun(as.list(call)[[1]])
+  # get function
+  fun <- get(sub("phyloraster::|phyloraster::", "", as.character(as.list(call)[[1]]))[1],
+             mode = "function", envir = loadNamespace("phyloraster"))
   defined <- methods::formalArgs(args(fun))
   passed <- names(as.list(call)[-1])
 
