@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
-Version: 2.0
+Version: 2.0.1
 Authors@R: c(
     person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
@@ -36,4 +36,3 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 StagedInstall: no
-
