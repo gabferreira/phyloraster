@@ -16,9 +16,10 @@
 #' @return vector
 #'
 #' @examples
+#' \dontrun{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' range_size(x, cellSz <- terra::cellSize(x))
-#'
+#' range_size(x[[1:2]], cellSz <- terra::cellSize(x))
+#'}
 #' @export
 range_size <- function(x, cellSz, unit = "m", ...){
 

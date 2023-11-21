@@ -28,9 +28,10 @@ but not in square meters, which was considered in the method applied to
 calculate the area.
 }
 \examples{
+\dontrun{
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-range_size(x, cellSz <- terra::cellSize(x))
-
+range_size(x[[1:2]], cellSz <- terra::cellSize(x))
+}
 }
 \author{
 Gabriela Alves Ferreira and Neander Marcel Heming

@@ -34,16 +34,17 @@ This function calculates evolutionary distinctiveness according
 to the fair-proportion index.
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 # phylogenetic tree
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-data <- phylo.pres(x, tree)
+data <- phylo.pres(x[[1:3]], tree)
 ed <- rast.ed(data$x, edge.path = data$edge.path,
               branch.length = data$branch.length, n.descen = data$n.descen)
 plot(ed)
-
+}
 }
 \references{
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,

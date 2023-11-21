@@ -11,6 +11,7 @@
 #'
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #'
 #' shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
@@ -32,7 +33,7 @@
 #' # rasterizing without using mask
 #' shp.t2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.1)
 #' plot(shp.t2[[9]], col = c("grey", "green"))
-#'
+#' }
 #' @export
 #'
 shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,

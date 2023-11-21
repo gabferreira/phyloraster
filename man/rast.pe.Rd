@@ -41,13 +41,14 @@ Calculate the sum of the inverse of the range size multiplied
 by the branch length for the species present in raster data.
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-pe <- rast.pe(x = x, tree)
+pe <- rast.pe(x = x[[1:3]], tree)
 plot(pe)
-
+}
 }
 \references{
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,

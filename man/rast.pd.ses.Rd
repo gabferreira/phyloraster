@@ -76,6 +76,7 @@ to cells with nodata. The phylogenetic randomization shuffles taxa names
 across all taxa included in phylogeny.
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 library(SESraster)
@@ -85,7 +86,7 @@ data <- phylo.pres(x[[1:10]], tree)
 t <- rast.pd.ses(data$x, edge.path = data$edge.path,
                 branch.length = data$branch.length, aleats = 3, random = "spat")
 plot(t)
-
+}
 }
 \references{
 Faith, D. P. (1992). Conservation evaluation and phylogenetic

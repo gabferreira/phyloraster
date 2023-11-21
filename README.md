@@ -1,13 +1,11 @@
 <!-- badges: start -->
 
-[![CRAN-status](https://www.r-pkg.org/badges/version/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
-[![](http://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
-[![R-CMD-check](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
+[![R-CMD-check](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phylogrid/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
+# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo2.png" alt="phyloraster website" align="right" height="139"/></a>
 
 <br>
 

@@ -24,13 +24,14 @@ SpatRaster
 Calculate the weighted endemism for species present in raster data.
 }
 \examples{
+\dontrun{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 inv.R <- inv.range(x)
 we <- rast.we(x, inv.R)
 plot(we)
-
+}
 }
 \references{
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,

@@ -35,6 +35,7 @@ the raster and "Leptodactylus latrans" in the tree, the function will not
 work. The same goes for uppercase and lowercase letters.
 }
 \examples{
+\dontrun{
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
@@ -42,7 +43,7 @@ phylo.pres(x[[1:3]], tree, full_tree_metr = TRUE)
 
 # using the prunned tree
 phylo.pres(x[[1:3]], tree, full_tree_metr = FALSE)
-
+}
 }
 \author{
 Neander Marcel Heming and Gabriela Alves Ferreira

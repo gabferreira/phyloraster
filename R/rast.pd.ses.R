@@ -47,14 +47,15 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
+#' data <- phylo.pres(x[[1:3]], tree)
 #' pd <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
 #' plot(pd)
-#'
+#' }
 #' @export
 rast.pd <- function(x, tree,
                     edge.path, branch.length,
@@ -155,6 +156,7 @@ rast.pd <- function(x, tree,
 #' diversity. Biological conservation, 61(1), 1-10.
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)
@@ -164,7 +166,7 @@ rast.pd <- function(x, tree,
 #' t <- rast.pd.ses(data$x, edge.path = data$edge.path,
 #'                 branch.length = data$branch.length, aleats = 3, random = "spat")
 #' plot(t)
-#'
+#' }
 #' @export
 rast.pd.ses <- function(x, tree,
                         edge.path, branch.length,

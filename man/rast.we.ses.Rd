@@ -52,12 +52,13 @@ nodata. The phylogenetic randomization shuffles taxa names across all taxa
 included in phylogeny.
 }
 \examples{
+\dontrun{
 library(terra)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 t <- rast.we.ses(x[[1:10]], aleats = 3)
 plot(t)
-
+}
 }
 \references{
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,

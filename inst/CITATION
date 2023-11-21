@@ -12,5 +12,5 @@ bibentry(
               person(c("Neander", "Marcel"), "Heming")),
   year   = year,
   note   = note,
-  url    = c("https://CRAN.R-project.org/package=phyloraster")
+  url    = c("https://github.com/gabferreira/phyloraster")
 )

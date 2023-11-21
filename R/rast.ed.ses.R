@@ -53,16 +53,17 @@
 #' @return SpatRaster
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' # phylogenetic tree
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x, tree)
+#' data <- phylo.pres(x[[1:3]], tree)
 #' ed <- rast.ed(data$x, edge.path = data$edge.path,
 #'               branch.length = data$branch.length, n.descen = data$n.descen)
 #' plot(ed)
-#'
+#' }
 #' @export
 rast.ed <- function(x, tree,
                     edge.path, branch.length, n.descen,
@@ -158,13 +159,14 @@ rast.ed <- function(x, tree,
 #' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
 #' @examples
+#' \dontrun{
 #' library(phyloraster)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
 #' t <- rast.ed.ses(x[[1:10]], tree, aleats = 3, random = "spat")
 #' terra::plot(t)
-#'
+#' }
 #' @export
 rast.ed.ses <- function(x, tree,
                         edge.path, branch.length, n.descen,

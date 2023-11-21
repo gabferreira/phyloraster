@@ -26,10 +26,11 @@ NA, the inverse of range size and the inverse of range size multiplied by
 branch length for multiple species using a raster of presence-absence.
 }
 \examples{
+\dontrun{
 # calculating the inverse of range size
 x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-inv.range(x[[1:10]])
-
+inv.range(x[[5]])
+}
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

@@ -53,13 +53,14 @@
 #' @return SpatRaster
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
-#' pe <- rast.pe(x = x, tree)
+#' pe <- rast.pe(x = x[[1:3]], tree)
 #' plot(pe)
-#'
+#'}
 #' @export
 rast.pe <- function(x, tree,
                     inv.R, branch.length,
@@ -154,17 +155,18 @@ rast.pe <- function(x, tree,
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
-#' data <- phylo.pres(x[[1:10]], tree)
+#' data <- phylo.pres(x[[1:3]], tree)
 #' range.BL <- inv.range(data$x)
 #' t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
 #' random = "spat")
 #' plot(t)
-#'
+#'}
 #' @export
 rast.pe.ses <- function(x, tree,
                         branch.length, inv.R,

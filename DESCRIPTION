@@ -1,18 +1,17 @@
 Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
 Version: 2.0
-Authors@R:  c(
-    person("Gabriela", "Alves-Ferreira", email = "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
+Authors@R: c(
+    person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
-    person(c("Flávio", "M.", "M."), "Mota", email = "flaviomoc@gmail.com", role = "aut",
+    person(c("Flávio", "M.", "M."), "Mota", , "flaviomoc@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0002-0308-7151")),
-    person(c("Neander", "Marcel"), "Heming", email = "neanderh@yahoo.com.br", role = c("aut"),
+    person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", role = "aut",
            comment = c(ORCID = "0000-0003-2461-5045"))
   )
-Description: Phylogenetic indices (such as
-    phylogenetic diversity (Faith 1992), phylogenetic endemism (Rosauer et
-    al. 2009), and weighted endemism (Laffan et al., 2016)) for
-    presence-absence rasters.
+Description: Phylogenetic indices (such as phylogenetic diversity (Faith
+    1992), phylogenetic endemism (Rosauer et al. 2009), and weighted
+    endemism (Laffan et al., 2016)) for presence-absence rasters.
 License: GPL (>= 3)
 URL: https://gabferreira.github.io/phyloraster/
 Depends: 
@@ -25,7 +24,6 @@ Imports:
     stats,
     terra
 Suggests: 
-    devtools,
     knitr,
     maps,
     rmarkdown,
@@ -38,3 +36,4 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 StagedInstall: no
+

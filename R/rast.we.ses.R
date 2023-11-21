@@ -51,13 +51,14 @@
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' inv.R <- inv.range(x)
 #' we <- rast.we(x, inv.R)
 #' plot(we)
-#'
+#'}
 #' @export
 rast.we <- function(x, inv.R,
                     filename = "", ...){
@@ -149,12 +150,13 @@ rast.we <- function(x, inv.R,
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
+#' \dontrun{
 #' library(terra)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
 #' t <- rast.we.ses(x[[1:10]], aleats = 3)
 #' plot(t)
-#'
+#'}
 #' @export
 rast.we.ses <- function(x,
                         inv.R,

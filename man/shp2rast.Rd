@@ -45,6 +45,7 @@ SpatRaster
 The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
 }
 \examples{
+\dontrun{
 library(terra)
 
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
@@ -66,5 +67,5 @@ plot(shp.t, col = c("grey", "green"))
 # rasterizing without using mask
 shp.t2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.1)
 plot(shp.t2[[9]], col = c("grey", "green"))
-
+}
 }
