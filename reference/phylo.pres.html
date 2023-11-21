@@ -114,90 +114,15 @@ vectors containing the branch length and the number of descendants of each speci
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gabferreira.github.io/phyloraster/">phyloraster</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gabferreira.github.io/phyloraster/">phyloraster</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ape</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">read.tree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tree.nex"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">phylo.pres</span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="va">tree</span>, full_tree_metr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped: Litoria_dorsalis, Litoria_rubella, Litoria_nigrofrenata, Litoria_nasuta, Litoria_tornieri, Litoria_inermis, Litoria_pallida, Litoria_latopalmata, Litoria_bicolor, Litoria_fallax, Litoria_genimaculata, Litoria_andiirrmalin, Litoria_wilcoxii, Litoria_jungguy, Litoria_caerulea, Litoria_gracilenta, Litoria_chloris, Litoria_xanthomera, Cyclorana_brevipes, Cyclorana_novaehollandiae, Cyclorana_manya, Cyclorana_cultripes, Litoria_alboguttata, Cyclorana_longipes, Nyctimystes_dayi, Litoria_nannotis, Litoria_lorica, Litoria_rheocola, Litoria_nyakalensis, Litoria_infrafrenata</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> class       : SpatRaster </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dimensions  : 90, 68, 3  (nrow, ncol, nlyr)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resolution  : 0.1, 0.1  (x, y)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> coord. ref. : lon/lat WGS 84 (EPSG:4326) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> source      : rast.presab.tif </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> names       : Litoria_revelata, Litoria_rothii, Litoria_longirostris </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min values  :                0,              0,                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max values  :                1,              1,                    1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tree</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 3 tips and 1 internal nodes.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Tip labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Litoria_revelata, Litoria_rothii, Litoria_longirostris</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Unrooted; includes branch lengths.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edge.path</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      [,1] [,2] [,3] [,4] [,5]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_revelata        0    1    0    0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_rothii          0    0    1    0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_longirostris    0    0    0    1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $branch.length</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12.680290  0.589016  0.589015  0.589015  0.420985</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $n.descendants</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 37 37 38 38 37 39 40 41 42 42 41 43 43 48 49 50 50 51 52 53 53 54 54 55 55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26] 56 56 57 58 58 59 59 44 34 35 36 37 36 39 40 41 35 34 44 45 46 47 48 49 47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51] 51 52 46 54 55 45 57 58</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"na.action")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "exclude"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using the prunned tree</span></span></span>
 <span class="r-in"><span><span class="fu">phylo.pres</span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="va">tree</span>, full_tree_metr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some species in the phylogeny 'tree' are missing from the SpatRaster 'x' and were dropped: Litoria_dorsalis, Litoria_rubella, Litoria_nigrofrenata, Litoria_nasuta, Litoria_tornieri, Litoria_inermis, Litoria_pallida, Litoria_latopalmata, Litoria_bicolor, Litoria_fallax, Litoria_genimaculata, Litoria_andiirrmalin, Litoria_wilcoxii, Litoria_jungguy, Litoria_caerulea, Litoria_gracilenta, Litoria_chloris, Litoria_xanthomera, Cyclorana_brevipes, Cyclorana_novaehollandiae, Cyclorana_manya, Cyclorana_cultripes, Litoria_alboguttata, Cyclorana_longipes, Nyctimystes_dayi, Litoria_nannotis, Litoria_lorica, Litoria_rheocola, Litoria_nyakalensis, Litoria_infrafrenata</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> class       : SpatRaster </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dimensions  : 90, 68, 3  (nrow, ncol, nlyr)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resolution  : 0.1, 0.1  (x, y)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> coord. ref. : lon/lat WGS 84 (EPSG:4326) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> source      : rast.presab.tif </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> names       : Litoria_revelata, Litoria_rothii, Litoria_longirostris </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min values  :                0,              0,                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max values  :                1,              1,                    1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tree</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 3 tips and 1 internal nodes.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Tip labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Litoria_revelata, Litoria_rothii, Litoria_longirostris</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Unrooted; includes branch lengths.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edge.path</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      [,1] [,2] [,3]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_revelata        1    0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_rothii          0    1    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Litoria_longirostris    0    0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $branch.length</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.589016 0.589015 0.589015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $n.descendants</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4 4 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"na.action")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "exclude"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

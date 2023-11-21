@@ -97,31 +97,10 @@ See <code><a href="https://rdrr.io/pkg/terra/man/cellSize.html" class="external-
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">range_size</span><span class="op">(</span><span class="va">x</span>, <span class="va">cellSz</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/cellSize.html" class="external-link">cellSize</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          Litoria_revelata            Litoria_rothii      Litoria_longirostris </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                5021016045              196704341029                4523101306 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          Litoria_dorsalis           Litoria_rubella           Litoria_inermis </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               26914371162              216777517522              315599945794 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Litoria_pallida       Litoria_latopalmata          Litoria_tornieri </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               46641760386              283024695689                2357368186 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Litoria_nasuta      Litoria_nigrofrenata           Litoria_bicolor </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              128975306997               27880171167               64016561339 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Litoria_fallax      Litoria_genimaculata          Litoria_wilcoxii </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              105407823256               46631895568               98735291950 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Litoria_jungguy      Litoria_andiirrmalin          Litoria_caerulea </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               27268098100                 477612940              274967475725 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Litoria_chloris        Litoria_xanthomera        Litoria_gracilenta </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               16970408732               14130600645              124447061138 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Cyclorana_brevipes Cyclorana_novaehollandiae       Cyclorana_cultripes </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              247438116703              328609847581                 909156692 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Cyclorana_manya       Litoria_alboguttata        Cyclorana_longipes </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               47698700335              288806915892               10082989729 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          Nyctimystes_dayi          Litoria_nannotis            Litoria_lorica </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               24131739829               26022243175                3076448838 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          Litoria_rheocola       Litoria_nyakalensis      Litoria_infrafrenata </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               24884175617               20589961515               84850742051 </span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">range_size</span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">cellSz</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/cellSize.html" class="external-link">cellSize</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
