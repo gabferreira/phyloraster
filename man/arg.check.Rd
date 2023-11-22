@@ -23,9 +23,11 @@ Check for missing arguments using function call and a provided
 vector with argument names to check
 }
 \examples{
+\dontrun{
 geop <- function(x, tree, ...){
                 f4 <- arg.check(match.call(),
-                                c("LR", "inv.R", "branch.length", "n.descen"))
+                                c("LR", "inv.R",
+                                "branch.length", "n.descen"))
                 f1 <- arg.check(match.call(),
                                 c("tree"))
                 c(f1, f4)
@@ -33,7 +35,7 @@ geop <- function(x, tree, ...){
 geop(1, 1)
 geop(1)
 geop(1, LR=1)
-
+}
 }
 \author{
 Neander Marcel Heming

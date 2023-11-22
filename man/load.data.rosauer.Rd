@@ -5,7 +5,8 @@
 \title{Load an example dataset with presence-absence data of 33 tree frogs and
 a phylogenetic tree for this species}
 \source{
-Rosauer, 2017. Available on: \href{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data/}{Github}
+Rosauer, 2017. Available on:
+\href{https://github.com/DanRosauer/phylospatial/tree/master/PhyloEndemism_in_R/Tree\%20Frog\%20Data/}{Github}
 
 IUCN. 2022. The IUCN Red List of Threatened Species (spatial data).
 Version 2022-1. \href{https://www.iucnredlist.org}{IUCN}

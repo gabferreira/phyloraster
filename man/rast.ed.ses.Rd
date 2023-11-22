@@ -62,10 +62,14 @@ Calculates the standardized effect size for evolutionary
 distinctiveness. See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples
-species presences proportionally to their observed frequency (i.e. number
-of occupied pixels). The randomization will not assign values to cells with
-nodata. The phylogenetic randomization shuffles taxa names across all taxa
+The spatial randomization (spat) keeps the
+richness exact and samples
+species presences proportionally to their
+observed frequency (i.e. number
+of occupied pixels). The randomization will
+not assign values to cells with
+nodata. The phylogenetic randomization shuffles
+taxa names across all taxa
 included in phylogeny.
 }
 \examples{
@@ -94,12 +98,17 @@ resolve biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
 \seealso{
-\code{\link{phylo.pres}}, \code{\link{inv.range}},
+\code{\link{phylo.pres}},
+\code{\link{inv.range}},
 \code{\link{geo.phylo.ses}},
-\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
-\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
-\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
-\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+\code{\link{rast.ed.ses}},
+\code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}},
+\code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}},
+\code{\link[SESraster]{SESraster}}
 }
 \author{
 Neander M. Heming and Gabriela Alves-Ferreira

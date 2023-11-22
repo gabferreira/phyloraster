@@ -57,7 +57,8 @@ Community metrics calculated:
 \references{
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
 and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
-geographical concentrations of evolutionary history. Molecular ecology, 18(19),
+geographical concentrations of evolutionary history.
+Molecular ecology, 18(19),
 4061-4072.
 
 Faith, D. P. (1992). Conservation evaluation and phylogenetic

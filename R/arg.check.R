@@ -11,6 +11,7 @@
 #' @author Neander Marcel Heming
 #'
 #' @examples
+#' \dontrun{
 #' geop <- function(x, tree, ...){
 #'                 f4 <- arg.check(match.call(),
 #'                                 c("LR", "inv.R",
@@ -22,7 +23,7 @@
 #' geop(1, 1)
 #' geop(1)
 #' geop(1, LR=1)
-#'
+#' }
 #' @export
 arg.check <- function(call,
                       arguments = c("LR", "inv.R", "branch.length",
