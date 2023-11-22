@@ -5,7 +5,7 @@
 [![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# phyloraster <a href="https://github.com/gabferreira/phyloraster"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
+# phyloraster <a href="https://gabferreira.github.io/phyloraster/"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
 
 <br>
 
