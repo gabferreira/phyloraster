@@ -111,7 +111,8 @@ the calculation should be repeated.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The spatial randomization (spat) keeps the richness exact and samples
+    <p>The spatial randomization (spat) keeps the richness exact and
+samples
 species presences proportionally to their observed frequency (i.e. number
 of occupied pixels). The randomization will not assign values to cells with
 nodata. The phylogenetic randomization shuffles taxa names across all taxa
@@ -123,17 +124,23 @@ included in phylogeny.</p>
 VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
 in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
 Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.</p>
-<p>Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in the
+<p>Crisp, M., Laffan, S., Linder, H., Monro, A. (2001).
+Endemism in the
 Australian flora. Journal of Biogeography, 28, 183–198.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="phylo.pres.html">phylo.pres</a></code>, <code><a href="inv.range.html">inv.range</a></code>,
+    <div class="dont-index"><p><code><a href="phylo.pres.html">phylo.pres</a></code>,
+<code><a href="inv.range.html">inv.range</a></code>,
 <code><a href="geo.phylo.ses.html">geo.phylo.ses</a></code>,
-<code><a href="rast.ed.ses.html">rast.ed.ses</a></code>, <code><a href="rast.pd.ses.html">rast.pd.ses</a></code>,
-<code>rast.we.ses</code>, <code><a href="rast.pe.ses.html">rast.pe.ses</a></code>,
-<code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_str.html" class="external-link">bootspat_str</a></code>, <code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_naive.html" class="external-link">bootspat_naive</a></code>,
-<code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_ff.html" class="external-link">bootspat_ff</a></code>, <code><a href="https://hemingnm.github.io/SESraster/reference/SESraster.html" class="external-link">SESraster</a></code></p></div>
+<code><a href="rast.ed.ses.html">rast.ed.ses</a></code>,
+<code><a href="rast.pd.ses.html">rast.pd.ses</a></code>,
+<code>rast.we.ses</code>,
+<code><a href="rast.pe.ses.html">rast.pe.ses</a></code>,
+<code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_str.html" class="external-link">bootspat_str</a></code>,
+<code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_naive.html" class="external-link">bootspat_naive</a></code>,
+<code><a href="https://hemingnm.github.io/SESraster/reference/bootspat_ff.html" class="external-link">bootspat_ff</a></code>,
+<code><a href="https://hemingnm.github.io/SESraster/reference/SESraster.html" class="external-link">SESraster</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -145,7 +152,8 @@ Australian flora. Journal of Biogeography, 28, 183–198.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://CRAN.R-project.org/package=SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>,</span></span>
+<span class="r-in"><span>package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">t</span> <span class="op">&lt;-</span> <span class="fu">rast.we.ses</span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">]</span>, aleats <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
