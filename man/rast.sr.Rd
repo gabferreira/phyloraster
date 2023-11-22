@@ -12,7 +12,8 @@ for a set of species.}
 
 \item{filename}{character. Output filename.}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{...}{additional arguments to be passed passed down from a calling
+function.}
 }
 \value{
 SpatRaster
@@ -22,7 +23,8 @@ Calculate the species richness for raster data.
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
 rse <- rast.sr(x)
 terra::plot(rse)
 }

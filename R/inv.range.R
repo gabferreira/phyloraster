@@ -7,7 +7,8 @@
 #' @inheritParams geo.phylo.ses
 #'
 #' @param overwrite logical. If TRUE, filename is overwritten
-#' @param ... additional arguments to be passed passed down from a calling function.
+#' @param ... additional arguments to be passed passed down from a
+#' calling function.
 #'
 #' @return SpatRaster and numeric
 #'
@@ -16,15 +17,17 @@
 #' @examples
 #' \dontrun{
 #' # calculating the inverse of range size
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif",
+#' package="phyloraster"))
 #' inv.range(x[[5]])
 #' }
 #' @export
 inv.range <- function(x,
                       filename = "", overwrite = FALSE, ...){
-  cores = 1
+  cores <- 1
   # Test if there is enough memory in the user's pc
-  mi <- .fit.memory(x, 4) ## proc in memory = TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
+  mi <- .fit.memory(x, 4) ## proc in memory = TRUE means that it fits in
+  # the pc's memory, so you wouldn't have to use temporary files
 
   # temporary files
   temp.ir <- paste0(tempfile(), "ir.tif")  # to store the second raster

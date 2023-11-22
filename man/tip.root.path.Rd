@@ -11,9 +11,11 @@ tip.root.path(tree)
 }
 \value{
 returns a list with two components: matrix H1
-representing the paths through the tree from root to each tip, and edge.length a
+representing the paths through the tree from root to each tip,
+and edge.length a
 numeric vector giving the length of each branch in the tree. Some matrix
-algebra and a summation of the resulting vector gives the whole-tree PD value.
+algebra and a summation of the resulting vector gives the whole-tree
+PD value.
 }
 \description{
 Computation of tree edge lengths and node paths from root to each tip to
@@ -24,7 +26,8 @@ Based on the algorithm FastXtreePhylo of Peter D. Wilson
 }
 \examples{
 library(phyloraster)
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 
 fxtp <- tip.root.path(tree)
 H1 <- fxtp$H1

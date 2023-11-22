@@ -1,6 +1,7 @@
 test_that("Are the returned values correct", {
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
 
   x <- x[[1:5]]
 

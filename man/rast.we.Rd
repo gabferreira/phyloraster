@@ -21,13 +21,15 @@ tree order. See the phylo.pres function.}
 SpatRaster
 }
 \description{
-Calculate the weighted endemism for species present in raster data.
+Calculate the weighted endemism for species present in raster
+data.
 }
 \examples{
 \dontrun{
 library(terra)
 library(phyloraster)
-x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
 inv.R <- inv.range(x)
 we <- rast.we(x, inv.R)
 plot(we)
@@ -35,12 +37,15 @@ plot(we)
 }
 \references{
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
-metrics of species and phylogenetic turnover can better resolve biogeographic
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
+Range‐weighted
+metrics of species and phylogenetic turnover can better resolve
+biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
-VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in
+VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
+in
 conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
 Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 

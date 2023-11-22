@@ -42,7 +42,8 @@
 #'
 #' @return SpatRaster
 #'
-#' @references Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+#' @references Faith, D. P. (1992). Conservation evaluation and
+#' phylogenetic diversity. Biological conservation, 61(1), 1-10.
 #'
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
@@ -50,10 +51,13 @@
 #' \dontrun{
 #' library(terra)
 #' library(phyloraster)
-#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' x <- rast(system.file("extdata", "rast.presab.tif",
+#' package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex",
+#' package="phyloraster"))
 #' data <- phylo.pres(x[[1:3]], tree)
-#' pd <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
+#' pd <- rast.pd(data$x, edge.path = data$edge.path,
+#' branch.length = data$branch.length)
 #' plot(pd)
 #' }
 #' @export
@@ -63,17 +67,20 @@ rast.pd <- function(x, tree,
 
   ## object checks
   if(!terra::is.lonlat(x)){
-    stop("Geographic coordinates are needed for the calculations.")
+    stop("Geographic coordinates are needed for the
+         calculations.")
   }
-
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path",
+                                       "branch.length",
+                                       "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or 'edge.path' and 'branch.length' need to be supplied")
+      stop("Either argument 'tree' or 'edge.path' and 'branch.length'
+           need to be supplied")
 
     } else if(any(miss4)){
 
@@ -119,14 +126,16 @@ rast.pd <- function(x, tree,
 
 #' Phylogenetic diversity standardized for species richness
 #'
-#' @description Calculates the standardized effect size for phylogenetic diversity.
+#' @description Calculates the standardized effect size for phylogenetic
+#' diversity.
 #'  See Details for more information.
 #'
 #' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
-#' @details The spatial randomization (spat) keeps the richness exact and samples
+#' @details The spatial randomization (spat) keeps the richness exact and
+#' samples
 #'  species presences proportionally to their observed frequency (i.e. number
 #'  of occupied pixels). The randomization will not assign values to cells with
 #'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
@@ -136,11 +145,14 @@ rast.pd <- function(x, tree,
 #' \code{\link{geo.phylo.ses}},
 #' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
 #' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
-#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
-#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+#' \code{\link[SESraster]{bootspat_str}},
+#' \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}},
+#' \code{\link[SESraster]{SESraster}}
 #'
 #' @return SpatRaster. The function returns the observed phylogenetic diversity,
-#' the mean of the simulations calculated over n times, the standard deviation of
+#' the mean of the simulations calculated over n times, the standard deviation
+#' of
 #' the simulations, and the standardized effect size (SES) for the phylogenetic
 #' diversity.
 #'
@@ -160,11 +172,14 @@ rast.pd <- function(x, tree,
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)
-#' x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' x <- rast(system.file("extdata", "rast.presab.tif",
+#' package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex",
+#' package="phyloraster"))
 #' data <- phylo.pres(x[[1:10]], tree)
 #' t <- rast.pd.ses(data$x, edge.path = data$edge.path,
-#'                 branch.length = data$branch.length, aleats = 3, random = "spat")
+#'                 branch.length = data$branch.length, aleats = 3,
+#'                 random = "spat")
 #' plot(t)
 #' }
 #' @export
@@ -188,13 +203,16 @@ rast.pd.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "edge.path", "branch.length",
+                                       "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      # stop("Either argument 'tree' or all 'inv.R', 'branch.length', and 'n.descen' need to be supplied")
-      stop("Either argument 'tree' or both 'edge.path' and branch.length' need to be supplied")
+      # stop("Either argument 'tree' or all 'inv.R', 'branch.length', and
+      # 'n.descen' need to be supplied")
+      stop("Either argument 'tree' or both 'edge.path' and 'branch.length'
+      need to be supplied")
 
     } else if(any(miss4)){
 
@@ -231,7 +249,7 @@ rast.pd.ses <- function(x, tree,
   ## function arguments
   #    .rast.ed.B(x, branch.length = bl.random, n.descen,
   #                              filename = temp[[i]], cores = cores)
-  FUN_args = list(edge.path = edge.path,
+  FUN_args <- list(edge.path = edge.path,
                   branch.length = branch.length
                   # n.descen = n.descen
                   )
@@ -243,9 +261,11 @@ rast.pd.ses <- function(x, tree,
     pd.ses <- SESraster::SESraster(x,
                                    FUN = ".rast.pd.B", FUN_args = FUN_args,
                                    Fa_sample = "branch.length",
-                                   Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                   Fa_alg = "sample", Fa_alg_args =
+                                   list(replace=FALSE),
                                    spat_alg = NULL, spat_alg_args = list(),
-                                   # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                   # spat_alg = spat_alg, spat_alg_args =
+                                   # spat_alg_args,
                                    aleats = aleats,
                                    filename = filename, ...)
 
@@ -254,16 +274,19 @@ rast.pd.ses <- function(x, tree,
     pd.ses <- SESraster::SESraster(x,
                                    FUN = ".rast.pd.B", FUN_args = FUN_args,
                                    # Fa_sample = "branch.length",
-                                   # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                   # Fa_alg = "sample", Fa_alg_args =
+                                   #list(replace=FALSE),
                                    # spat_alg = NULL, spat_alg_args = list(),
-                                   spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                   spat_alg = spat_alg, spat_alg_args =
+                                   spat_alg_args,
                                    aleats = aleats,
                                    # cores = cores,
                                    filename = filename, ...)
 
   } else {
 
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
+    stop("Choose a valid randomization method! The methods currently available
+    are: 'tip' and 'spat'.")
 
   }
 

@@ -37,17 +37,21 @@ to the fair-proportion index.
 \dontrun{
 library(terra)
 library(phyloraster)
-x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
 # phylogenetic tree
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 data <- phylo.pres(x[[1:3]], tree)
 ed <- rast.ed(data$x, edge.path = data$edge.path,
-              branch.length = data$branch.length, n.descen = data$n.descen)
+              branch.length = data$branch.length,
+              n.descen = data$n.descen)
 plot(ed)
 }
 }
 \references{
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
+Baillie,
 J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
 and phylogeny. PLoS ONE 2, e296.
 }

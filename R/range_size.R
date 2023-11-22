@@ -9,7 +9,8 @@
 #' @param cellSz SpatRaster. A SpatRaster containing cellSize values.
 #' See \code{\link[terra]{cellSize}}
 #' @inheritParams terra::cellSize
-#' @param ... additional arguments to be passed passed down from a calling function.
+#' @param ... additional arguments to be passed passed down from a calling
+#' function.
 #'
 #' @author Gabriela Alves Ferreira and Neander Marcel Heming
 #'
@@ -17,23 +18,27 @@
 #'
 #' @examples
 #' \dontrun{
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif",
+#' package="phyloraster"))
 #' range_size(x[[1:2]], cellSz <- terra::cellSize(x))
 #'}
 #' @export
 range_size <- function(x, cellSz, unit = "m", ...){
 
   # colocar ifelse do mi
-  temp <- vector("list", length = 2) # to create a temporary vector with the raster number
+  temp <- vector("list", length = 2) # to create a temporary vector with
+  # the raster number
   temp[[1]] <- paste0(tempfile(), ".tif")  # to store the first raster
 
   miss4 <- arg.check(match.call(), c("cellSz"))
   if(any(miss4)){
-    cellSz <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]], unit = unit) # to calculate cell size
+    cellSz <- terra::cellSize(terra::rast(x[[1]]), filename = temp[[1]],
+                              unit = unit) # to calculate cell size
   }
 
-  # The function bellow extracts the range size for each species and stores it in a vector
-  rs <- terra::global(x*cellSz, fun="sum", na.rm=T)[,1]
+  # The function bellow extracts the range size for each species and stores
+  # it in a vector
+  rs <- terra::global(x*cellSz, fun = "sum", na.rm = TRUE)[,1]
 
   names(rs) <- names(x) # to add names
 

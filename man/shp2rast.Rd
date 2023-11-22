@@ -42,7 +42,9 @@ shp2rast(
 SpatRaster
 }
 \description{
-The function will rasterize the shapefile using the parameters of y, a spatraster. When the argument y is provided, the resolution parameter is ignored. When the argument ymask is TRUE, y is used as a mask for x.
+The function will rasterize the shapefile using the parameters of y, a
+spatraster. When the argument y is provided, the resolution parameter is
+ignored. When the argument ymask is TRUE, y is used as a mask for x.
 }
 \examples{
 \dontrun{
@@ -54,18 +56,21 @@ shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
 # create a polygon to use as mask with an extent
 e <- terra::ext(113, 123, -43.64, -33.90)
 p <- terra::as.polygons(e, crs="")
-coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of the polygons
+coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of
+the polygons
 coun.rast <- terra::rasterize(coun.crop,
 terra::rast(terra::ext(shp), resolution = 0.5))
 
 plot(coun.rast, col = "green")
 
 # rasterizing with the mask of the polygon
-shp.t <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE, background = 0)
+shp.t <- shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
+ymask = TRUE, background = 0)
 plot(shp.t, col = c("grey", "green"))
 
 # rasterizing without using mask
-shp.t2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = NA, resolution = 0.1)
+shp.t2 <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE,
+background = NA, resolution = 0.1)
 plot(shp.t2[[9]], col = c("grey", "green"))
 }
 }

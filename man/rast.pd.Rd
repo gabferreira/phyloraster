@@ -34,15 +34,19 @@ each cell of the raster.
 \dontrun{
 library(terra)
 library(phyloraster)
-x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+x <- rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 data <- phylo.pres(x[[1:3]], tree)
-pd <- rast.pd(data$x, edge.path = data$edge.path, branch.length = data$branch.length)
+pd <- rast.pd(data$x, edge.path = data$edge.path,
+branch.length = data$branch.length)
 plot(pd)
 }
 }
 \references{
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992). Conservation evaluation and
+phylogenetic diversity. Biological conservation, 61(1), 1-10.
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira

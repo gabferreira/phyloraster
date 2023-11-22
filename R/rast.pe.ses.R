@@ -42,11 +42,15 @@
 #' @author Gabriela Alves-Ferreira and Neander Marcel Heming
 #'
 #' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
-#' metrics of species and phylogenetic turnover can better resolve biogeographic
+#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
+#' Range‐weighted
+#' metrics of species and phylogenetic turnover can better resolve
+#' biogeographic
 #' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
-#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
-#'  and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+#' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D.,
+#' Donnellan, S. C.
+#'  and Cook, L. G. (2009). Phylogenetic endemism: a new approach for
+#'  identifying
 #'   geographical concentrations of evolutionary history. Molecular ecology,
 #'   18(19), 4061-4072.
 #'
@@ -56,25 +60,30 @@
 #' \dontrun{
 #' library(terra)
 #' library(phyloraster)
-#' x <- rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+#' x <- rast(system.file("extdata", "rast.presab.tif",
+#' package = "phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex",
+#' package = "phyloraster"))
 #' pe <- rast.pe(x = x[[1:3]], tree)
 #' plot(pe)
 #'}
 #' @export
 rast.pe <- function(x, tree,
-                    inv.R, branch.length,
+                    inv.R,
+                    branch.length,
                     full_tree_metr = FALSE,
                     filename = "", ...){
 
   ## object checks
   if(!terra::is.lonlat(x)){
-    stop("Geographic coordinates are needed for the calculations.")
+    stop("Geographic coordinates are needed
+         for the calculations.")
   }
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("rs", "branch.length", "cellSz", "inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("rs", "branch.length", "cellSz",
+                                       "inv.R", "branch.length", "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
@@ -126,30 +135,38 @@ rast.pe <- function(x, tree,
 
 #' Phylogenetic endemism standardized for specie richness
 #'
-#' @description Calculates the standardized effect size for phylogenetic endemism.
+#' @description Calculates the standardized effect size for phylogenetic
+#' endemism.
 #' See Details for more information.
 #'
 #' @inheritParams geo.phylo.ses
 #'
 #' @return SpatRaster
 #'
-#' @details The spatial randomization (spat) keeps the richness exact and samples
+#' @details The spatial randomization (spat) keeps the richness exact and
+#' samples
 #'  species presences proportionally to their observed frequency (i.e. number
 #'  of occupied pixels). The randomization will not assign values to cells with
 #'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
 #'  included in phylogeny.
 #'
-#' @seealso \code{\link{phylo.pres}}, \code{\link{inv.range}},
+#' @seealso \code{\link{phylo.pres}},
+#' \code{\link{inv.range}},
 #' \code{\link{geo.phylo.ses}},
-#' \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
-#' \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
-#' \code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
-#' \code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+#' \code{\link{rast.ed.ses}},
+#' \code{\link{rast.pd.ses}},
+#' \code{\link{rast.we.ses}},
+#' \code{\link{rast.pe.ses}},
+#' \code{\link[SESraster]{bootspat_str}},
+#' \code{\link[SESraster]{bootspat_naive}},
+#' \code{\link[SESraster]{bootspat_ff}},
+#' \code{\link[SESraster]{SESraster}}
 #'
 #'
 #' @references Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
 #'  & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
-#'   geographical concentrations of evolutionary history. Molecular ecology, 18(19),
+#'   geographical concentrations of evolutionary history.
+#'   Molecular ecology, 18(19),
 #'   4061-4072.
 #'
 #' @author Gabriela Alves-Ferreira and Neander Heming
@@ -159,8 +176,10 @@ rast.pe <- function(x, tree,
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)
-#' x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+#' x <- terra::rast(system.file("extdata", "rast.presab.tif",
+#' package="phyloraster"))
+#' tree <- ape::read.tree(system.file("extdata", "tree.nex",
+#' package="phyloraster"))
 #' data <- phylo.pres(x[[1:3]], tree)
 #' range.BL <- inv.range(data$x)
 #' t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
@@ -188,12 +207,14 @@ rast.pe.ses <- function(x, tree,
 
   ### initial argument check
   {
-    miss4 <- arg.check(match.call(), c("inv.R", "branch.length", "n.descen"))
+    miss4 <- arg.check(match.call(), c("inv.R", "branch.length",
+                                       "n.descen"))
     miss.tree <- arg.check(match.call(), "tree")
 
     if(any(miss4) & miss.tree){
 
-      stop("Either argument 'tree' or all 'inv.R', and 'branch.length' need to be supplied")
+      stop("Either argument 'tree' or all 'inv.R', and 'branch.length'
+           need to be supplied")
 
     } else if(any(miss4)){
 
@@ -230,7 +251,7 @@ rast.pe.ses <- function(x, tree,
   # .rast.pe.B(xeSZ*x, branch.length,
   #            cores = cores, filename = filename)
 
-  FUN_args = list(
+  FUN_args <- list(
     branch.length = branch.length,
     inv.R = inv.R
     # n.descen = n.descen,
@@ -246,9 +267,11 @@ rast.pe.ses <- function(x, tree,
     ses <- SESraster::SESraster(x,
                                 FUN = ".rast.pe.B", FUN_args = FUN_args,
                                 Fa_sample = "branch.length",
-                                Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),
+                                Fa_alg = "sample", Fa_alg_args =
+                                  list(replace = FALSE),
                                 spat_alg = NULL, spat_alg_args = list(),
-                                # spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                # spat_alg = spat_alg,
+                                # spat_alg_args = spat_alg_args,
                                 aleats = aleats,
                                 cores = cores, filename = filename, ...)
 
@@ -257,14 +280,17 @@ rast.pe.ses <- function(x, tree,
     ses <- SESraster::SESraster(x,
                                 FUN = ".rast.pe.B", FUN_args = FUN_args,
                                 # Fa_sample = "branch.length",
-                                # Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                                # Fa_alg = "sample",
+                                # Fa_alg_args = list(replace=FALSE),
                                 # spat_alg = NULL, spat_alg_args = list(),
-                                spat_alg = spat_alg, spat_alg_args = spat_alg_args,
+                                spat_alg = spat_alg,
+                                spat_alg_args = spat_alg_args,
                                 aleats = aleats,
                                 cores = cores, filename = filename, ...)
   }  else {
 
-    stop("Choose a valid randomization method! The methods currently available are: 'tip', 'spat'.")
+    stop("Choose a valid randomization method! The methods currently available
+         are: 'tip', 'spat'.")
 
   }
   return(ses)

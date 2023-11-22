@@ -41,7 +41,8 @@ each branch. See \code{\link{phylo.pres}}}
 SpatRaster with one layer for each metric
 }
 \description{
-Calculate species richness, phylogenetic diversity, evolutionary distinctiveness,
+Calculate species richness, phylogenetic diversity, evolutionary
+distinctiveness,
 phylogenetic endemism and weighted endemism using rasters as input.
 }
 \details{
@@ -49,7 +50,8 @@ Community metrics calculated:
 \itemize{
 \item{Phylogenetic diversity (Faith 1992)}
 \item{Species Richness}
-\item{Evolutionary distinctiveness by fair-proportion (Isaac et al. 2007)}
+\item{Evolutionary distinctiveness by fair-proportion
+(Isaac et al. 2007)}
 \item{Phylogenetic endemism (Rosauer et al. 2009)}
 \item{Weighted endemism (Crisp et al. 2001, Williams et al. 1994)}
 }
@@ -58,8 +60,10 @@ Community metrics calculated:
 \dontrun{
 library(terra)
 library(phyloraster)
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))[[1:10]]
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))[[1:10]]
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 data <- phylo.pres(x, tree)
 inv.R <- inv.range(data$x)
 #t <- geo.phylo(x, tree)
@@ -69,17 +73,32 @@ terra::plot(t)
 }
 }
 \references{
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C. and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular ecology, 18(19), 4061-4072.
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
+and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+geographical concentrations of evolutionary history. Molecular ecology,
+18(19), 4061-4072.
 
-Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
+Faith, D. P. (1992). Conservation evaluation and phylogenetic
+diversity. Biological conservation, 61(1), 1-10.
 
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.
+and VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and
+endemism in conservation. In: Systematics and Conservation Evaluation
+(eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University
+Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001).
+Endemism in theAustralian flora. Journal of Biogeography, 28, 183–198.
 
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
+Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
+threat and phylogeny. PLoS ONE 2, e296.
 
-Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T., González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted metrics of species and phylogenetic turnover can better resolve biogeographic transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
+Range‐weighted metrics of species and phylogenetic turnover can better
+resolve biogeographic transition zones. Methods in Ecology and Evolution,
+7(5), 580-588.
 }
 \seealso{
 \code{\link{phylo.pres}}, \code{\link{inv.range}},

@@ -15,7 +15,8 @@ tree order. See the phylo.pres function.}
 
 \item{overwrite}{logical. If TRUE, filename is overwritten}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{...}{additional arguments to be passed passed down from a
+calling function.}
 }
 \value{
 SpatRaster and numeric
@@ -28,7 +29,8 @@ branch length for multiple species using a raster of presence-absence.
 \examples{
 \dontrun{
 # calculating the inverse of range size
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
 inv.range(x[[5]])
 }
 }

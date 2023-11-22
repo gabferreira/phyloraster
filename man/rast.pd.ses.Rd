@@ -54,16 +54,19 @@ the calculation should be repeated.}
 SpatRaster
 
 SpatRaster. The function returns the observed phylogenetic diversity,
-the mean of the simulations calculated over n times, the standard deviation of
+the mean of the simulations calculated over n times, the standard deviation
+of
 the simulations, and the standardized effect size (SES) for the phylogenetic
 diversity.
 }
 \description{
-Calculates the standardized effect size for phylogenetic diversity.
+Calculates the standardized effect size for phylogenetic
+diversity.
 See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples
+The spatial randomization (spat) keeps the richness exact and
+samples
 species presences proportionally to their observed frequency (i.e. number
 of occupied pixels). The randomization will not assign values to cells with
 nodata. The phylogenetic randomization shuffles taxa names across all taxa
@@ -80,11 +83,14 @@ across all taxa included in phylogeny.
 library(terra)
 library(phyloraster)
 library(SESraster)
-x <- rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+x <- rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 data <- phylo.pres(x[[1:10]], tree)
 t <- rast.pd.ses(data$x, edge.path = data$edge.path,
-                branch.length = data$branch.length, aleats = 3, random = "spat")
+                branch.length = data$branch.length, aleats = 3,
+                random = "spat")
 plot(t)
 }
 }
@@ -97,8 +103,10 @@ diversity. Biological conservation, 61(1), 1-10.
 \code{\link{geo.phylo.ses}},
 \code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
 \code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
-\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
-\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+\code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}},
+\code{\link[SESraster]{SESraster}}
 }
 \author{
 Gabriela Alves-Ferreira and Neander Heming

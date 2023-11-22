@@ -16,7 +16,8 @@ See \code{\link[terra]{cellSize}}}
 
 \item{unit}{character. One of "m", "km", or "ha"}
 
-\item{...}{additional arguments to be passed passed down from a calling function.}
+\item{...}{additional arguments to be passed passed down from a calling
+function.}
 }
 \value{
 vector
@@ -29,7 +30,8 @@ calculate the area.
 }
 \examples{
 \dontrun{
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
 range_size(x[[1:2]], cellSz <- terra::cellSize(x))
 }
 }

@@ -1,15 +1,23 @@
 #' Transform a data.frame to raster
 #'
-#' @description The function transforms a data.frame or a matrix of presence-absence in a raster of distribution.
-#' @param x data.frame. A data.frame or matrix with species names in columns and sites in rows. The first two columns must provide longitude and latitude, respectively.
-#' @param ... additional arguments to be passed passed down from a calling function.
-#' @param CRS character. Description of the Coordinate Reference System (map projection) in PROJ.4, WKT or authority:code notation. See crs. If this argument is missing, and the x coordinates are within -360 .. 360 and the y coordinates are within -90 .. 90, longitude/latitude is assigned
+#' @description The function transforms a data.frame or a matrix of presence-
+#' absence in a raster of distribution.
+#' @param x data.frame. A data.frame or matrix with species names in columns
+#' and sites in rows. The first two columns must provide longitude and latitude,
+#' respectively.
+#' @param ... additional arguments to be passed passed down from a calling
+#' function.
+#' @param CRS character. Description of the Coordinate Reference System
+#' (map projection) in PROJ.4, WKT or authority:code notation. See crs. If
+#' this argument is missing, and the x coordinates are within -360 .. 360 and
+#' the y coordinates are within -90 .. 90, longitude/latitude is assigned
 #' @return SpatRaster
 #' @export
 #' @examples
 #' \dontrun{
 #' dat <- phyloraster::load.data.rosauer()
-#' df2rast(dat$presab, crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+#' df2rast(dat$presab, crs = "+proj=longlat +datum=WGS84 +ellps=WGS84
+#' +towgs84=0,0,0")
 #' }
 df2rast <- function(x, CRS = "+proj=longlat +datum=WGS84", ...){
 

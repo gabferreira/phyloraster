@@ -1,6 +1,7 @@
 test_that("are the returned values correct?", {
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
 
   # getting fewer cells to test all values
   # getting fewer cells to test all values
@@ -16,7 +17,8 @@ test_that("are the returned values correct?", {
 test_that("returned object classes are correct", {
 
   # load data
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
   # getting fewer cells to test all values
   x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
@@ -25,9 +27,11 @@ test_that("returned object classes are correct", {
 
 })
 
-test_that("error is returned when the raster does not have a longitude/latitude coordinate reference system (CRS)", {
+test_that("error is returned when the raster does not have a longitude/latitude
+          coordinate reference system (CRS)", {
 
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
   # getting fewer cells to test all values
   x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 

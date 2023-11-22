@@ -2,7 +2,8 @@
 % Please edit documentation in R/geo.phylo.R
 \name{geo.phylo.ses}
 \alias{geo.phylo.ses}
-\title{Calculate phylogenetic community metrics and their standardized effect sizes for raster data}
+\title{Calculate phylogenetic community metrics and their standardized effect sizes
+for raster data}
 \usage{
 geo.phylo.ses(
   x,
@@ -68,17 +69,22 @@ Calculates the standardized effect size for phylogenetic
 community metrics. See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and samples
-species presences proportionally to their observed frequency (i.e. number of
-occupied pixels). The randomization will not assign values to cells with nodata.
+The spatial randomization (spat) keeps the richness exact
+and samples
+species presences proportionally to their observed frequency (i.e.
+number of
+occupied pixels). The randomization will not assign values to cells
+with nodata.
 }
 \examples{
 \dontrun{
 library(terra)
 library(phyloraster)
 require("SESraster")
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 # data <- phylo.pres(x, tree)
 # area.branch <- inv.range(data$x, data$branch.length)
 tses <- geo.phylo.ses(x = x,
@@ -96,16 +102,26 @@ terra::plot(tses)
 }
 }
 \references{
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J., VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in conservation. In: Systematics and Conservation Evaluation (eds Forey PL, Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
+VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
+in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
+Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism in the Australian flora. Journal of Biogeography, 28, 183–198.
+Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism
+in the Australian flora. Journal of Biogeography, 28, 183–198.
 }
 \seealso{
-\code{\link{phylo.pres}}, \code{\link{inv.range}}, \code{\link{geo.phylo}},
-\code{\link{rast.ed.ses}}, \code{\link{rast.pd.ses}},
-\code{\link{rast.we.ses}}, \code{\link{rast.pe.ses}},
-\code{\link[SESraster]{bootspat_str}}, \code{\link[SESraster]{bootspat_naive}},
-\code{\link[SESraster]{bootspat_ff}}, \code{\link[SESraster]{SESraster}}
+\code{\link{phylo.pres}},
+\code{\link{inv.range}},
+\code{\link{geo.phylo}},
+\code{\link{rast.ed.ses}},
+\code{\link{rast.pd.ses}},
+\code{\link{rast.we.ses}},
+\code{\link{rast.pe.ses}},
+\code{\link[SESraster]{bootspat_str}},
+\code{\link[SESraster]{bootspat_naive}},
+\code{\link[SESraster]{bootspat_ff}},
+\code{\link[SESraster]{SESraster}}
 }
 \author{
 Neander Marcel Heming

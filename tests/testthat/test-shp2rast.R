@@ -1,22 +1,28 @@
 test_that("error is returned with arguments missing and wrong imput class", {
 
   # load data and functions
-  shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phyloraster"))
+  shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                                 package="phyloraster"))
   shp$BINOMIAL <- NULL
-  x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
 
   # tests
-  expect_error(phyloraster::shp2rast(x = shp, sps.col = "BINOMIAL", ymask = FALSE,
+  expect_error(phyloraster::shp2rast(x = shp, sps.col = "BINOMIAL",
+                                     ymask = FALSE,
                                    resolution = 0.1, background = 0))
-  expect_error(phyloraster::shp2rast(x = x, sps.col = "BINOMIAL", ymask = FALSE,
+  expect_error(phyloraster::shp2rast(x = x, sps.col = "BINOMIAL",
+                                     ymask = FALSE,
                                    resolution = 0.1, background = 0))
 })
 
 test_that("check if the object class is correct", {
 
   # load data
-  shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp", package="phyloraster"))
-  sr <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0, resolution = 0.5)
+  shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                                 package="phyloraster"))
+  sr <- shp2rast(shp, sps.col = "BINOMIAL", ymask = FALSE, background = 0,
+                 resolution = 0.5)
 
   # tests
   expect_s4_class(sr, "SpatRaster")
@@ -62,12 +68,14 @@ test_that("function runs ok when a mask is applied", {
   e <- terra::ext(113, 123, -43.64, -33.90)
   p <- terra::as.polygons(e, crs="")
 
-  coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of the polygons
+  coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of
+  # the polygons
   coun.rast <- terra::rasterize(coun.crop,
                                 terra::rast(terra::ext(shp), resolution = 0.5))
 
   # rasterizing with a mask of a country for example
-  expect(phyloraster::shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL", ymask = TRUE,
+  expect(phyloraster::shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
+                               ymask = TRUE,
                                background = 0), ok = T)
 })
 

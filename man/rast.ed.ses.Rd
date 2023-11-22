@@ -72,20 +72,25 @@ included in phylogeny.
 \dontrun{
 library(phyloraster)
 library(SESraster)
-x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+x <- terra::rast(system.file("extdata", "rast.presab.tif",
+package="phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package="phyloraster"))
 t <- rast.ed.ses(x[[1:10]], tree, aleats = 3, random = "spat")
 terra::plot(t)
 }
 }
 \references{
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and Baillie,
+Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
+Baillie,
 J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
 and phylogeny. PLoS ONE 2, e296.
 
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
-metrics of species and phylogenetic turnover can better resolve biogeographic
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
+Range‐weighted
+metrics of species and phylogenetic turnover can better
+resolve biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 }
 \seealso{

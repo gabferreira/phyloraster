@@ -27,7 +27,8 @@ tree order. See the phylo.pres function.}
 each species. See \code{\link{phylo.pres}}}
 
 \item{full_tree_metr}{logical. Whether edge.path, branch length and number
-of descendants should be calculated with the full (TRUE) or the prunned tree (FALSE).}
+of descendants should be calculated with the full (TRUE) or the prunned tree
+(FALSE).}
 
 \item{filename}{character. Output filename}
 
@@ -44,20 +45,26 @@ by the branch length for the species present in raster data.
 \dontrun{
 library(terra)
 library(phyloraster)
-x <- rast(system.file("extdata", "rast.presab.tif", package = "phyloraster"))
-tree <- ape::read.tree(system.file("extdata", "tree.nex", package = "phyloraster"))
+x <- rast(system.file("extdata", "rast.presab.tif",
+package = "phyloraster"))
+tree <- ape::read.tree(system.file("extdata", "tree.nex",
+package = "phyloraster"))
 pe <- rast.pe(x = x[[1:3]], tree)
 plot(pe)
 }
 }
 \references{
 Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016). Range‐weighted
-metrics of species and phylogenetic turnover can better resolve biogeographic
+González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
+Range‐weighted
+metrics of species and phylogenetic turnover can better resolve
+biogeographic
 transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 
-Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.
-and Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
+Rosauer, D. A. N., Laffan, S. W., Crisp, M. D.,
+Donnellan, S. C.
+and Cook, L. G. (2009). Phylogenetic endemism: a new approach for
+identifying
 geographical concentrations of evolutionary history. Molecular ecology,
 18(19), 4061-4072.
 }
