@@ -9,9 +9,8 @@ Authors@R: c(
     person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", role = "aut",
            comment = c(ORCID = "0000-0003-2461-5045"))
   )
-Description: Phylogenetic indices (such as phylogenetic diversity (Faith
-    1992), phylogenetic endemism (Rosauer et al. 2009), and weighted
-    endemism (Laffan et al., 2016)) for presence-absence rasters.
+Description: Phylogenetic Diversity (PD), Phylogenetic Endemism (PE), and Weighted
+    Endemism (WE) for presence-absence raster.
 License: GPL (>= 3)
 URL: https://gabferreira.github.io/phyloraster/
 Depends: 
@@ -35,4 +34,3 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-StagedInstall: no
