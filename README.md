@@ -2,7 +2,6 @@
 
 [![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
-[![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # phyloraster <a href="https://gabferreira.github.io/phyloraster/"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
