@@ -66,7 +66,6 @@ tree <- ape::read.tree(system.file("extdata", "tree.nex",
 package="phyloraster"))
 data <- phylo.pres(x, tree)
 inv.R <- inv.range(data$x)
-#t <- geo.phylo(x, tree)
 t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 branch.length = data$branch.length, n.descen = data$n.descendants)
 terra::plot(t)

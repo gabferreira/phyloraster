@@ -11,7 +11,7 @@
 #' @author Neander Marcel Heming
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' geop <- function(x, tree, ...){
 #'                 f4 <- arg.check(match.call(),
 #'                                 c("LR", "inv.R",

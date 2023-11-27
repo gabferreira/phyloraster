@@ -23,7 +23,7 @@ Check for missing arguments using function call and a provided
 vector with argument names to check
 }
 \examples{
-\dontrun{
+\donttest{
 geop <- function(x, tree, ...){
                 f4 <- arg.check(match.call(),
                                 c("LR", "inv.R",

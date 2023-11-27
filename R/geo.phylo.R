@@ -220,7 +220,6 @@ rast.sr <- function(x, filename = "", ...){
 #' package="phyloraster"))
 #' data <- phylo.pres(x, tree)
 #' inv.R <- inv.range(data$x)
-#' #t <- geo.phylo(x, tree)
 #' t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
 #' branch.length = data$branch.length, n.descen = data$n.descendants)
 #' terra::plot(t)
@@ -338,8 +337,6 @@ geo.phylo <- function(x, tree,
 #' package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex",
 #' package="phyloraster"))
-#' # data <- phylo.pres(x, tree)
-#' # area.branch <- inv.range(data$x, data$branch.length)
 #' tses <- geo.phylo.ses(x = x,
 #'                      tree = tree,
 #'                       # FUN_args = list(range.BL=area.branch$range.BL,

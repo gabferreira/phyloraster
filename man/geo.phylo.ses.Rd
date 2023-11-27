@@ -85,8 +85,6 @@ x <- terra::rast(system.file("extdata", "rast.presab.tif",
 package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex",
 package="phyloraster"))
-# data <- phylo.pres(x, tree)
-# area.branch <- inv.range(data$x, data$branch.length)
 tses <- geo.phylo.ses(x = x,
                      tree = tree,
                       # FUN_args = list(range.BL=area.branch$range.BL,
