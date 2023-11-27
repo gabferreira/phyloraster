@@ -54,7 +54,7 @@
 #'
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif",
@@ -161,7 +161,7 @@ rast.we <- function(x, inv.R,
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",

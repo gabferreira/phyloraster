@@ -42,7 +42,7 @@ Calculate the sum of the inverse of the range size multiplied
 by the branch length for the species present in raster data.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif",

@@ -58,7 +58,7 @@
 #' @return SpatRaster
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif",
@@ -179,7 +179,7 @@ rast.ed <- function(x, tree,
 #' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(phyloraster)
 #' library(SESraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",

@@ -43,11 +43,11 @@ SpatRaster
 }
 \description{
 The function will rasterize the shapefile using the parameters of y, a
-spatraster. When the argument y is provided, the resolution parameter is
+SpatRaster. When the argument y is provided, the resolution parameter is
 ignored. When the argument ymask is TRUE, y is used as a mask for x.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 
 shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
@@ -56,8 +56,7 @@ shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
 # create a polygon to use as mask with an extent
 e <- terra::ext(113, 123, -43.64, -33.90)
 p <- terra::as.polygons(e, crs="")
-coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of
-the polygons
+coun.crop <- terra::crop(p, terra::ext(shp))
 coun.rast <- terra::rasterize(coun.crop,
 terra::rast(terra::ext(shp), resolution = 0.5))
 

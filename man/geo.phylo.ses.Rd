@@ -77,7 +77,7 @@ occupied pixels). The randomization will not assign values to cells
 with nodata.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 require("SESraster")

@@ -73,7 +73,7 @@ taxa names across all taxa
 included in phylogeny.
 }
 \examples{
-\dontrun{
+\donttest{
 library(phyloraster)
 library(SESraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif",

@@ -43,7 +43,7 @@ the raster and "Leptodactylus latrans" in the tree, the function will not
 work. The same goes for uppercase and lowercase letters.
 }
 \examples{
-\dontrun{
+\donttest{
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif",
 package="phyloraster"))

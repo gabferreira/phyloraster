@@ -14,7 +14,7 @@
 #' @return SpatRaster
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' dat <- phyloraster::load.data.rosauer()
 #' df2rast(dat$presab, crs = "+proj=longlat +datum=WGS84 +ellps=WGS84
 #' +towgs84=0,0,0")

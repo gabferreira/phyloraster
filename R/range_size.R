@@ -17,7 +17,7 @@
 #' @return vector
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))
 #' range_size(x[[1:2]], cellSz <- terra::cellSize(x))

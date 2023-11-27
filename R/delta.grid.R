@@ -24,18 +24,19 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # data
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex",
 #' package="phyloraster"))
 #'
-#' # metric SE richness
-#' riq.pres <- rast.se(x)
-#' riq.fut <- rast.se(x[[c(1:15)]]) # imagine we lost some species in the future
+#' # metric SR richness
+#' riq.pres <- rast.sr(x)
+#' # imagine we lost some species in the future
+#' riq.fut <- rast.sr(x[[c(1:15)]])
 #' dg <- delta.grid(riq.pres, riq.fut)
-#' plot(dg)
+#' terra::plot(dg)
 #' }
 delta.grid <- function(r1, r2, filename = NULL, cores = 1, ...){
 

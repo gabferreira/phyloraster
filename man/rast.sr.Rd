@@ -22,7 +22,7 @@ SpatRaster
 Calculate the species richness for raster data.
 }
 \examples{
-\dontrun{
+\donttest{
 x <- terra::rast(system.file("extdata", "rast.presab.tif",
 package="phyloraster"))
 rse <- rast.sr(x)

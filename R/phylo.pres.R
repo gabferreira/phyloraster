@@ -114,7 +114,7 @@ tip.root.path <- function(tree){
 #' @author Neander Marcel Heming and Gabriela Alves Ferreira
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))

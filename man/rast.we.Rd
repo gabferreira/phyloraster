@@ -25,7 +25,7 @@ Calculate the weighted endemism for species present in raster
 data.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif",

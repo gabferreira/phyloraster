@@ -57,7 +57,7 @@
 #' @return SpatRaster
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif",
@@ -172,7 +172,7 @@ rast.pe <- function(x, tree,
 #' @author Gabriela Alves-Ferreira and Neander Heming
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)

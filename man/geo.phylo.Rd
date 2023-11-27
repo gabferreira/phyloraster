@@ -57,7 +57,7 @@ Community metrics calculated:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 x <- terra::rast(system.file("extdata", "rast.presab.tif",

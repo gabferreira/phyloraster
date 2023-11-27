@@ -69,7 +69,7 @@ nodata. The phylogenetic randomization shuffles taxa names across all taxa
 included in phylogeny.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 library(SESraster)

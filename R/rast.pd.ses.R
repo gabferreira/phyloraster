@@ -48,7 +48,7 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' x <- rast(system.file("extdata", "rast.presab.tif",
@@ -168,7 +168,7 @@ rast.pd <- function(x, tree,
 #' diversity. Biological conservation, 61(1), 1-10.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' library(SESraster)

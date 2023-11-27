@@ -33,7 +33,7 @@
 #' @return SpatRaster
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))
 #' rse <- rast.sr(x)
@@ -211,7 +211,7 @@ rast.sr <- function(x, filename = "", ...){
 #' 7(5), 580-588.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
@@ -330,7 +330,7 @@ geo.phylo <- function(x, tree,
 #' in the Australian flora. Journal of Biogeography, 28, 183–198.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(terra)
 #' library(phyloraster)
 #' require("SESraster")

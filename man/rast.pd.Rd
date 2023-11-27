@@ -31,7 +31,7 @@ Calculate the sum of the branch length for species present in
 each cell of the raster.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif",

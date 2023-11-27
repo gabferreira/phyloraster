@@ -15,7 +15,7 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # calculating the inverse of range size
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))

@@ -34,7 +34,7 @@ This function calculates evolutionary distinctiveness according
 to the fair-proportion index.
 }
 \examples{
-\dontrun{
+\donttest{
 library(terra)
 library(phyloraster)
 x <- rast(system.file("extdata", "rast.presab.tif",
