@@ -36,7 +36,7 @@
 #' \donttest{
 #' x <- terra::rast(system.file("extdata", "rast.presab.tif",
 #' package="phyloraster"))
-#' rse <- rast.sr(x)
+#' rse <- phyloraster::rast.sr(x)
 #' terra::plot(rse)
 #' }
 rast.sr <- function(x, filename = "", ...){
