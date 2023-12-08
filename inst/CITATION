@@ -18,7 +18,12 @@ bibentry(
 bibentry(
   bibtype = "Article",
   title   = "phyloraster: an R package to calculate measures of endemism and evolutionary diversity for rasters",
-  author = c("G. Alves-Ferreira", "F. M. M. Mota", "D. C. Talora", "C. Oliveira", "M. Solé","N. M. Heming"),
+  author = c(person("Gabriela", "Alves-Ferreira"),
+              person(c("Flávio", "M.", "M."), "Mota"),
+              person("Daniela", "Talora"),
+              person(c("Cynthia""), "Mota"),
+              person(c("Mirco", "Solé"), "Heming")
+              person(c("Neander", "Marcel"), "Heming")),
   journal = "Ecography"
   year   = "2023",
   pages    = "e06902",
