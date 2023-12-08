@@ -18,7 +18,10 @@ Description: Phylogenetic Diversity (PD, Faith 1992), Evolutionary Distinctivene
     Laffan, S. W. et al. (2016)  <doi:10.1111/2041-210X.12513>
     Rosauer, D. et al. (2009) <doi:10.1111/j.1365-294X.2009.04311.x>.
 License: GPL (>= 3)
-URL: https://gabferreira.github.io/phyloraster/
+URL: https://CRAN.R-project.org/package=phyloraster, 
+    https://github.com/gabferreira/phyloraster,
+    https:https://gabferreira.github.io/phyloraster/
+BugReports: https://github.com/gabferreira/phyloraster/issues
 Depends: 
     R (>= 2.10)
 Imports: 
