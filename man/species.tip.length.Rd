@@ -34,10 +34,11 @@ species.tip.length(tree)
 
 library(ape)
 set.seed(1)
-
 tree <- rtree(n=40)
 
 plot(tree)
+
+species.tip.length(tree)
 
 edge.info <- tip.root.path(tree)
 

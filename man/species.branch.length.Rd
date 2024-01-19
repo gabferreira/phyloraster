@@ -35,19 +35,11 @@ species.branch.length(tree)
 
 library(ape)
 set.seed(1)
-
 tree <- rtree(n=40)
 
 plot(tree)
 
 species.branch.length(tree)
-
-#' library(ape)
-set.seed(1)
-
-tree <- rtree(n=40)
-
-plot(tree)
 
 edge.info <- tip.root.path(tree)
 

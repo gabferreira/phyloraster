@@ -24,19 +24,11 @@
 #'
 #' library(ape)
 #' set.seed(1)
-#'
 #' tree <- rtree(n=40)
 #'
 #' plot(tree)
 #'
 #' species.branch.length(tree)
-#'
-#' #' library(ape)
-#' set.seed(1)
-#'
-#' tree <- rtree(n=40)
-#'
-#' plot(tree)
 #'
 #' edge.info <- tip.root.path(tree)
 #'
@@ -77,10 +69,11 @@ species.branch.length <- function(tree, edge.info = NULL, ...){
 #'
 #' library(ape)
 #' set.seed(1)
-#'
 #' tree <- rtree(n=40)
 #'
 #' plot(tree)
+#'
+#' species.tip.length(tree)
 #'
 #' edge.info <- tip.root.path(tree)
 #'
@@ -95,6 +88,6 @@ species.tip.length <- function(tree = NULL, edge.info = NULL, ...){
 
   cp <- crossprod(edge.info$H1,
                   matrix(1, nrow = nrow(edge.info$H1))) == 1
-  return(setNames(edge.info$edge.length[cp],
+  return(stats::setNames(edge.info$edge.length[cp],
                   rownames(edge.info$H1)))
 }
