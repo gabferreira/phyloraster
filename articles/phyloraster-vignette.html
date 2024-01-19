@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Gabriela
 Alves-Ferreira, Flávio Mota and Neander Heming</h4>
             
-            <h4 data-toc-skip class="date">2023-12-08</h4>
+            <h4 data-toc-skip class="date">2024-01-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gabferreira/phyloraster/blob/HEAD/vignettes/phyloraster-vignette.Rmd" class="external-link"><code>vignettes/phyloraster-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>phyloraster-vignette.Rmd</code></div>
@@ -354,7 +354,7 @@ names in the same order. We can verify this premise using a simple
 logical test like this.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load.data.rosauer.html">load.data.rosauer</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/phylobase/man/print-methods.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">raster</span><span class="op">)</span> <span class="op">==</span> <span class="va">data</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">raster</span><span class="op">)</span> <span class="op">==</span> <span class="va">data</span><span class="op">$</span><span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span></span>
 <span><span class="co">#&gt;  [1]  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE</span></span>
 <span><span class="co">#&gt; [13]  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE</span></span>
 <span><span class="co">#&gt; [25] FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span></span></code></pre></div>
@@ -371,7 +371,7 @@ species.</p>
 <p>Now, the raster stack and the tip label of the tree are in the same
 order!</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/phylobase/man/print-methods.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dataprep</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">==</span> <span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dataprep</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">==</span> <span class="va">tree</span><span class="op">$</span><span class="va">tip.label</span></span>
 <span><span class="co">#&gt;  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
 <span><span class="co">#&gt; [16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
 <span><span class="co">#&gt; [31] TRUE TRUE TRUE</span></span></code></pre></div>
