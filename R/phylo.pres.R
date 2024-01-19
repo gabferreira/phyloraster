@@ -38,7 +38,7 @@ tip.root.path <- function(tree){
   # In edge matrix in a phylo object, OTUs are indexed 1:Ntip, the root node has
   # index Ntip + 1, and internal nodes are indexed from root.node to
   # total.nodes. This is clever because it lets us very efficiently
-  # cross-reference between edge indicies and the left and right terminal node
+  # cross-reference between edge indices and the left and right terminal node
   # indices of each edge. So, compute the key values:
   root.node <- ape::Ntip(tree) + 1
   total.nodes <- max(tree$edge)
