@@ -1,4 +1,4 @@
-# phyloraster (development version)
+# phyloraster 2.1.0
 
 # phyloraster 2.1.0
 
