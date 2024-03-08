@@ -1,5 +1,11 @@
 # phyloraster (development version)
 
+# phyloraster 2.1.0
+
+-  added functions to compute full and tip branch lengths: 'species.tip.length()' and 'species.branch.length()'
+- added new function to compute ED for each species
+- fixed ED calculation for raster data
+
 # phyloraster 2.0.1
 
 * Initial CRAN submission.
