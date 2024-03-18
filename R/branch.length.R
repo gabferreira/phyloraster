@@ -1,6 +1,6 @@
 #' Compute species branch lengths
 #'
-#' Computation of species branch lengths using a phylogeny
+#' Computation of species branch lengths using a phylogeny.
 #'
 #' @inheritParams phylo.pres
 #' @param edge.info Object returned by \code{\link{tip.root.path}} consisting of
@@ -11,7 +11,7 @@
 #'
 #' @details
 #' Calculates species branch lengths using the edge length and edge path
-#'across the phylogeny
+#'across the phylogeny.
 #'
 #' @author Neander M. Heming
 #'

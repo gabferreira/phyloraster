@@ -27,13 +27,13 @@ Depends:
 Imports: 
     ape,
     methods,
-    phylobase,
     SESraster,
     stats,
     terra
 Suggests: 
     knitr,
     maps,
+    phylobase,
     rmarkdown,
     testthat (>= 2.0.0)
 VignetteBuilder: 

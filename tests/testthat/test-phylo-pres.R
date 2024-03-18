@@ -9,11 +9,14 @@ test_that("check if the returned object class is correct", {
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
-  pp <- phylo.pres(x, tree)
+  pp <- phylo.pres(x, tree, full_tree_metr = F)
+  ppF <- phylo.pres(x, tree, full_tree_metr = T)
 
   # tests
   expect_s4_class(pp$x, "SpatRaster")
   expect_type(pp$branch.length, "double")
+  expect_s4_class(ppF$x, "SpatRaster")
+  expect_type(ppF$branch.length, "double")
 })
 
 test_that("Test that error is returned with wrong input class", {
@@ -88,8 +91,7 @@ test_that("Are the returned values correct?", {
 
   pp.obs <- suppressWarnings(phylo.pres(xcrop[[1:10]], tree,
                                         full_tree_metr = FALSE))
-  descen.expect <- c(12, 12, 13, 13, 12, 14, 15, 16,
-                     16, 15, 11, 12, 11, 14, 15)
+  descen.expect <- c(5, 1, 1, 2, 1, 1, 1, 5, 1, 4, 1, 2, 1, 1, 1)
 
   # (terra::values(pp.obs[[1]]))[,10]
   rast.expect <- matrix(data = c(0, 0, 0, 0, 0, 0, 0, 0,

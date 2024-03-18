@@ -20,11 +20,11 @@ function.}
 returns a numeric vector giving the length of species branch.
 }
 \description{
-Computation of species branch lengths using a phylogeny
+Computation of species branch lengths using a phylogeny.
 }
 \details{
 Calculates species branch lengths using the edge length and edge path
-across the phylogeny
+across the phylogeny.
 }
 \examples{
 library(phyloraster)

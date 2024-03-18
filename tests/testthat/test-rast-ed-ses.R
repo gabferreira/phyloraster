@@ -133,7 +133,7 @@ test_that("error is returned when the user choose a randomization
                                      spat_alg_args = list(rprob = NULL,
                                                           rich = NULL,
                                                           fr_prob = NULL),
-                                     random = "spatial",
+                                     random = "SPATIAL",
                                      aleats = 5))
           })
 
