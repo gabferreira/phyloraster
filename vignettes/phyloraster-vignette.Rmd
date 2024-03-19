@@ -95,7 +95,7 @@ library(phylobase)
 
 ## Data processing {#data}
 
-In the step of pre processing, we offer support to manipulate matrices, 
+In the step of pre-processing, we offer support to manipulate matrices, 
 shapefiles, rasters, and phylogenetic trees.
 In the processing step, we provide functions to calculate Faith's phylogenetic 
 diversity (Faith, 1992), phylogenetic endemism (Rosauer et al., 2009), 
@@ -410,7 +410,7 @@ plot(t)
 -   **Function** `delta.grid`
 
 The package also brings the function `delta.grid` that allows you to calculate 
-the difference between spatialized diversity metrics between two different times.
+the difference between rasterized diversity metrics between two different times.
 This function would allow assessing how species richness varies between 
 different times, which could be useful in a climate change scenario.
 For example, imagine that we currently have 33 tree frog species of the 
@@ -474,7 +474,7 @@ Gotelli, N. J., and McCabe, D. J.
 Species co-occurrence: A meta-analysis of J.
 M. Diamond's assembly rules model.
 Ecology, 83(8), 2091--2096.
-[https://doi.org/10.1890/0012-9658(2002)083[2091:SCOAMA]2.0.CO;2](https://doi.org/10.1890/0012-9658(2002)083%5B2091:SCOAMA%5D2.0.CO;2){.uri}
+<https://doi.org/10.1890/0012-9658(2002)083%5B2091:SCOAMA%5D2.0.CO;2>
 
 Gotelli, N. J., and Ulrich, W.
 (2012).

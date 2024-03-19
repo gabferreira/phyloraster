@@ -2,18 +2,16 @@
 % Please edit documentation in R/delta.grid.R
 \name{delta.grid}
 \alias{delta.grid}
-\title{Calculates the delta of spatialized diversity metrics (richness,
-phylogenetic endemism, phylogenetic diversity, weighted endemism,
-evolutionary distinctiveness) between different time periods}
+\title{Delta of Diversity Metrics}
 \usage{
 delta.grid(r1, r2, filename = NULL, cores = 1, ...)
 }
 \arguments{
-\item{r1}{SpatRaster Spatialized diversity metrics for time 1 (e.g
+\item{r1}{SpatRaster Rasterized diversity metrics for time 1 (e.g
 phylogenetic diversity in present). To calculate some diversity metrics for
 rasters see phyloraster::geo.phylo function.}
 
-\item{r2}{SpatRaster Spatialized diversity metrics for time 2 (e.g
+\item{r2}{SpatRaster Rasterized diversity metrics for time 2 (e.g
 phylogenetic diversity in future).}
 
 \item{filename}{character. Output filename.}
@@ -28,9 +26,9 @@ function.}
 SpatRaster
 }
 \description{
-Calculates the delta of spatialized diversity metrics
+Calculates the difference of rasterized diversity metrics
 (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism,
-evolutionary distinctiveness) between different time periods.
+evolutionary distinctiveness) between time periods.
 }
 \details{
 The two input rasters (r1 and r2) must have the same extent.

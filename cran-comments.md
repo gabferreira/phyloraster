@@ -4,7 +4,11 @@
 
 * This is a new release.
 
-* \dontrun{} has been replaced with \donttest{}.
+* added functions to compute full and tip branch lengths: 'species.tip.length()' and 'species.branch.length()'
 
-* Comments in the example code lines have been removed.
+* added new function to compute ED for each species: 'species.ed()'
+
+* fixed ED calculation for raster data
+
+* added new tests for the new functions
 

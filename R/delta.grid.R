@@ -1,18 +1,16 @@
 .delta.vec <- function(x) {
-  diff <- x[2] - x[1] # diference between metric in time 2 and 1
+  diff <- x[2] - x[1] # difference between metric in time 2 and 1
 }
 
-#' Calculates the delta of spatialized diversity metrics (richness,
-#' phylogenetic endemism, phylogenetic diversity, weighted endemism,
-#' evolutionary distinctiveness) between different time periods
+#' Delta of Diversity Metrics
 #'
-#' @description Calculates the delta of spatialized diversity metrics
+#' @description Calculates the difference of rasterized diversity metrics
 #' (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism,
-#' evolutionary distinctiveness) between different time periods.
-#' @param r1 SpatRaster Spatialized diversity metrics for time 1 (e.g
+#' evolutionary distinctiveness) between time periods.
+#' @param r1 SpatRaster Rasterized diversity metrics for time 1 (e.g
 #' phylogenetic diversity in present). To calculate some diversity metrics for
 #' rasters see phyloraster::geo.phylo function.
-#' @param r2 SpatRaster Spatialized diversity metrics for time 2 (e.g
+#' @param r2 SpatRaster Rasterized diversity metrics for time 2 (e.g
 #' phylogenetic diversity in future).
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling

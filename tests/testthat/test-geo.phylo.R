@@ -162,8 +162,8 @@ test_that("names are reordened in the function geo.phylo", {
 
   # tests
   expect(geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
-                   inv.R = inv.R,
-                   edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
+                inv.R = inv.R,
+                edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
                    branch.length = data$branch.length,
                    n.descen = data$n.descendants), ok = T)
 

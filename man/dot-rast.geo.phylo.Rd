@@ -67,10 +67,10 @@ diversity. Biological conservation, 61(1), 1-10.
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J. and
 VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism in
 conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
-Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Humphries C.J., Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
 Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism
-in theAustralian flora. Journal of Biogeography, 28, 183–198.
+in the Australian flora. Journal of Biogeography, 28, 183–198.
 
 Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
 Baillie, J. E. (2007). Mammals on the EDGE: conservation priorities based on
