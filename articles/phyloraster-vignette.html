@@ -508,6 +508,51 @@ from the <code>terra</code> package.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">per</span><span class="op">$</span><span class="va">PE</span>, main <span class="op">=</span> <span class="st">"Phylogenetic Endemism"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="phyloraster-vignette_files/figure-html/per-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>The third metric is evolutionary distinctiveness (ED; Isaac et
+al. 2007) or ‘fair proportion’ (Redding et al. 2014), which is
+calculated dividing the total phylogenetic diversity of a clade among
+its members (Isaac et al. 2007). Our package returns a map with the mean
+value of ED for each cell, that is calculated based on the ED for
+species presents in each raster cell. The function <code>rast.ed</code>
+calculates this metric and returns a raster layer containing ED the
+region of interest.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># phylogenetic tree</span></span>
+<span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ape</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">read.tree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tree.nex"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/phylo.pres.html">phylo.pres</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">tree</span><span class="op">)</span></span>
+<span><span class="va">ed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.ed.html">rast.ed</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">x</span>, <span class="va">tree</span><span class="op">)</span></span>
+<span><span class="va">ed</span></span>
+<span><span class="co">#&gt; class       : SpatRaster </span></span>
+<span><span class="co">#&gt; dimensions  : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; resolution  : 0.1, 0.1  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span><span class="co">#&gt; source(s)   : memory</span></span>
+<span><span class="co">#&gt; name        :        ED </span></span>
+<span><span class="co">#&gt; min value   : 0.2469036 </span></span>
+<span><span class="co">#&gt; max value   : 0.4712075</span></span></code></pre></div>
+<p>The result can be visualized using the R <code>plot</code> function
+from the <code>terra</code> package.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ed</span>, main <span class="op">=</span> <span class="st">"Evolutionary Distinctiveness"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="phyloraster-vignette_files/figure-html/edr-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>We also added a new function to calculates the Evolutionary
+distinctiveness for each species separately. The function will divide
+the total phylogenetic diversity of a clade among its members (Isaac et
+al., 2007).</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ape</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">read.tree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tree.nex"</span>, package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ed</span> <span class="op">&lt;-</span> <span class="fu">phyloraster</span><span class="fu">::</span><span class="fu"><a href="../reference/species.ed.html">species.ed</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ed</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                             ED</span></span>
+<span><span class="co">#&gt; Litoria_revelata     0.6440047</span></span>
+<span><span class="co">#&gt; Litoria_rothii       0.6440037</span></span>
+<span><span class="co">#&gt; Litoria_longirostris 0.5470682</span></span>
+<span><span class="co">#&gt; Litoria_dorsalis     0.5470682</span></span>
+<span><span class="co">#&gt; Litoria_rubella      0.6440037</span></span>
+<span><span class="co">#&gt; Litoria_nigrofrenata 0.5563398</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="null">Null models<a class="anchor" aria-label="anchor" href="#null"></a>
@@ -557,7 +602,7 @@ the spatial structure of species distributions but keeps the spatial
 structure of the observed richness pattern across cells.</p>
 <p>Now that we have presented the randomization methods, we can start to
 build the null models.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://CRAN.R-project.org/package=SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span>
 <span><span class="va">ras</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, </span>
 <span>                               package <span class="op">=</span> <span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
@@ -569,7 +614,7 @@ build the null models.</p>
 <span>                 branch.length <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">branch.length</span>, aleats <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>                 random <span class="op">=</span> <span class="st">"spat"</span><span class="op">)</span></span></code></pre></div>
 <p>Plotting the results</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span></code></pre></div>
 <p><img src="phyloraster-vignette_files/figure-html/pds-plot-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
@@ -589,7 +634,7 @@ useful in a climate change scenario. For example, imagine that we
 currently have 33 tree frog species of the subfamily Pelodryadinae
 occurring in Australia. In the map below we can visualize the spatial
 pattern of species richness.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load the data</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, </span>
 <span>                             package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
@@ -599,7 +644,7 @@ pattern of species richness.</p>
 <p><img src="phyloraster-vignette_files/figure-html/sr-plot-1.png" width="700"></p>
 <p>Now imagine that as climate change progresses, 16 relatively more
 vulnerable species are heavily affected and become locally extinct.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load the data</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rast.presab.tif"</span>, </span>
 <span>                             package<span class="op">=</span><span class="st">"phyloraster"</span><span class="op">)</span><span class="op">)</span></span>
@@ -610,7 +655,7 @@ vulnerable species are heavily affected and become locally extinct.</p>
 <p>The <code>delta.grid</code> function allows you to visualize the
 variation in these richness patterns spatially. See an example
 below.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/delta.grid.html">delta.grid</a></span><span class="op">(</span><span class="va">riq.pres</span>, <span class="va">riq.fut</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="phyloraster-vignette_files/figure-html/dg-1.png" width="700"></p>
@@ -623,10 +668,10 @@ the <code>phyloraster</code> package.</p>
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>Crisp, M., Laffan, S., Linder, H. and Monro, A. (2001). Endemism in
-the Australian flora. Journal of Biogeography, 28, 183–198.</p>
+the Australian flora. Journal of Biogeography, 28, 183-198.</p>
 <p>Daru, B. H., Karunarathne, P., and Schliep, K. (2020). phyloregion: R
 package for biogeographical regionalization and macroecology. Methods in
-Ecology and Evolution, 11(11), 1483–1491. <a href="https://doi.org/10.1111/2041-210X.13478" class="external-link uri">https://doi.org/10.1111/2041-210X.13478</a></p>
+Ecology and Evolution, 11(11), 1483-1491. <a href="https://doi.org/10.1111/2041-210X.13478" class="external-link uri">https://doi.org/10.1111/2041-210X.13478</a></p>
 <p>Faith, D. P. (1992). Conservation evaluation and phylogenetic
 diversity. Biological conservation, 61(1), 1-10.</p>
 <p>Gotelli, N. J., and McCabe, D. J. (2002). Species co-occurrence: A
