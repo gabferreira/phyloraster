@@ -243,7 +243,7 @@ will be disregarded and only the terminal branches will be used to calculate
 branch length, so that the calculated branch lengths of the species A and B 
 will be shorter (Figure 1c). 
 
-```{r, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE, echo = FALSE}
+```{r, fig.height = 5, fig.width = 4, fig.align = 'center', warning= FALSE, echo = FALSE}
 knitr::include_graphics("figs/tree.jpg")
 ```
 Figure 1. Phylogenetic tree for tree frogs denoting the implications of using 
@@ -339,6 +339,41 @@ package.
 
 ```{r per-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= FALSE}
 plot(per$PE, main = "Phylogenetic Endemism")
+```
+
+The third metric is evolutionary distinctiveness (ED; Isaac et al. 2007) or 
+‘fair proportion' (Redding et al. 2014), which is calculated dividing the total 
+phylogenetic diversity of a clade among its members (Isaac et al. 2007). Our 
+package returns a map with the mean value of ED for each cell, that is
+calculated based on the ED for species presents in each raster cell. 
+The function `rast.ed` calculates this metric and returns a raster layer 
+containing ED the region of interest.
+
+```{r, warning= FALSE}
+x <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+# phylogenetic tree
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+data <- phylo.pres(x, tree)
+ed <- rast.ed(data$x, tree)
+ed
+```
+
+The result can be visualized using the R `plot` function from the `terra` 
+package.
+
+```{r edr-plot, fig.height = 5, fig.width = 7, fig.align = 'center', warning= TRUE}
+terra::plot(ed, main = "Evolutionary Distinctiveness")
+```
+
+We also added a new function to calculates the Evolutionary distinctiveness for
+each species separately. The function will divide the total
+phylogenetic diversity of a clade among its members (Isaac et al., 2007).
+
+```{r, warning= FALSE}
+tree <- ape::read.tree(system.file("extdata", "tree.nex", package="phyloraster"))
+
+ed <- phyloraster::species.ed(tree)
+head(ed)
 ```
 
 
@@ -457,12 +492,12 @@ available in the `phyloraster` package.
 Crisp, M., Laffan, S., Linder, H. and Monro, A.
 (2001).
 Endemism in the Australian flora.
-Journal of Biogeography, 28, 183--198.
+Journal of Biogeography, 28, 183-198.
 
 Daru, B. H., Karunarathne, P., and Schliep, K.
 (2020).
 phyloregion: R package for biogeographical regionalization and macroecology.
-Methods in Ecology and Evolution, 11(11), 1483--1491.
+Methods in Ecology and Evolution, 11(11), 1483-1491.
 <https://doi.org/10.1111/2041-210X.13478>
 
 Faith, D. P. (1992).

@@ -20,10 +20,10 @@ function.}
 returns a numeric vector giving the length of species branch.
 }
 \description{
-Computation of species tip length
+Computation of species tip length using a phylogeny.
 }
 \details{
-Calculates tip lengths for all species
+Calculates tip lengths for all species in a phylogeny
 }
 \examples{
 library(phyloraster)

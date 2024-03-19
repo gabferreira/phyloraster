@@ -1,6 +1,6 @@
-#' Compute species branch lengths
+#' Compute species tip length
 #'
-#' Computation of species branch lengths using a phylogeny.
+#' Computation of species tip length using a phylogeny.
 #'
 #' @inheritParams phylo.pres
 #' @param edge.info Object returned by \code{\link{tip.root.path}} consisting of
@@ -10,53 +10,7 @@
 #' @returns returns a numeric vector giving the length of species branch.
 #'
 #' @details
-#' Calculates species branch lengths using the edge length and edge path
-#'across the phylogeny.
-#'
-#' @author Neander M. Heming
-#'
-#' @examples
-#' library(phyloraster)
-#' tree <- ape::read.tree(system.file("extdata", "tree.nex",
-#' package="phyloraster"))
-#'
-#' species.branch.length(tree)
-#'
-#' library(ape)
-#' set.seed(1)
-#' tree <- rtree(n=40)
-#'
-#' plot(tree)
-#'
-#' species.branch.length(tree)
-#'
-#' edge.info <- tip.root.path(tree)
-#'
-#' species.branch.length(edge.info = edge.info)
-#'
-#' @export
-species.branch.length <- function(tree, edge.info = NULL, ...){
-
-  if(is.null(edge.info)){
-    edge.info <- phyloraster::tip.root.path(tree)
-  }
-
-  return(crossprod(matrix(edge.info$edge.length, nrow = ncol(edge.info$H1)),
-                   t(edge.info$H1))[1,])
-  # colSums(t(edge.info$H1) * edge.info$edge.length)
-}
-
-
-#' Compute species tip length
-#'
-#' Computation of species tip length
-#'
-#' @inheritParams species.branch.length
-#'
-#' @returns returns a numeric vector giving the length of species branch.
-#'
-#' @details
-#' Calculates tip lengths for all species
+#' Calculates tip lengths for all species in a phylogeny
 #'
 #' @author Neander M. Heming
 #'
