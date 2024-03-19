@@ -8,9 +8,7 @@
 #' @param ... additional arguments to be passed passed down from a calling
 #' function.
 #' @param CRS character. Description of the Coordinate Reference System
-#' (map projection) in PROJ.4, WKT or authority:code notation. See crs. If
-#' this argument is missing, and the x coordinates are within -360 .. 360 and
-#' the y coordinates are within -90 .. 90, longitude/latitude is assigned
+#' (map projection) in PROJ.4.
 #' @return SpatRaster
 #' @export
 #' @examples

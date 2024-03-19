@@ -173,8 +173,6 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
     ## Compute node paths through the tree from root to each tip
     edge.info <- tip.root.path(tree)
     # Get descendant node numbers
-    n.descen <- stats::na.exclude(
-      as.numeric(phylobase::ancestor(phylobase::phylo4(tree))))
 
     ### sum common edges to reduce matrix dim
     # rownames(edge.info$H1) <- tree$tip.label
@@ -186,12 +184,18 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
     edge.info$H1 <- t(H1agg)[int.tip.spat,]
     edge.info$edge.length <- H1agg[,"edge.length"]
 
+    n.descen <- colSums(edge.info$H1)
+    # stats::na.exclude(
+    # as.numeric(phylobase::ancestor(phylobase::phylo4(tree))))
+
+
   } else {
     ## Compute node paths through the tree from root to each tip
     edge.info <- tip.root.path(subtree)
     # Get descendant node numbers
-    n.descen <- stats::na.exclude(as.numeric(phylobase::ancestor(
-      phylobase::phylo4(subtree))))
+    n.descen <- colSums(edge.info$H1)
+      # stats::na.exclude(as.numeric(phylobase::ancestor(
+      # phylobase::phylo4(subtree))))
 
   }
 

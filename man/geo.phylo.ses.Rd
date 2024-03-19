@@ -103,7 +103,7 @@ terra::plot(tses)
 Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
 VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
 in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
-Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Humphries C.J., Vane-Wright RI), p. 438. Oxford University Press, Oxford.
 
 Crisp, M., Laffan, S., Linder, H., Monro, A. (2001). Endemism
 in the Australian flora. Journal of Biogeography, 28, 183–198.

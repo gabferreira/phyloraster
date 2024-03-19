@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
-Version: 2.0.1
+Version: 2.1.0
 Authors@R: c(
     person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", 
     role = c("aut", "cre", "cph"),
@@ -27,13 +27,13 @@ Depends:
 Imports: 
     ape,
     methods,
-    phylobase,
     SESraster,
     stats,
     terra
 Suggests: 
     knitr,
     maps,
+    phylobase,
     rmarkdown,
     testthat (>= 2.0.0)
 VignetteBuilder: 
@@ -42,4 +42,4 @@ Config/testthat/edition: 2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

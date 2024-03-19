@@ -31,7 +31,8 @@ SpatRaster
 }
 \description{
 This function calculates evolutionary distinctiveness according
-to the fair-proportion index.
+to the fair-proportion index. The values represents the mean ED for species
+presents in each raster cell.
 }
 \examples{
 \donttest{
@@ -56,5 +57,5 @@ J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
 and phylogeny. PLoS ONE 2, e296.
 }
 \author{
-Gabriela Alves-Ferreira and Neander Marcel Heming
+Neander Marcel Heming and Gabriela Alves-Ferreira
 }

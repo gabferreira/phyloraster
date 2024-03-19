@@ -90,12 +90,13 @@ test_that("Are the returned values correct?", {
 
   # metric ED
   ed.obs <- round(terra::values(t$ED), 7)
-  ed.expect <- c(0.1530742, 0.1530742, 0.1530742,
-                 0.1563603, 0.1735835,
-                 0.1735835, 0.1735835, 0.1735835,
-                 0.1530742, 0.1530742,
-                 0.1371549, 0.1530742, 0.1702974,
-                 0.1735835, 0.1735835, 0.1735835)
+
+
+  ed.expect <- c(0.3635588, 0.3635588, 0.3635588,
+                 0.3423826, 0.3892801, 0.3892801,
+                 0.3892801, 0.3892801, 0.3635588,
+                 0.3635588, 0.3430628, 0.3635588,
+                 0.4124349, 0.3892801, 0.3892801, 0.3892801)
   expect_equivalent(ed.obs, ed.expect)
 })
 
@@ -161,8 +162,8 @@ test_that("names are reordened in the function geo.phylo", {
 
   # tests
   expect(geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
-                   inv.R = inv.R,
-                   edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
+                inv.R = inv.R,
+                edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
                    branch.length = data$branch.length,
                    n.descen = data$n.descendants), ok = T)
 

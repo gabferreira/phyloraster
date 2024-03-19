@@ -8,7 +8,7 @@
 #' tree order. See the phylo.pres function.
 #' @inheritParams geo.phylo
 #'
-#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B.,
 #' Waterman, C. and Baillie,
@@ -26,8 +26,9 @@
   red <- terra::app(x,
                     function(x, H1, branch.length, n.descen){
                       if(all(is.na(x))) return(NA)
+                      if(sum(x, na.rm = T)==0) return(0)
 
-                      sum((crossprod(H1, x)>0) * (branch.length/n.descen) )
+                  sum((crossprod(H1, x)>0) * (branch.length/n.descen))/sum(x)
                     }, H1 = edge.path, branch.length = branch.length,
                     n.descen = n.descen,
                     filename = filename, ...)
@@ -44,11 +45,12 @@
 #' Calculate Evolutionary distinctiveness for raster data
 #'
 #' @description This function calculates evolutionary distinctiveness according
-#' to the fair-proportion index.
+#' to the fair-proportion index. The values represents the mean ED for species
+#' presents in each raster cell.
 #'
 #' @inheritParams geo.phylo.ses
 #'
-#' @author Gabriela Alves-Ferreira and Neander Marcel Heming
+#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
 #' Baillie,

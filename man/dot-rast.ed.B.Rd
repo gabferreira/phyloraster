@@ -39,6 +39,6 @@ based on threat
 and phylogeny. PLoS ONE 2, e296.
 }
 \author{
-Gabriela Alves-Ferreira and Neander Marcel Heming
+Neander Marcel Heming and Gabriela Alves-Ferreira
 }
 \keyword{internal}
