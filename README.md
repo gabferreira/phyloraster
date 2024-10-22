@@ -2,8 +2,8 @@
 [![CRAN-status](https://www.r-pkg.org/badges/version/phyloraster)](https://cran.r-project.org/package=phyloraster)
 [![R-CMD-check](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabferreira/phyloraster/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/gabferreira/phyloraster/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gabferreira/phyloraster)
-[![download](http://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
-[![download per month](http://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
+[![download](https://cranlogs.r-pkg.org/badges/grand-total/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
+[![download per month](https://cranlogs.r-pkg.org/badges/phyloraster?color=green)](https://cran.r-project.org/package=phyloraster)
 <!-- badges: end -->
 
 # phyloraster <a href="https://gabferreira.github.io/phyloraster/"><img src="man/figures/logo.png" alt="phyloraster website" align="right" height="139"/></a>
