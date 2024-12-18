@@ -2,19 +2,22 @@
 % Please edit documentation in R/rast.pe.ses.R
 \name{rast.pe.ses}
 \alias{rast.pe.ses}
-\title{Phylogenetic endemism standardized for specie richness}
+\title{Standardized effect size for Phylogenetic endemism}
 \usage{
 rast.pe.ses(
   x,
   tree,
   branch.length,
+  branch.length.alt,
   inv.R,
+  full_tree_metr = TRUE,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
-  random = c("tip", "spat")[2],
+  metric = c("pe", "pe.alt", "rpe", "all")[4],
   aleats = 10,
   cores = 1,
   filename = "",
+  overwrite = TRUE,
   ...
 )
 }
@@ -28,7 +31,15 @@ tree order. See the phylo.pres function.}
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
 
+\item{branch.length.alt}{numeric. Branch length calculated by using an
+alternative phylogeny with non-zero branch lengths converted to a constant
+value (1) and rescaled so the sum of all branch lengths is 1.}
+
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
+
+\item{full_tree_metr}{logical. Whether edge.path, branch length and number
+of descendants should be calculated with the full (TRUE) or the prunned tree
+(FALSE). The default is TRUE.}
 
 \item{spat_alg}{A function with the algorithm implementing the desired
 randomization method. It must work with SpatRaster objects. See examples.
@@ -39,9 +50,8 @@ Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
 chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
 \code{\link[SESraster]{bootspat_ff}}}
 
-\item{random}{character. A character indicating the type of randomization.
-The currently available randomization methods are "tip", "site", "species" or
-"both" (site and species).}
+\item{metric}{character. Names of biodiversity metrics to calculate
+(pe, pe_alt, rpe, all). See details.}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
@@ -50,10 +60,15 @@ the calculation should be repeated.}
 
 \item{filename}{character. Output filename}
 
+\item{overwrite}{logical. If TRUE, filename is overwritten}
+
 \item{...}{additional arguments passed for terra::app}
 }
 \value{
-SpatRaster
+SpatRaster. The function returns the observed value of the metric,
+the mean of the simulations calculated over n times, the standard deviation
+of the simulations, the standardized effect size (SES) for the metric,
+and the p-values.
 }
 \description{
 Calculates the standardized effect size for phylogenetic
@@ -61,12 +76,35 @@ endemism.
 See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and
-samples
-species presences proportionally to their observed frequency (i.e. number
-of occupied pixels). The randomization will not assign values to cells with
-nodata. The phylogenetic randomization shuffles taxa names across all taxa
-included in phylogeny.
+The dependency ‘SESraster’ is used to calculate the null models.
+This package currently implements six algorithms to randomize binary species
+distribution with several levels of constraints:
+SIM1, SIM2, SIM3, SIM5, SIM6 and SIM9 (sensu Gotelli 2000).
+The methods implemented in ‘SESraster’ are based on how species
+(originally rows) and sites (originally columns) are treated
+(i.e. fixed, equiprobable, or proportional sums) (Gotelli 2000).
+By default, the ‘phyloraster’ uses the function bootspat_ str() from the
+‘SESraster’ package to conduct the randomizations, but the user is free
+to choose any of the other methods mentioned above through the spat_alg
+argument in the *.ses() functions of the ‘phyloraster’ package.
+The bootspat_str() is equivalent to the SIM5 (proportional-fixed) method of
+Gotelli (2000), which partially relaxes the spatial structure of species
+distributions, but keeps the spatial structure of the observed richness
+pattern across cells.
+Biodiversity metrics available are:
+\itemize{
+\item pe: Phylogenetic endemism (Rosauer et al., 2009)
+\item pe.alt: Alternate Phylogenetic endemism  (Mishler et al., 2014)
+\item rpe: Relative Phylogenetic endemism (Mishler et al., 2014)
+\item all: Calculate all available metrics
+Alternate phylogenetic endemism (PE.alt, Mishler et al., 2014) is
+calculated using an alternate phylogeny with non-zero branch lengths
+converted to a constant value (here we use 1) and rescaled so the sum of all
+branch lengths is 1.
+Relative phylogenetic endemism (RPE, Mishler et al., 2014) is the ratio
+of phylogenetic endemism (PE, Rosauer et al., 2009) measured on the
+original tree versus PE measured on a alternate tree (PE.alt).
+}
 }
 \examples{
 \donttest{
@@ -78,18 +116,28 @@ package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex",
 package="phyloraster"))
 data <- phylo.pres(x[[1:3]], tree)
-range.BL <- inv.range(data$x)
-t <- rast.pe.ses(x = data$x,  tree, aleats = 3,
-random = "spat")
+t <- rast.pe.ses(x = data$x, data$tree, aleats = 99, metric = "all")
 plot(t)
 }
 }
 \references{
+Gotelli, N. J. 2000.
+Null model analysis of species co-occurrence patterns.
+Ecology 81: 2606–2621.
+
+Heming, N. M., Mota, F. M. M. and Alves-Ferreira, G.
+2023. SESraster: raster randomization for null hypothesis testing.
+https://CRAN.R-project.org/package=SESraster.
+
+Mishler, B. D., Knerr, N., González-Orozco, C. E., Thornhill,
+A. H., Laffan, S. W. and Miller, J. T. 2014. Phylogenetic measures of
+biodiversity and neo- and paleo-endemism in Australian Acacia. –
+Nat. Commun. 5: 4473.
+
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
 & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
-geographical concentrations of evolutionary history.
-Molecular ecology, 18(19),
-4061-4072.
+geographical concentrations of evolutionary history. Molecular ecology,
+18(19), 4061-4072.
 }
 \seealso{
 \code{\link{phylo.pres}},

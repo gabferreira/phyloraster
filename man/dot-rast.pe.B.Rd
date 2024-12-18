@@ -4,7 +4,16 @@
 \alias{.rast.pe.B}
 \title{Calculate phylogenetic endemism for a raster}
 \usage{
-.rast.pe.B(x, inv.R, branch.length, filename = "", ...)
+.rast.pe.B(
+  x,
+  inv.R,
+  branch.length,
+  branch.length.alt,
+  metric = c("pe", "pe.alt", "rpe", "all")[1],
+  filename = "",
+  overwrite = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -16,7 +25,16 @@ tree order. See the phylo.pres function.}
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}
 
+\item{branch.length.alt}{numeric. Branch length calculated by using an
+alternative phylogeny with non-zero branch lengths converted to a constant
+value (1) and rescaled so the sum of all branch lengths is 1.}
+
+\item{metric}{character. Names of the biodiversity metrics to calculate.
+Available options are: "pe", "pe.alt", "rpe", or "all". See details.}
+
 \item{filename}{character. Output filename}
+
+\item{overwrite}{logical. If TRUE, filename is overwritten}
 
 \item{...}{additional arguments passed for terra::app}
 }
@@ -26,10 +44,34 @@ SpatRaster
 \description{
 Calculate phylogenetic endemism using rasters as input and output.
 }
+\details{
+Metrics available are:
+\itemize{
+\item pe: Phylogenetic endemism (Rosauer et al., 2009)
+\item pe.alt: Alternate Phylogenetic endemism  (Mishler et al., 2014)
+\item rpe: Relative Phylogenetic endemism (Mishler et al., 2014)
+\item all: Calculate all available metrics
+Alternate phylogenetic endemism (PE.alt, Mishler et al., 2014) is
+calculated using an alternate phylogeny with non-zero branch lengths
+converted to a constant value (here we use 1) and rescaled so the sum of all
+branch lengths is 1.
+Relative phylogenetic endemism (RPE, Mishler et al., 2014) is the ratio
+of phylogenetic endemism (PE, Rosauer et al., 2009) measured on the
+original tree versus PE measured on a alternate tree (PE.alt).
+}
+}
 \references{
+Mishler, B. D., Knerr, N., González-Orozco, C. E., Thornhill,
+A. H., Laffan, S. W. and Miller, J. T. 2014. Phylogenetic measures of
+biodiversity and neo- and paleo-endemism in Australian Acacia. –
+Nat. Commun. 5: 4473.
+
 Rosauer, D. A. N., Laffan, S. W., Crisp, M. D., Donnellan, S. C.,
 & Cook, L. G. (2009). Phylogenetic endemism: a new approach for identifying
 geographical concentrations of evolutionary history. Molecular ecology,
 18(19), 4061-4072.
+}
+\author{
+Gabriela Alves-Ferreira and Neander Heming
 }
 \keyword{internal}

@@ -3,7 +3,7 @@ test_that("returned values are correct", {
   x <- terra::rast(system.file("extdata", "rast.presab.tif",
                                package="phyloraster"))
   # getting fewer cells to test all values
-  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+  # x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
@@ -13,13 +13,13 @@ test_that("returned values are correct", {
   xcrop <- terra::crop(x, terra::ext(r))
 
   # metric PE
-  pe.obs <- round(terra::values(rast.pe(xcrop, tree)), 7)
-  pe.expect <- matrix(data = c(0.3807860, 0.3807860, 0.3807860, 0.4651102,
-                               0.4776858, 0.4776858, 0.4776858, 0.4776858,
-                               0.3805112, 0.3805112, 0.3496615, 0.3805112,
-                               0.3930776, 0.4773410, 0.4773410, 0.4773410),
-                      ncol = 1)
-  expect_equivalent(pe.obs, pe.expect)
+  pe.obs <- round(terra::values(rast.pe(x, tree, full_tree_metr = T)), 7)
+
+  # PE from epm package
+  epm.pe <- round(terra::values(terra::rast(system.file("extdata", "epm_PE.tif",
+                                package="phyloraster"))), 7)
+
+  expect_equivalent(pe.obs, epm.pe, tolerance = 0.00571)
 })
 
 test_that("error is returned with wrong order of the species names", {
@@ -31,10 +31,21 @@ test_that("error is returned with wrong order of the species names", {
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
-  data <- phylo.pres(x, tree)
+  data <- phylo.pres(x, tree, full_tree_metr = TRUE)
 
   # metric PE
   expect_error(rast.pe(data$x[[1:4]], branch.length = data$branch.length[5:8]))
+})
+
+test_that("error is returned when tree or edge.path and branch lenght are
+          not supplied", {
+
+  x <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
+  # getting fewer cells to test all values
+  x <- terra::crop(x, terra::ext(c(150.0157, 150.8157, -23.044, -22.8563)))
+
+  # metric PE
   expect_error(rast.pe(data$x[[1:4]]))
 })
 
@@ -85,6 +96,8 @@ test_that("returned object classes are correct", {
 
   # tests
   expect_s4_class(rast.pe(x, tree), "SpatRaster")
+
+
 })
 
 test_that("error is returned when the raster does not have a longitude/latitude

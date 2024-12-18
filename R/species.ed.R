@@ -8,10 +8,8 @@
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @references Isaac, N. J., Turvey, S. T., Collen, B.,
-#' Waterman, C. and Baillie,
-#'  J. E. (2007). Mammals on the EDGE: conservation priorities
-#'  based on threat
-#'  and phylogeny. PLoS ONE 2, e296.
+#' Waterman, C. and Baillie, J. E. (2007). Mammals on the EDGE:
+#' conservation priorities based on threat and phylogeny. PLoS ONE 2, e296.
 #'
 #' @return data.frame
 #' @examples

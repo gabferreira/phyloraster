@@ -86,22 +86,19 @@ tip.root.path <- function(tree){
 #' match the order
 #' of the tips of the tree, and get branch length and number of descendants for
 #' each species to calculate diversity metrics using phyloraster::geo.phylo().
-#' The
-#'  branch length and the number of descendants can be calculated based on the
-#'  full
-#'  tree or the raster based tree subset.
-#'  The names must be the same in the phylogenetic tree and in the raster for
-#'  the
-#'  same species. For example, if you have the name "Leptodactylus_latrans" in
-#'  the raster and "Leptodactylus latrans" in the tree, the function will not
-#'  work. The same goes for uppercase and lowercase letters.
+#' The branch length and the number of descendants can be calculated based
+#' on the full tree or the raster based tree subset. The names must be the
+#' same in the phylogenetic tree and in the raster for the
+#' same species. For example, if you have the name "Leptodactylus_latrans" in
+#' the raster and "Leptodactylus latrans" in the tree, the function will not
+#' work. The same goes for uppercase and lowercase letters.
 #'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species.
 #' @param tree phylo. A dated tree.
 #' @param full_tree_metr logical. Whether edge.path, branch length and number
 #' of descendants should be calculated with the full (TRUE) or the prunned tree
-#' (FALSE).
+#' (FALSE). The default is TRUE.
 #' @param ... additional arguments to be passed passed down from a calling
 #' function.
 #' @return Returns a list containing a SpatRaster reordered according to the
@@ -126,7 +123,7 @@ tip.root.path <- function(tree){
 #' phylo.pres(x[[1:3]], tree, full_tree_metr = FALSE)
 #' }
 #' @export
-phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
+phylo.pres <- function(x, tree, full_tree_metr = TRUE, ...) {
 
   if(!inherits(x, "SpatRaster")){ # class "Raster" in "SpatRaster"
     stop("Object 'x' must be of class 'SpatRaster'. See ?terra::rast")
@@ -173,7 +170,6 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
     ## Compute node paths through the tree from root to each tip
     edge.info <- tip.root.path(tree)
     # Get descendant node numbers
-
     ### sum common edges to reduce matrix dim
     # rownames(edge.info$H1) <- tree$tip.label
     H1agg <- stats::aggregate(stats::reformulate(int.tip.spat,
@@ -188,9 +184,40 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
     # stats::na.exclude(
     # as.numeric(phylobase::ancestor(phylobase::phylo4(tree))))
 
+    # altered branch lenghts
+    phy_alt <- tree
+    # convert **non-zero** branch lengths to same value (1)
+    non_zero_branches <- purrr::map_lgl(phy_alt$edge.length,
+                                        ~ !isTRUE(all.equal(., 0))) # nolint
+    phy_alt$edge.length[non_zero_branches] <- rep(x = 1,
+            times = length(phy_alt$edge.length[non_zero_branches])) # nolint
+    # rescale so total phy length is 1
+    phy_alt$edge.length <- phy_alt$edge.length/sum(phy_alt$edge.length) # nolint
+    edge.info.alt <- tip.root.path(phy_alt)
+
+    # # rescale original phy so total length is 1
+    # tree$edge.length <- tree$edge.length/sum(tree$edge.length) # nolint
+
+    ## Compute node paths through the tree from root to each tip
+    edge.info <- tip.root.path(tree)
 
   } else {
+
+    # altered branch lenghts
+    phy_alt_sub <- subtree
+    # convert **non-zero** branch lengths to same value (1)
+    non_zero_branches <- purrr::map_lgl(phy_alt_sub$edge.length,
+                                        ~ !isTRUE(all.equal(., 0))) # nolint
+    phy_alt_sub$edge.length[non_zero_branches] <- rep(x = 1,
+              times = length(phy_alt_sub$edge.length[non_zero_branches])) # nolint
+    # rescale so total phy length is 1
+    phy_alt_sub$edge.length <- phy_alt_sub$edge.length/sum(phy_alt_sub$edge.length) # nolint
+
+    # # rescale original phy so total length is 1
+    subtree$edge.length <- subtree$edge.length/sum(subtree$edge.length) # nolint
+
     ## Compute node paths through the tree from root to each tip
+    edge.info.alt <- tip.root.path(phy_alt_sub)
     edge.info <- tip.root.path(subtree)
     # Get descendant node numbers
     n.descen <- colSums(edge.info$H1)
@@ -204,6 +231,7 @@ phylo.pres <- function(x, tree, full_tree_metr = FALSE, ...) {
               tree = subtree,
               edge.path = edge.info$H1[int.tip.spat,],
               branch.length = edge.info$edge.length,
+              branch.length.alt = edge.info.alt$edge.length,
               n.descendants = n.descen))
 
 }

@@ -4,7 +4,7 @@
 \alias{phylo.pres}
 \title{Prepare rasters and phylogenetic tree to run community metrics}
 \usage{
-phylo.pres(x, tree, full_tree_metr = FALSE, ...)
+phylo.pres(x, tree, full_tree_metr = TRUE, ...)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -14,7 +14,7 @@ for a set of species.}
 
 \item{full_tree_metr}{logical. Whether edge.path, branch length and number
 of descendants should be calculated with the full (TRUE) or the prunned tree
-(FALSE).}
+(FALSE). The default is TRUE.}
 
 \item{...}{additional arguments to be passed passed down from a calling
 function.}
@@ -32,12 +32,9 @@ Reorder a stack of rasters of species distribution to
 match the order
 of the tips of the tree, and get branch length and number of descendants for
 each species to calculate diversity metrics using phyloraster::geo.phylo().
-The
-branch length and the number of descendants can be calculated based on the
-full
-tree or the raster based tree subset.
-The names must be the same in the phylogenetic tree and in the raster for
-the
+The branch length and the number of descendants can be calculated based
+on the full tree or the raster based tree subset. The names must be the
+same in the phylogenetic tree and in the raster for the
 same species. For example, if you have the name "Leptodactylus_latrans" in
 the raster and "Leptodactylus latrans" in the tree, the function will not
 work. The same goes for uppercase and lowercase letters.

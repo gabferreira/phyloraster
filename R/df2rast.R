@@ -5,10 +5,10 @@
 #' @param x data.frame. A data.frame or matrix with species names in columns
 #' and sites in rows. The first two columns must provide longitude and latitude,
 #' respectively.
-#' @param ... additional arguments to be passed passed down from a calling
-#' function.
 #' @param CRS character. Description of the Coordinate Reference System
 #' (map projection) in PROJ.4.
+#' @param ... additional arguments to be passed passed down from a calling
+#' function.
 #' @return SpatRaster
 #' @export
 #' @examples

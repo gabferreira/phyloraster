@@ -2,7 +2,7 @@
 % Please edit documentation in R/rast.ed.ses.R
 \name{rast.ed.ses}
 \alias{rast.ed.ses}
-\title{Evolutionary distinctiveness standardized for specie richness}
+\title{Standardized effect size for Evolutionary distinctiveness}
 \usage{
 rast.ed.ses(
   x,
@@ -10,9 +10,9 @@ rast.ed.ses(
   edge.path,
   branch.length,
   n.descen,
+  full_tree_metr = TRUE,
   spat_alg = "bootspat_str",
   spat_alg_args = list(rprob = NULL, rich = NULL, fr_prob = NULL),
-  random = c("tip", "spat")[2],
   aleats = 10,
   filename = "",
   ...
@@ -25,7 +25,7 @@ tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{edge.path}{matrix representing the paths through the tree from root
+\item{edge.path}{matrix. Matrix representing the paths through the tree from root
 to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
@@ -33,6 +33,10 @@ each species. See \code{\link{phylo.pres}}}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch. See \code{\link{phylo.pres}}}
+
+\item{full_tree_metr}{logical. Whether edge.path, branch length and number
+of descendants should be calculated with the full (TRUE) or the prunned tree
+(FALSE). The default is TRUE.}
 
 \item{spat_alg}{A function with the algorithm implementing the desired
 randomization method. It must work with SpatRaster objects. See examples.
@@ -43,10 +47,6 @@ Example of functions that work are: \code{\link[SESraster]{bootspat_naive}},
 chosen in 'spat_alg'. See \code{\link[SESraster]{bootspat_naive}}, \code{\link[SESraster]{bootspat_str}},
 \code{\link[SESraster]{bootspat_ff}}}
 
-\item{random}{character. A character indicating the type of randomization.
-The currently available randomization methods are "tip", "site", "species" or
-"both" (site and species).}
-
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
 
@@ -55,22 +55,31 @@ the calculation should be repeated.}
 \item{...}{additional arguments passed for terra::app}
 }
 \value{
-SpatRaster
+SpatRaster. The function returns the observed value of the metric,
+the mean of the simulations calculated over n times, the standard deviation
+of the simulations, the standardized effect size (SES) for the metric,
+and the p-values.
 }
 \description{
 Calculates the standardized effect size for evolutionary
 distinctiveness. See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the
-richness exact and samples
-species presences proportionally to their
-observed frequency (i.e. number
-of occupied pixels). The randomization will
-not assign values to cells with
-nodata. The phylogenetic randomization shuffles
-taxa names across all taxa
-included in phylogeny.
+The dependency ‘SESraster’ is used to calculate the null models.
+This package currently implements six algorithms to randomize binary species
+distribution with several levels of constraints:
+SIM1, SIM2, SIM3, SIM5, SIM6 and SIM9 (sensu Gotelli 2000).
+The methods implemented in ‘SESraster’ are based on how species
+(originally rows) and sites (originally columns) are treated
+(i.e. fixed, equiprobable, or proportional sums) (Gotelli 2000).
+By default, the ‘phyloraster’ uses the function bootspat_ str() from the
+‘SESraster’ package to conduct the randomizations, but the user is free
+to choose any of the other methods mentioned above through the spat_alg
+argument in the *.ses() functions of the ‘phyloraster’ package.
+The bootspat_str() is equivalent to the SIM5 (proportional-fixed) method of
+Gotelli (2000), which partially relaxes the spatial structure of species
+distributions, but keeps the spatial structure of the observed richness
+pattern across cells.
 }
 \examples{
 \donttest{
@@ -80,22 +89,18 @@ x <- terra::rast(system.file("extdata", "rast.presab.tif",
 package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex",
 package="phyloraster"))
-t <- rast.ed.ses(x[[1:10]], tree, aleats = 3, random = "spat")
+t <- rast.ed.ses(x[[1:10]], tree, aleats = 3)
 terra::plot(t)
 }
 }
 \references{
-Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
-Baillie,
-J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
-and phylogeny. PLoS ONE 2, e296.
+Gotelli, N. J. 2000.
+Null model analysis of species co-occurrence patterns.
+– Ecology 81: 2606–2621.
 
-Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
-Range‐weighted
-metrics of species and phylogenetic turnover can better
-resolve biogeographic
-transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+Heming, N. M., Mota, F. M. M. and Alves-Ferreira, G. 2023.
+SESraster: raster randomization for null hypothesis testing.
+https://CRAN.R-project.org/package=SESraster.
 }
 \seealso{
 \code{\link{phylo.pres}},

@@ -63,7 +63,7 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
   for(i in seq_along(nm)){
     r_list[[i]] <- terra::rasterize(x[data.frame(x)[,sps.col] == nm[i],], y,
                                     # field = NULL,
-                                    values = values,
+                                    # values = values,
                                     background = background,
                                     touches = touches, filename = "", ...)
   }
@@ -82,3 +82,4 @@ shp2rast <- function(x, y = NULL, sps.col, ymask = FALSE, background = NA,
 
   return(rt)
 }
+

@@ -4,7 +4,16 @@
 \alias{rast.ed}
 \title{Calculate Evolutionary distinctiveness for raster data}
 \usage{
-rast.ed(x, tree, edge.path, branch.length, n.descen, filename = "", ...)
+rast.ed(
+  x,
+  tree,
+  edge.path,
+  branch.length,
+  n.descen,
+  full_tree_metr = TRUE,
+  filename = "",
+  ...
+)
 }
 \arguments{
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
@@ -13,7 +22,7 @@ tree order. See the phylo.pres function.}
 
 \item{tree}{phylo. A dated tree.}
 
-\item{edge.path}{matrix representing the paths through the tree from root
+\item{edge.path}{matrix. Matrix representing the paths through the tree from root
 to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
@@ -21,6 +30,10 @@ each species. See \code{\link{phylo.pres}}}
 
 \item{n.descen}{numeric. A Named numeric vector of number of descendants for
 each branch. See \code{\link{phylo.pres}}}
+
+\item{full_tree_metr}{logical. Whether edge.path, branch length and number
+of descendants should be calculated with the full (TRUE) or the prunned tree
+(FALSE). The default is TRUE.}
 
 \item{filename}{character. Output filename}
 

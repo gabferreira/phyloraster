@@ -129,14 +129,6 @@ rast.we <- function(x, inv.R,
 #'
 #' @inheritParams geo.phylo.ses
 #'
-#' @return SpatRaster
-#'
-#' @details The spatial randomization (spat) keeps the richness exact and
-#' samples
-#'  species presences proportionally to their observed frequency (i.e. number
-#'  of occupied pixels). The randomization will not assign values to cells with
-#'  nodata. The phylogenetic randomization shuffles taxa names across all taxa
-#'  included in phylogeny.
 #'
 #' @seealso \code{\link{phylo.pres}},
 #' \code{\link{inv.range}},
@@ -150,15 +142,35 @@ rast.we <- function(x, inv.R,
 #' \code{\link[SESraster]{bootspat_ff}},
 #' \code{\link[SESraster]{SESraster}}
 #'
-#' @references Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
-#' VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
-#' in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
-#' Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
-#' @references Crisp, M., Laffan, S., Linder, H., Monro, A. (2001).
-#' Endemism in the
-#' Australian flora. Journal of Biogeography, 28, 183–198.
+#' @return SpatRaster. The function returns the observed value of the metric,
+#' the mean of the simulations calculated over n times, the standard deviation
+#' of the simulations, the standardized effect size (SES) for the metric,
+#' and the p-values.
 #'
-#' @author Neander Marcel Heming and Gabriela Alves-Ferreira
+#' @details The dependency ‘SESraster’ is used to calculate the null models.
+#' This package currently implements six algorithms to randomize binary species
+#'  distribution with several levels of constraints:
+#'  SIM1, SIM2, SIM3, SIM5, SIM6 and SIM9 (sensu Gotelli 2000).
+#'  The methods implemented in ‘SESraster’ are based on how species
+#'  (originally rows) and sites (originally columns) are treated
+#'  (i.e. fixed, equiprobable, or proportional sums) (Gotelli 2000).
+#'  By default, the ‘phyloraster’ uses the function bootspat_ str() from the
+#'  ‘SESraster’ package to conduct the randomizations, but the user is free
+#'  to choose any of the other methods mentioned above through the spat_alg
+#'  argument in the *.ses() functions of the ‘phyloraster’ package.
+#'  The bootspat_str() is equivalent to the SIM5 (proportional-fixed) method of
+#'  Gotelli (2000), which partially relaxes the spatial structure of species
+#'  distributions, but keeps the spatial structure of the observed richness
+#'  pattern across cells.
+#'
+#' @references Gotelli, N. J. 2000.
+#' Null model analysis of species co-occurrence patterns.
+#' – Ecology 81: 2606–2621.
+#' @references Heming, N. M., Mota, F. M. M. and Alves-Ferreira, G. 2023.
+#' SESraster: raster randomization for null hypothesis testing.
+#' https://CRAN.R-project.org/package=SESraster.
+#'
+#' @author Gabriela Alves-Ferreira and Neander Heming
 #'
 #' @examples
 #' \donttest{
@@ -176,11 +188,12 @@ rast.we.ses <- function(x,
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
                                              fr_prob = NULL),
-                        # random = c("spat"),
                         aleats = 10,
                         filename = "", ...){
 
   requireNamespace("SESraster")
+  message("Please cite SESraster when using spatial null models.
+          See: citation(SESraster)")
 
   ## object checks
   if(!terra::is.lonlat(x)){

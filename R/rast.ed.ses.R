@@ -28,7 +28,7 @@
                       if(all(is.na(x))) return(NA)
                       if(sum(x, na.rm = T)==0) return(0)
 
-                  sum((crossprod(H1, x)>0) * (branch.length/n.descen))/sum(x)
+                    sum((crossprod(H1, x)>0) * (branch.length/n.descen))/sum(x)
                     }, H1 = edge.path, branch.length = branch.length,
                     n.descen = n.descen,
                     filename = filename, ...)
@@ -49,6 +49,7 @@
 #' presents in each raster cell.
 #'
 #' @inheritParams geo.phylo.ses
+#' @inheritParams phylo.pres
 #'
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
@@ -77,6 +78,7 @@
 #' @export
 rast.ed <- function(x, tree,
                     edge.path, branch.length, n.descen,
+                    full_tree_metr = TRUE,
                     filename = "", ...){
 
   ## object checks
@@ -97,7 +99,7 @@ rast.ed <- function(x, tree,
 
     } else if(any(miss4)){
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
@@ -113,7 +115,7 @@ rast.ed <- function(x, tree,
                   # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
@@ -135,27 +137,13 @@ rast.ed <- function(x, tree,
 }
 
 
-#' Evolutionary distinctiveness standardized for specie richness
+#' Standardized effect size for Evolutionary distinctiveness
 #'
 #' @description Calculates the standardized effect size for evolutionary
 #' distinctiveness. See Details for more information.
 #'
 #' @inheritParams geo.phylo.ses
-#'
-#' @return SpatRaster
-#'
-#' @author Neander M. Heming and Gabriela Alves-Ferreira
-#'
-#' @details The spatial randomization (spat) keeps the
-#' richness exact and samples
-#'  species presences proportionally to their
-#'  observed frequency (i.e. number
-#'  of occupied pixels). The randomization will
-#'  not assign values to cells with
-#'  nodata. The phylogenetic randomization shuffles
-#'  taxa names across all taxa
-#'  included in phylogeny.
-#'
+#' @inheritParams phylo.pres
 #'
 #' @seealso \code{\link{phylo.pres}},
 #' \code{\link{inv.range}},
@@ -169,16 +157,35 @@ rast.ed <- function(x, tree,
 #' \code{\link[SESraster]{bootspat_ff}},
 #' \code{\link[SESraster]{SESraster}}
 #'
-#' @references Isaac, N. J., Turvey, S. T., Collen, B., Waterman, C. and
-#' Baillie,
-#' J. E. (2007). Mammals on the EDGE: conservation priorities based on threat
-#' and phylogeny. PLoS ONE 2, e296.
-#' @references Laffan, S. W., Rosauer, D. F., Di Virgilio, G., Miller, J. T.,
-#' González‐Orozco, C. E., Knerr, N., ... & Mishler, B. D. (2016).
-#' Range‐weighted
-#' metrics of species and phylogenetic turnover can better
-#' resolve biogeographic
-#' transition zones. Methods in Ecology and Evolution, 7(5), 580-588.
+#' @return SpatRaster. The function returns the observed value of the metric,
+#' the mean of the simulations calculated over n times, the standard deviation
+#' of the simulations, the standardized effect size (SES) for the metric,
+#' and the p-values.
+#'
+#' @details The dependency ‘SESraster’ is used to calculate the null models.
+#' This package currently implements six algorithms to randomize binary species
+#'  distribution with several levels of constraints:
+#'  SIM1, SIM2, SIM3, SIM5, SIM6 and SIM9 (sensu Gotelli 2000).
+#'  The methods implemented in ‘SESraster’ are based on how species
+#'  (originally rows) and sites (originally columns) are treated
+#'  (i.e. fixed, equiprobable, or proportional sums) (Gotelli 2000).
+#'  By default, the ‘phyloraster’ uses the function bootspat_ str() from the
+#'  ‘SESraster’ package to conduct the randomizations, but the user is free
+#'  to choose any of the other methods mentioned above through the spat_alg
+#'  argument in the *.ses() functions of the ‘phyloraster’ package.
+#'  The bootspat_str() is equivalent to the SIM5 (proportional-fixed) method of
+#'  Gotelli (2000), which partially relaxes the spatial structure of species
+#'  distributions, but keeps the spatial structure of the observed richness
+#'  pattern across cells.
+#'
+#' @references Gotelli, N. J. 2000.
+#' Null model analysis of species co-occurrence patterns.
+#' – Ecology 81: 2606–2621.
+#' @references Heming, N. M., Mota, F. M. M. and Alves-Ferreira, G. 2023.
+#' SESraster: raster randomization for null hypothesis testing.
+#' https://CRAN.R-project.org/package=SESraster.
+#'
+#' @author Neander M. Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
 #' \donttest{
@@ -188,21 +195,24 @@ rast.ed <- function(x, tree,
 #' package="phyloraster"))
 #' tree <- ape::read.tree(system.file("extdata", "tree.nex",
 #' package="phyloraster"))
-#' t <- rast.ed.ses(x[[1:10]], tree, aleats = 3, random = "spat")
+#' t <- rast.ed.ses(x[[1:10]], tree, aleats = 3)
 #' terra::plot(t)
 #' }
 #' @export
 rast.ed.ses <- function(x, tree,
                         edge.path, branch.length, n.descen,
+                        full_tree_metr = TRUE,
                         spat_alg = "bootspat_str",
                         spat_alg_args = list(rprob = NULL,
                                              rich = NULL,
                                              fr_prob = NULL),
-                        random = c("tip", "spat")[2],
                         aleats = 10,
                         filename = "", ...){
 
   requireNamespace("SESraster")
+  message("Please cite SESraster when using spatial null models.
+          See: citation(SESraster)")
+
 
   ## object checks
   if(!terra::is.lonlat(x)){
@@ -223,7 +233,7 @@ rast.ed.ses <- function(x, tree,
 
     } else if(any(miss4)){
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x,
       # data$branch.length)
 
@@ -239,7 +249,7 @@ rast.ed.ses <- function(x, tree,
                   # isFALSE(identical(names(x), names(n.descen)))
     )) {
 
-      data <- phylo.pres(x, tree)
+      data <- phylo.pres(x, tree, full_tree_metr = full_tree_metr)
       # area.branch <- inv.range(data$x, data$branch.length)
 
       x <- data$x
@@ -268,42 +278,16 @@ rast.ed.ses <- function(x, tree,
 
 
   ## Null model (bootstrap structure)
-  if(random == "tip"){
-
-    ed.ses <- SESraster::SESraster(x,
-                                   FUN = ".rast.ed.B",
-                                   FUN_args = FUN_args,
-                                   Fa_sample = "branch.length",
-                                   Fa_alg = "sample", Fa_alg_args =
-                                     list(replace=FALSE),
-                                   spat_alg = NULL, spat_alg_args =
-                                     list(),
-                                   # spat_alg = spat_alg,
-                                   # spat_alg_args = spat_alg_args,
-                                   aleats = aleats,
-                                   # cores = cores,
-                                   filename = filename, ...)
-
-
-  } else if(random == "spat"){
-
-    ed.ses <- SESraster::SESraster(x,
-                                   FUN = ".rast.ed.B", FUN_args = FUN_args,
-                                   # Fa_sample = "branch.length",
-                                   # Fa_alg = "sample", Fa_alg_args =
-                                   # list(replace=FALSE),
-                                   # spat_alg = NULL, spat_alg_args = list(),
-                                   spat_alg = spat_alg, spat_alg_args =
-                                     spat_alg_args,
-                                   aleats = aleats,
-                                   filename = filename, ...)
-
-  }  else {
-
-    stop("Choose a valid randomization method! The methods currently available
-         are: 'tip', 'spat'.")
-
-  }
+  ed.ses <- SESraster::SESraster(x,
+                                 FUN = ".rast.ed.B", FUN_args = FUN_args,
+                                 # Fa_sample = "branch.length",
+                                 # Fa_alg = "sample", Fa_alg_args =
+                                 # list(replace=FALSE),
+                                 # spat_alg = NULL, spat_alg_args = list(),
+                                 spat_alg = spat_alg, spat_alg_args =
+                                   spat_alg_args,
+                                 aleats = aleats,
+                                 filename = filename, ...)
 
   return(ed.ses)
 

@@ -79,3 +79,26 @@ test_that("function runs ok when a mask is applied", {
                                background = 0), ok = T)
 })
 
+test_that("Raster is saved when filename is provided", {
+
+  # load data
+  shp <- terra::vect(system.file("extdata", "shps_iucn_spps_rosauer.shp",
+                                 package="phyloraster"))
+
+  # create a polygon to use as mask
+  ## with an extent
+  e <- terra::ext(113, 123, -43.64, -33.90)
+  p <- terra::as.polygons(e, crs="")
+
+  coun.crop <- terra::crop(p, terra::ext(shp)) # cut by the total extension of
+  # the polygons
+  coun.rast <- terra::rasterize(coun.crop,
+                                terra::rast(terra::ext(shp), resolution = 0.5))
+  temp <- tempfile(fileext = ".tif")
+
+  # rasterizing with a mask of a country for example
+  expect(shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
+                               background = 0, filename = temp), ok = T)
+  unlink(temp)
+})
+

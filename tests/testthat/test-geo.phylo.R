@@ -10,7 +10,7 @@ test_that("returned object classes are correct", {
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
-  data <- phylo.pres(x, tree)
+  data <- phyloraster::phylo.pres(x, tree)
   # branch.length <- data$branch.length
   # n.descen <- data$n.descendants
   inv.R <- phyloraster::inv.range(data$x)
@@ -36,13 +36,13 @@ test_that("Are the returned values correct?", {
                                        -23.044, -22.8563)))
 
   # matching phylogenetic tree and the raster
-  data <- phylo.pres(xcrop, tree)
+  data <- phylo.pres(xcrop, tree, full_tree_metr = T)
   branch.length <- data$branch.length
   n.descen <- data$n.descendants
   inv.R <- phyloraster::inv.range(data$x)
 
   # metric SE
-  t <- geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
+  t <- phyloraster::geo.phylo(data$x, inv.R = inv.R, edge.path = data$edge.path,
                  branch.length = data$branch.length,
                  n.descen = data$n.descendants)
 
@@ -92,11 +92,10 @@ test_that("Are the returned values correct?", {
   ed.obs <- round(terra::values(t$ED), 7)
 
 
-  ed.expect <- c(0.3635588, 0.3635588, 0.3635588,
-                 0.3423826, 0.3892801, 0.3892801,
-                 0.3892801, 0.3892801, 0.3635588,
-                 0.3635588, 0.3430628, 0.3635588,
-                 0.4124349, 0.3892801, 0.3892801, 0.3892801)
+  ed.expect <- c(0.4002847, 0.4002847, 0.4002847, 0.3789135,
+                0.3554159, 0.3554159, 0.3554159, 0.3554159,
+                0.4002847, 0.4002847, 0.4099008,
+                0.4002847, 0.3733356, 0.3554159, 0.3554159, 0.3554159)
   expect_equivalent(ed.obs, ed.expect)
 })
 

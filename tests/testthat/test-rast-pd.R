@@ -42,19 +42,18 @@ test_that("results of the analyses replicate those of
 
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
-  data <- phylo.pres(x, tree)
+  data <- phylo.pres(x, tree, full_tree_metr = T)
 
   # phyloraster
-  pg <- rast.pd(data$x, tree)
+  pg <- rast.pd(data$x, data$tree, full_tree_metr = T)
 
-  # epm
   # epm
   ep <- terra::rast(system.file("extdata", "epm_PD.tif",
                                 package="phyloraster"))
 
   testthat::expect_equal(matrix(terra::values(pg), ncol=1),
                          matrix(terra::values(ep),  ncol=1),
-                         tolerance = 0.02)
+                         tolerance = 1.43e-07)
 })
 
 test_that("results of the analyses replicate those of
@@ -64,20 +63,20 @@ test_that("results of the analyses replicate those of
                                package="phyloraster"))
   tree <- ape::read.tree(system.file("extdata", "tree.nex",
                                      package="phyloraster"))
-  data <- phylo.pres(x, tree)
+  data <- phylo.pres(x, tree, full_tree_metr = T)
 
   # phyloraster
   pg <- rast.pd(data$x, edge.path = data$edge.path,
                 branch.length = data$branch.length)
 
   # epm
-  # epm
   ep <- terra::rast(system.file("extdata", "epm_PD.tif",
                                 package="phyloraster"))
 
   testthat::expect_equal(matrix(terra::values(pg), ncol=1),
                          matrix(terra::values(ep),  ncol=1),
-                         tolerance = 2.33)
+                         tolerance = 1.43e-07)
+
 })
 
 test_that("error is returned when the raster does not have a

@@ -7,10 +7,10 @@
 #' @description Calculates the difference of rasterized diversity metrics
 #' (richness, phylogenetic endemism, phylogenetic diversity, weighted endemism,
 #' evolutionary distinctiveness) between time periods.
-#' @param r1 SpatRaster Rasterized diversity metrics for time 1 (e.g
+#' @param r1 SpatRaster. Rasterized diversity metrics for time 1 (e.g
 #' phylogenetic diversity in present). To calculate some diversity metrics for
 #' rasters see phyloraster::geo.phylo function.
-#' @param r2 SpatRaster Rasterized diversity metrics for time 2 (e.g
+#' @param r2 SpatRaster. Rasterized diversity metrics for time 2 (e.g
 #' phylogenetic diversity in future).
 #' @param filename character. Output filename.
 #' @param ... additional arguments to be passed passed down from a calling
@@ -18,7 +18,8 @@
 #' @param cores positive integer. If cores > 1, a 'parallel' package cluster
 #' with that many cores is created and used.
 #' @return SpatRaster
-#' @details The two input rasters (r1 and r2) must have the same extent.
+#' @details The two input rasters (r1 and r2) must have the same extent
+#' and resolution.
 #' @export
 #'
 #' @examples

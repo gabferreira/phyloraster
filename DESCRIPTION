@@ -2,23 +2,23 @@ Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
 Version: 2.1.0
 Authors@R: c(
-    person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", 
-    role = c("aut", "cre", "cph"),
+    person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
-    person(c("Flávio", "M.", "M."), "Mota", , "flaviomoc@gmail.com", 
-    role = "aut",
+    person(c("Flávio", "M.", "M."), "Mota", , "flaviomoc@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0002-0308-7151")),
-    person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", 
-    role = "aut",
+    person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", role = "aut",
            comment = c(ORCID = "0000-0003-2461-5045"))
   )
-Description: Phylogenetic Diversity (PD, Faith 1992), Evolutionary Distinctiveness (ED, Isaac et al. 2007), Phylogenetic Endemism (PE, Rosauer et al. 2009; Laffan et al. 2016), and Weighted Endemism (WE, Laffan et al. 2016) for presence-absence raster.
-    Faith, D. P. (1992) <doi:10.1016/0006-3207(92)91201-3>
-    Isaac, N. J. et al. (2007) <doi:10.1371/journal.pone.0000296>
-    Laffan, S. W. et al. (2016)  <doi:10.1111/2041-210X.12513>
-    Rosauer, D. et al. (2009) <doi:10.1111/j.1365-294X.2009.04311.x>.
+Description: Phylogenetic Diversity (PD, Faith 1992), Evolutionary
+    Distinctiveness (ED, Isaac et al. 2007), Phylogenetic Endemism (PE,
+    Rosauer et al. 2009; Laffan et al. 2016), and Weighted Endemism (WE,
+    Laffan et al. 2016) for presence-absence raster.  Faith, D. P. (1992)
+    <doi:10.1016/0006-3207(92)91201-3> Isaac, N. J. et al. (2007)
+    <doi:10.1371/journal.pone.0000296> Laffan, S. W. et al. (2016)
+    <doi:10.1111/2041-210X.12513> Rosauer, D. et al. (2009)
+    <doi:10.1111/j.1365-294X.2009.04311.x>.
 License: GPL (>= 3)
-URL: https://CRAN.R-project.org/package=phyloraster, 
+URL: https://CRAN.R-project.org/package=phyloraster,
     https://github.com/gabferreira/phyloraster,
     https:https://gabferreira.github.io/phyloraster/
 BugReports: https://github.com/gabferreira/phyloraster/issues
@@ -27,6 +27,7 @@ Depends:
 Imports: 
     ape,
     methods,
+    purrr,
     SESraster,
     stats,
     terra
@@ -42,4 +43,4 @@ Config/testthat/edition: 2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

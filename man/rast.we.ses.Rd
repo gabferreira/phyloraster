@@ -38,19 +38,31 @@ the calculation should be repeated.}
 \item{...}{additional arguments passed for terra::app}
 }
 \value{
-SpatRaster
+SpatRaster. The function returns the observed value of the metric,
+the mean of the simulations calculated over n times, the standard deviation
+of the simulations, the standardized effect size (SES) for the metric,
+and the p-values.
 }
 \description{
 Calculates the standardized effect size for weighted endemism.
 See Details for more information.
 }
 \details{
-The spatial randomization (spat) keeps the richness exact and
-samples
-species presences proportionally to their observed frequency (i.e. number
-of occupied pixels). The randomization will not assign values to cells with
-nodata. The phylogenetic randomization shuffles taxa names across all taxa
-included in phylogeny.
+The dependency ‘SESraster’ is used to calculate the null models.
+This package currently implements six algorithms to randomize binary species
+distribution with several levels of constraints:
+SIM1, SIM2, SIM3, SIM5, SIM6 and SIM9 (sensu Gotelli 2000).
+The methods implemented in ‘SESraster’ are based on how species
+(originally rows) and sites (originally columns) are treated
+(i.e. fixed, equiprobable, or proportional sums) (Gotelli 2000).
+By default, the ‘phyloraster’ uses the function bootspat_ str() from the
+‘SESraster’ package to conduct the randomizations, but the user is free
+to choose any of the other methods mentioned above through the spat_alg
+argument in the *.ses() functions of the ‘phyloraster’ package.
+The bootspat_str() is equivalent to the SIM5 (proportional-fixed) method of
+Gotelli (2000), which partially relaxes the spatial structure of species
+distributions, but keeps the spatial structure of the observed richness
+pattern across cells.
 }
 \examples{
 \donttest{
@@ -63,14 +75,13 @@ plot(t)
 }
 }
 \references{
-Williams, P.H., Humphries, C.J., Forey, P.L., Humphries, C.J.,
-VaneWright, R.I. (1994). Biodiversity, taxonomic relatedness, and endemism
-in conservation. In: Systematics and Conservation Evaluation (eds Forey PL,
-Humphries CJ, Vane-Wright RI), p. 438. Oxford University Press, Oxford.
+Gotelli, N. J. 2000.
+Null model analysis of species co-occurrence patterns.
+– Ecology 81: 2606–2621.
 
-Crisp, M., Laffan, S., Linder, H., Monro, A. (2001).
-Endemism in the
-Australian flora. Journal of Biogeography, 28, 183–198.
+Heming, N. M., Mota, F. M. M. and Alves-Ferreira, G. 2023.
+SESraster: raster randomization for null hypothesis testing.
+https://CRAN.R-project.org/package=SESraster.
 }
 \seealso{
 \code{\link{phylo.pres}},
@@ -86,5 +97,5 @@ Australian flora. Journal of Biogeography, 28, 183–198.
 \code{\link[SESraster]{SESraster}}
 }
 \author{
-Neander Marcel Heming and Gabriela Alves-Ferreira
+Gabriela Alves-Ferreira and Neander Heming
 }
