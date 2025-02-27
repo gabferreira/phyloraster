@@ -1,3 +1,5 @@
+# phyloraster 2.2.1
+
 # phyloraster 2.2.0
 
 - fixed bug in *ses functions
