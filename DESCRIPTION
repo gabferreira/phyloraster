@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
-Version: 2.2.1
+Version: 2.2.0
 Authors@R: c(
     person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
