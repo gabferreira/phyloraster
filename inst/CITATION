@@ -1,7 +1,7 @@
 citHeader("Please cite both the package and the original article describing the methods in your publications:")
 
 year <- sub("-.*", "", meta$Date)
-year <- ifelse(length(as.numeric(year))==0, "2023", year) # sub("-.*", "", Sys.Date())
+year <- ifelse(length(as.numeric(year))==0, "2024", year) # sub("-.*", "", Sys.Date())
 note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
@@ -12,7 +12,7 @@ bibentry(
               person(c("Neander", "Marcel"), "Heming")),
   year   = year,
   note   = note,
-  url    = c("https://github.com/gabferreira/phyloraster")
+  doi    = "10.32614/CRAN.package.phyloraster"
 )
 
 bibentry(
@@ -25,7 +25,7 @@ bibentry(
               person(c("Mirco"), "Solé"),
               person(c("Neander", "Marcel"), "Heming")),
   journal  = "Ecography",
-  year     = "2023",
+  year     = "2024",
   pages    = "e06902",
   doi      = "10.1111/ecog.06902"
 )

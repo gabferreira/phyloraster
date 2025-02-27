@@ -1,6 +1,6 @@
 Package: phyloraster
 Title: Evolutionary Diversity Metrics for Raster Data
-Version: 2.1.0
+Version: 2.2.0
 Authors@R: c(
     person("Gabriela", "Alves-Ferreira", , "gabriela-alves77@hotmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5661-3381")),
@@ -20,7 +20,8 @@ Description: Phylogenetic Diversity (PD, Faith 1992), Evolutionary
 License: GPL (>= 3)
 URL: https://CRAN.R-project.org/package=phyloraster,
     https://github.com/gabferreira/phyloraster,
-    https:https://gabferreira.github.io/phyloraster/
+    https:https://gabferreira.github.io/phyloraster/,
+    https://doi.org/10.1111/ecog.06902
 BugReports: https://github.com/gabferreira/phyloraster/issues
 Depends: 
     R (>= 2.10)

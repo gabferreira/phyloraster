@@ -160,8 +160,8 @@ rast.sr <- function(x, filename = "", ...){
 #'
 #' @inheritParams phylo.pres
 #' @param inv.R SpatRaster. Inverse of range size. See \code{\link{inv.range}}
-#' @param edge.path matrix. Matrix representing the paths through the tree from root
-#' to each tip. See \code{\link{phylo.pres}}
+#' @param edge.path matrix. Matrix representing the paths through the tree from
+#' root to each tip. See \code{\link{phylo.pres}}
 #' @param branch.length numeric. A Named numeric vector of branch length for
 #' each species. See \code{\link{phylo.pres}}
 #' @param n.descen numeric. A Named numeric vector of number of descendants for

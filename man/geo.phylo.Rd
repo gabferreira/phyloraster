@@ -25,8 +25,8 @@ tree order. See the phylo.pres function.}
 
 \item{inv.R}{SpatRaster. Inverse of range size. See \code{\link{inv.range}}}
 
-\item{edge.path}{matrix. Matrix representing the paths through the tree from root
-to each tip. See \code{\link{phylo.pres}}}
+\item{edge.path}{matrix. Matrix representing the paths through the tree from
+root to each tip. See \code{\link{phylo.pres}}}
 
 \item{branch.length}{numeric. A Named numeric vector of branch length for
 each species. See \code{\link{phylo.pres}}}

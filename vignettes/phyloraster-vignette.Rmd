@@ -23,7 +23,8 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,
 -   [Data processing](#data)
 -   [Analysis](#analysis)
 -   [Null Models](#null)
--   [Post Processing](#processing)
+-   [CANAPE](#CANAPE)
+-   [Citation](#citation)
 -   [References](#references)
 
 ## Introduction {#intro}
@@ -333,6 +334,43 @@ tree <- ape::read.tree(system.file("extdata", "tree.nex",
 ed <- phyloraster::species.ed(tree)
 head(ed)
 ```
+-   **Function** `delta.grid`
+
+The package also brings the function `delta.grid` that allows you to calculate the difference between rasterized diversity metrics between two different times.
+This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario.
+For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia.
+In the map below we can visualize the spatial pattern of species richness.
+
+```{r sr-plot}
+# load the data
+x <- terra::rast(system.file("extdata", "rast.presab.tif", 
+                             package="phyloraster"))
+# richness
+riq.pres <- rast.sr(x)
+plot(riq.pres)
+```
+
+Now imagine that as climate change progresses, 16 relatively more vulnerable species are heavily affected and become locally extinct.
+
+```{r srf-plot}
+# load the data
+x <- terra::rast(system.file("extdata", "rast.presab.tif", 
+                             package="phyloraster"))
+# richness future
+riq.fut <- rast.sr(x[[c(1:15)]]) # imagine we lost some species in the future
+terra::plot(riq.fut)
+```
+
+The `delta.grid` function allows you to visualize the variation in these richness patterns spatially.
+See an example below.
+
+```{r dg}
+dg <- delta.grid(riq.pres, riq.fut)
+plot(dg)
+```
+
+On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species.
+The `delta.grid` function can be used for any of the other metrics that are available in the `phyloraster` package.
 
 ## Null models {#null}
 
@@ -382,17 +420,19 @@ Here, we provide an example of how to calculate the CANAPE.
 First, you need to load the data, which will be the same used in the `rast.pe()` function.
 
 ```{r}
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phyloraster"))
+ras <- terra::rast(system.file("extdata", "rast.presab.tif",
+                               package="phyloraster"))
 tree <- ape::read.tree(system.file("extdata", "tree.nex",
-package="phyloraster"))
+                                   package="phyloraster"))
 data <- phylo.pres(ras, tree, full_tree_metr = TRUE)
 ```
 
-After that, you will be able to calculate the null models for Phylogenetic Endemism using the function `rast.pe.ses()`. Usually, most studies use 999 iterations, but let’s set it to 50 iterations here to reduce processing time. As mentioned earlier, by default, the `phyloraster` package uses the function `bootspat_str()` from the `SESraster` package to conduct the randomizations in the `*.ses()` functions. However, users can choose any of the other methods mentioned above by specifying the spat_alg argument.
+After that, you will be able to calculate the null models for Phylogenetic Endemism using the function `rast.pe.ses()`. 
+Usually, most studies use 999 iterations, but let’s set it to 30 iterations here to reduce processing time. As mentioned earlier, by default, the `phyloraster` package uses the function `bootspat_str()` from the `SESraster` package to conduct the randomizations in the `*.ses()` functions. However, users can choose any of the other methods mentioned above by specifying the spat_alg argument.
 The user can also specify the metric argument to calculate significance for specific metrics: Phylogenetic Endemism ("pe"), Phylogenetic Endemism with the alternate tree ("pe.alt"), Relative Phylogenetic Endemism ("rpe"), or all metrics ("all", the default). The function `rast.pe.ses()` will return a set of metrics and their significance, which will be used in the CANAPE scheme.
 
 ```{r}
-ses <- rast.pe.ses(x = data$x, tree = data$tree, aleats = 30)
+ses <- rast.pe.ses(x = data$x, tree = data$tree, aleats = 30, metric = "all")
 names(ses)
 ```
 
@@ -400,51 +440,21 @@ Once the user has calculated the significance for each metric, it’s time to cl
 
 ```{r}
 # CANAPE
-canape <- phyloraster::canape.rast(ses$p.upper.PE, ses$p.upper.PE.alt,
+canape <- canape.rast(ses$p.upper.PE, ses$p.upper.PE.alt,
 ses$p.upper.RPE, ses$p.lower.RPE)
 terra::plot(canape)
 ```
 
 
-## Post processing {#processing}
+## Citation {#citation}
 
--   **Function** `delta.grid`
+Please cite both the package and the article describing the methods in your publications. Here is an example:
 
-The package also brings the function `delta.grid` that allows you to calculate the difference between rasterized diversity metrics between two different times.
-This function would allow assessing how species richness varies between different times, which could be useful in a climate change scenario.
-For example, imagine that we currently have 33 tree frog species of the subfamily Pelodryadinae occurring in Australia.
-In the map below we can visualize the spatial pattern of species richness.
+-  Article recently published in [`Ecography`]( https://doi.org/10.1111/ecog.06902):
+Alves-Ferreira G, Mota FMM, Talora DC, Oliveira, C, Solé, MK, Heming NM (2024). phyloraster: an R package to calculate measures of endemism and evolutionary diversity for rasters. Ecography. doi: 10.1111/ecog.06902.
 
-```{r sr-plot}
-# load the data
-x <- terra::rast(system.file("extdata", "rast.presab.tif", 
-                             package="phyloraster"))
-# richness
-riq.pres <- rast.sr(x)
-plot(riq.pres)
-```
-
-Now imagine that as climate change progresses, 16 relatively more vulnerable species are heavily affected and become locally extinct.
-
-```{r srf-plot}
-# load the data
-x <- terra::rast(system.file("extdata", "rast.presab.tif", 
-                             package="phyloraster"))
-# richness future
-riq.fut <- rast.sr(x[[c(1:15)]]) # imagine we lost some species in the future
-terra::plot(riq.fut)
-```
-
-The `delta.grid` function allows you to visualize the variation in these richness patterns spatially.
-See an example below.
-
-```{r dg}
-dg <- delta.grid(riq.pres, riq.fut)
-plot(dg)
-```
-
-On the map we can see that the greatest loss occurs in the eastern region of the map, losing up to 16 species.
-The `delta.grid` function can be used for any of the other metrics that are available in the `phyloraster` package.
+-  Package published in [`CRAN`](https://CRAN.R-project.org/package=phyloraster):
+Alves-Ferreira G, Heming NM, Mota FMM. (2024). phyloraster: Evolutionary Diversity Metrics for Raster Data. R package version 2.0.
 
 ## References {#references}
 
