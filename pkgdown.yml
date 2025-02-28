@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   phyloraster-vignette: phyloraster-vignette.html
-last_built: 2025-02-27T19:34Z
+last_built: 2025-02-28T14:23Z
 urls:
   reference: https://gabferreira.github.io/phyloraster/reference
   article: https://gabferreira.github.io/phyloraster/articles
