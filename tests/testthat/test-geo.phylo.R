@@ -141,7 +141,7 @@ test_that("arguments are calculated when is missing and the
   # area.branch <- phyloraster::inv.range(data$x)
 
   # tests
-  expect(geo.phylo(data$x, tree), ok = T)
+  geo.phylo(data$x, tree)
 
 })
 
@@ -160,11 +160,11 @@ test_that("names are reordened in the function geo.phylo", {
   inv.R <- phyloraster::inv.range(data$x)
 
   # tests
-  expect(geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
+  geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
                 inv.R = inv.R,
                 edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
                    branch.length = data$branch.length,
-                   n.descen = data$n.descendants), ok = T)
+                   n.descen = data$n.descendants)
 
 })
 
@@ -191,4 +191,3 @@ test_that("error is returned when the raster does not have a longitude/latitude
   expect_error(geo.phylo(data$x,
                          data$n.descendants))
 })
-

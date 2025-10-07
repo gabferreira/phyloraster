@@ -113,10 +113,10 @@ test_that("function compute branch lenght when tree is supplied", {
 
   require("SESraster")
   # tests
-  expect(rast.ed.ses(x = x, tree = tree,
+  rast.ed.ses(x = x, tree = tree,
                      spat_alg = "bootspat_str",
                      spat_alg_args = list(rprob = NULL,
                                           rich = NULL,
                                           fr_prob = NULL),
-                     aleats = 5), ok = T)
+                     aleats = 5)
 })
