@@ -18,7 +18,7 @@ shp2rast(
 )
 }
 \arguments{
-\item{x}{SpatVector or a two-column matrix (point coordinates)}
+\item{x}{SpatVector or a two-column matrix (point coordinates) or data.frame}
 
 \item{y}{SpatRaster}
 
@@ -32,7 +32,7 @@ shp2rast(
 
 \item{resolution}{numeric vector of length 1 or 2 to set the spatial resolution (see \code{\link[terra]{res}}). If this argument is used, arguments \code{ncols} and \code{nrows} are ignored }
 
-\item{values}{typically a numeric vector of length \code{1} or \code{nrow(x)}. If the length is below \code{nrow(x)} the values will be recycled to \code{nrow(x)}. Only used when \code{x} is a matrix. Can also be a matrix or data.frame}
+\item{values}{typically a numeric vector of length \code{1} or \code{nrow(x)}. If the length is below \code{nrow(x)}, the values will be recycled to \code{nrow(x)}. Only used when \code{x} is a matrix. Can also be a matrix or data.frame}
 
 \item{filename}{character. Output filename}
 

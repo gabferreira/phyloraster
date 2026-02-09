@@ -26,7 +26,7 @@
   red <- terra::app(x,
                     function(x, H1, branch.length, n.descen){
                       if(all(is.na(x))) return(NA)
-                      if(sum(x, na.rm = T)==0) return(0)
+                      if(sum(x, na.rm = TRUE)==0) return(0)
 
                     sum((crossprod(H1, x)>0) * (branch.length/n.descen))/sum(x)
                     }, H1 = edge.path, branch.length = branch.length,

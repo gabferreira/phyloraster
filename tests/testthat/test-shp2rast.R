@@ -74,9 +74,10 @@ test_that("function runs ok when a mask is applied", {
                                 terra::rast(terra::ext(shp), resolution = 0.5))
 
   # rasterizing with a mask of a country for example
-  expect(phyloraster::shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
+  expect_no_error(phyloraster::shp2rast(shp, y = coun.rast,
+                                        sps.col = "BINOMIAL",
                                ymask = TRUE,
-                               background = 0), ok = T)
+                               background = 0))
 })
 
 test_that("Raster is saved when filename is provided", {
@@ -97,8 +98,8 @@ test_that("Raster is saved when filename is provided", {
   temp <- tempfile(fileext = ".tif")
 
   # rasterizing with a mask of a country for example
-  expect(shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
-                               background = 0, filename = temp), ok = T)
+  expect_no_error(shp2rast(shp, y = coun.rast, sps.col = "BINOMIAL",
+                               background = 0, filename = temp))
   unlink(temp)
 })
 
