@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to the phyloraster package and its functionalities • phyloraster</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -26,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">phyloraster</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +64,7 @@
                         <h4 data-toc-skip class="author">Gabriela
 Alves-Ferreira, Flávio Mota and Neander Heming</h4>
             
-            <h4 data-toc-skip class="date">2025-02-28</h4>
+            <h4 data-toc-skip class="date">2026-02-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gabferreira/phyloraster/blob/master/vignettes/phyloraster-vignette.Rmd" class="external-link"><code>vignettes/phyloraster-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>phyloraster-vignette.Rmd</code></div>
@@ -127,7 +126,7 @@ this vignette, we demonstrate the use of the functions of the
 </h2>
 <p>The CRAN version of the package can be installed using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"phyloraster"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("phyloraster")</span></span></code></pre></div>
 <p>The development version of <code>phyloraster</code> can be downloaded
 from <a href="https://github.com/gabferreira/phyloraster" class="external-link">GitHub</a>
 using the following code:</p>
@@ -187,7 +186,7 @@ shapefile with the range of 27 species following IUCN spatial data.</p>
 <span><span class="co">#&gt; 6                0               1</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">raster</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, cex <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span><span class="op">$</span><span class="va">tree</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -199,7 +198,7 @@ shapefile with the range of 27 species following IUCN spatial data.</p>
 <span><span class="co">#&gt; Rooted; includes branch length(s).</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">tree</span>, cex <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <ul>
 <li>
 <strong>Function</strong> <code>df2rast</code>
@@ -219,7 +218,7 @@ absence).</p>
 <span><span class="co">#&gt; [1] "terra"</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <ul>
 <li>
 <strong>Function</strong> <code>shp2rast</code>
@@ -242,15 +241,15 @@ visualize this data through the following code:</p>
 <span><span class="va">colors</span> <span class="op">&lt;-</span> <span class="va">colors</span><span class="op">[</span><span class="va">position</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">shp</span>, col <span class="op">=</span> <span class="va">colors</span>, lty <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Spatial polygons"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">maps</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adeckmyn/maps" class="external-link">maps</a></span><span class="op">)</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shp2rast.html">shp2rast</a></span><span class="op">(</span><span class="va">shp</span>, sps.col <span class="op">=</span> <span class="st">"BINOMIAL"</span>, ymask <span class="op">=</span> <span class="cn">FALSE</span>, background <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>               resolution <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">r2</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 77, 126, 9  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; size        : 77, 126, 9  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 0.5008004, 0.4970178  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 114.099, 177.1998, -39.17965, -0.9092805  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84) </span></span>
@@ -259,7 +258,7 @@ visualize this data through the following code:</p>
 <span><span class="co">#&gt; min values  :           0,           0,           0,           0,           0,           0, ... </span></span>
 <span><span class="co">#&gt; max values  :           1,           1,           1,           1,           1,           1, ...</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[[</span><span class="fl">9</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="700"></p>
 <p>You can also masking the shapefile using another shapefile, as
 follows:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -280,7 +279,7 @@ follows:</p>
 <span><span class="co"># rasterizing with the mask of the polygon</span></span>
 <span><span class="va">shp.t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shp2rast.html">shp2rast</a></span><span class="op">(</span><span class="va">shp</span>, y <span class="op">=</span> <span class="va">coun.rast</span>, sps.col <span class="op">=</span> <span class="st">"BINOMIAL"</span>, ymask <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">shp.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="700"></p>
 <ul>
 <li>
 <strong>Function</strong> <code>phylo.pres</code>
@@ -339,7 +338,7 @@ and B will be shorter (Figure 1c).</p>
 <span></span>
 <span><span class="co"># Using the prunned tree</span></span>
 <span><span class="va">dataprep_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/phylo.pres.html">phylo.pres</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ras</span>, tree <span class="op">=</span> <span class="va">tree</span>, full_tree_metr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="figs%2Ftree.jpg" style="display: block; margin: auto;"></p>
+<p><img src="figs/tree.jpg" class="r-plt" alt="" style="display: block; margin: auto;"></p>
 <p>Figure 1. Phylogenetic tree for tree frogs denoting the implications
 of using the full or the subsetted tree in the phylo.pres function.
 Figure a) demonstrates the full phylogenetic tree for some tree frog
@@ -364,7 +363,7 @@ richness, endemism and evolutionary diversity.</p>
 <span><span class="va">sr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.sr.html">rast.sr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ras</span><span class="op">)</span></span>
 <span><span class="va">sr</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; size        : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 0.1, 0.1  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
@@ -374,7 +373,7 @@ richness, endemism and evolutionary diversity.</p>
 <span><span class="co">#&gt; max value   : 29</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sr</span>, main <span class="op">=</span> <span class="st">"Species richness"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <ul>
 <li><strong>Endemism measurements</strong></li>
 </ul>
@@ -394,7 +393,7 @@ are distributed.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wer</span><span class="op">$</span><span class="va">WE</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; size        : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 0.1, 0.1  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
@@ -403,7 +402,7 @@ are distributed.</p>
 <span><span class="co">#&gt; min value   : 0.0007231441 </span></span>
 <span><span class="co">#&gt; max value   : 0.2989257007</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wer</span><span class="op">$</span><span class="va">WE</span>, main <span class="op">=</span><span class="st">"Weigthed Endemism"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <ul>
 <li><strong>Evolutionary measurements</strong></li>
 </ul>
@@ -420,7 +419,7 @@ species occurring in a given region (Faith 1994).</p>
 <span><span class="va">pdr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.pd.html">rast.pd</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dataprep</span><span class="op">$</span><span class="va">x</span>, <span class="va">dataprep</span><span class="op">$</span><span class="va">tree</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pdr</span><span class="op">$</span><span class="va">PD</span>, main <span class="op">=</span> <span class="st">"Phylogenetic diversity"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/pdr-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/pdr-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>The second measure is phylogenetic endemism (PE, Rosauer et
 al. 2009), which calculates the degree to which PD are restricted to a
 specific region (Rosauer et al. 2009). The function <code>rast.pe</code>
@@ -435,7 +434,7 @@ returns a raster layer containing PE the region of interest.</p>
 <span><span class="va">per</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.pe.html">rast.pe</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dataprep</span><span class="op">$</span><span class="va">x</span>, <span class="va">dataprep</span><span class="op">$</span><span class="va">tree</span><span class="op">)</span></span>
 <span><span class="va">per</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; size        : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 0.1, 0.1  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
@@ -447,7 +446,7 @@ returns a raster layer containing PE the region of interest.</p>
 from the <code>terra</code> package.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">per</span><span class="op">$</span><span class="va">PE</span>, main <span class="op">=</span> <span class="st">"Phylogenetic Endemism"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/per-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/per-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>The third metric is evolutionary distinctiveness (ED; Isaac et
 al. 2007) or ‘fair proportion’ (Redding et al. 2014), which is
 calculated dividing the total phylogenetic diversity of a clade among
@@ -467,7 +466,7 @@ region of interest.</p>
 <span><span class="va">ed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.ed.html">rast.ed</a></span><span class="op">(</span><span class="va">dataprep</span><span class="op">$</span><span class="va">x</span>, <span class="va">dataprep</span><span class="op">$</span><span class="va">tree</span><span class="op">)</span></span>
 <span><span class="va">ed</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; size        : 90, 68, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 0.1, 0.1  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 144.0157, 150.8157, -23.044, -14.044  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
@@ -479,7 +478,7 @@ region of interest.</p>
 from the <code>terra</code> package.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ed</span>, main <span class="op">=</span> <span class="st">"Evolutionary Distinctiveness"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/edr-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/edr-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>We also added a new function to calculates the Evolutionary
 distinctiveness for each species separately. The function will divide
 the total phylogenetic diversity of a clade among its members (Isaac et
@@ -517,7 +516,7 @@ pattern of species richness.</p>
 <span><span class="co"># richness</span></span>
 <span><span class="va">riq.pres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.sr.html">rast.sr</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">riq.pres</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/sr-plot-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/sr-plot-1.png" class="r-plt" alt="" width="700"></p>
 <p>Now imagine that as climate change progresses, 16 relatively more
 vulnerable species are heavily affected and become locally extinct.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -527,14 +526,14 @@ vulnerable species are heavily affected and become locally extinct.</p>
 <span><span class="co"># richness future</span></span>
 <span><span class="va">riq.fut</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rast.sr.html">rast.sr</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># imagine we lost some species in the future</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">riq.fut</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/srf-plot-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/srf-plot-1.png" class="r-plt" alt="" width="700"></p>
 <p>The <code>delta.grid</code> function allows you to visualize the
 variation in these richness patterns spatially. See an example
 below.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/delta.grid.html">delta.grid</a></span><span class="op">(</span><span class="va">riq.pres</span>, <span class="va">riq.fut</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/dg-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/dg-1.png" class="r-plt" alt="" width="700"></p>
 <p>On the map we can see that the greatest loss occurs in the eastern
 region of the map, losing up to 16 species. The <code>delta.grid</code>
 function can be used for any of the other metrics that are available in
@@ -600,7 +599,7 @@ build the null models.</p>
 <p>Plotting the results</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/pds-plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="phyloraster-vignette_files/figure-html/pds-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="CANAPE">CANAPE<a class="anchor" aria-label="anchor" href="#CANAPE"></a>
@@ -663,7 +662,7 @@ time to classify the types of phylogenetic endemism using the function
 <span><span class="va">canape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/canape.rast.html">canape.rast</a></span><span class="op">(</span><span class="va">ses</span><span class="op">$</span><span class="va">p.upper.PE</span>, <span class="va">ses</span><span class="op">$</span><span class="va">p.upper.PE.alt</span>,</span>
 <span><span class="va">ses</span><span class="op">$</span><span class="va">p.upper.RPE</span>, <span class="va">ses</span><span class="op">$</span><span class="va">p.lower.RPE</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">canape</span><span class="op">)</span></span></code></pre></div>
-<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
+<p><img src="phyloraster-vignette_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -734,7 +733,7 @@ Press, Oxford.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
