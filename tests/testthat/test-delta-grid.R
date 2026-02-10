@@ -81,5 +81,3 @@ test_that("Raster is saved when filename is provided", {
                                  filename = temp))
   unlink(temp)
 })
-
-

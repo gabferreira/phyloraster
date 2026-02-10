@@ -192,4 +192,3 @@ test_that("error is returned when the raster does not have a longitude/latitude
   expect_error(geo.phylo(data$x,
                          data$n.descendants))
 })
-
