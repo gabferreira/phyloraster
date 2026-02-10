@@ -52,7 +52,7 @@ this vignette, we demonstrate the use of the functions of the
 The CRAN version of the package can be installed using:
 
 ``` r
-# install.packages("phyloraster")
+install.packages("phyloraster")
 ```
 
 The development version of `phyloraster` can be downloaded from
