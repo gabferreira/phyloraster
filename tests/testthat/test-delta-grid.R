@@ -77,6 +77,7 @@ test_that("Raster is saved when filename is provided", {
   temp <- tempfile(fileext = ".tif")
 
   # rasterizing with a mask of a country for example
-  phyloraster::delta.grid(riq.pres, riq.fut, filename = temp)
+  expect_no_error(phyloraster::delta.grid(riq.pres, riq.fut,
+                                 filename = temp))
   unlink(temp)
 })

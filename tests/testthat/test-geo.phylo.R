@@ -141,7 +141,7 @@ test_that("arguments are calculated when is missing and the
   # area.branch <- phyloraster::inv.range(data$x)
 
   # tests
-  geo.phylo(data$x, tree)
+  expect_no_error(geo.phylo(data$x, tree))
 
 })
 
@@ -160,11 +160,12 @@ test_that("names are reordened in the function geo.phylo", {
   inv.R <- phyloraster::inv.range(data$x)
 
   # tests
-  geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
+  expect_no_error(geo.phylo(data$x, tree, #range.BL = area.branch$range.BL,
                 inv.R = inv.R,
-                edge.path = data$edge.path[sample(1:nrow(data$edge.path)),],
-                   branch.length = data$branch.length,
-                   n.descen = data$n.descendants)
+                edge.path = data$edge.path[sample(seq_len(nrow(data$edge.path)))
+                                           , ],
+                branch.length = data$branch.length,
+                   n.descen = data$n.descendants))
 
 })
 

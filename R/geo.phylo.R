@@ -46,7 +46,7 @@ rast.sr <- function(x, filename = "", ...){
   }
 
   # richness
-  rsr <- terra::app(x, sum, na.rm = T, filename = filename, ...)
+  rsr <- terra::app(x, sum, na.rm = TRUE, filename = filename, ...)
 
   names(rsr) <- "SR"
 
