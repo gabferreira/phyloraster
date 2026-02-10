@@ -2,4 +2,4 @@
 
 ## phyloraster 2.3.0
 
-- Initial CRAN submission.
+- We solved the issues on testthat.
